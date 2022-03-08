@@ -1,0 +1,52 @@
+{
+  "root": "apps/ml-bridge",
+  "sourceRoot": "apps/ml-bridge/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/ml-bridge",
+        "main": "apps/ml-bridge/src/main.ts",
+        "tsConfig": "apps/ml-bridge/tsconfig.app.json",
+        "assets": ["apps/ml-bridge/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/ml-bridge/src/environments/environment.ts",
+              "with": "apps/ml-bridge/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "ml-bridge:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/ml-bridge/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/ml-bridge"],
+      "options": {
+        "jestConfig": "apps/ml-bridge/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

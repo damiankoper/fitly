@@ -1,0 +1,22 @@
+{
+  "root": "libs/shared/meta",
+  "sourceRoot": "libs/shared/meta/src",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/shared/meta/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/shared/meta"],
+      "options": {
+        "jestConfig": "libs/shared/meta/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,5 +1,3 @@
-
-
 # Fitly
 
 This project was generated using [Nx](https://nx.dev).
@@ -18,7 +16,7 @@ Below are our core plugins:
 
 - [React](https://reactjs.org)
   - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
+- Web (no framework fitlys)
   - `npm install --save-dev @nrwl/web`
 - [Angular](https://angular.io)
   - `npm install --save-dev @nrwl/angular`
@@ -79,8 +77,6 @@ Run `nx graph` to see a diagram of the dependencies of your projects.
 
 Visit the [Nx Documentation](https://nx.dev) to learn more.
 
-
-
 ## ☁ Nx Cloud
 
 ### Distributed Computation Caching & Distributed Task Execution
@@ -89,6 +85,6 @@ Visit the [Nx Documentation](https://nx.dev) to learn more.
 
 Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
 
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
+Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both fitly and ml-bridge developers.
 
 Visit [Nx Cloud](https://nx.app/) to learn more.

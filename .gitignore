@@ -95,4 +95,14 @@ buck-out/
 
 node_modules/
 
-apps/frontend-e2e/artifacts
+apps/fitly-e2e/artifacts
+## Nested node_modules
+
+node_modules/
+
+apps/fitly-e2e/artifacts
+## Nested node_modules
+
+node_modules/
+
+apps/ui-mobile-e2e/artifacts

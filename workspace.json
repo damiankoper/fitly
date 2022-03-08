@@ -1,8 +1,9 @@
 {
   "version": 2,
   "projects": {
-    "backend": "apps/backend",
-    "frontend": "apps/frontend",
-    "frontend-e2e": "apps/frontend-e2e"
+    "ml-bridge": "apps/ml-bridge",
+    "shared-meta": "libs/shared/meta",
+    "ui-mobile": "apps/ui-mobile",
+    "ui-mobile-e2e": "apps/ui-mobile-e2e"
   }
 }
