@@ -1,0 +1,59 @@
+@startuml ActivityClassificationFlow
+title Activity Classification Flow
+
+box "Frontend" #LightBlue
+  actor User
+  actor Band
+  boundary UiMobile
+end box
+
+box "Backend" #LightGoldenRodYellow
+  control UiMobileControl
+  control MlBridge
+end box
+
+box "ML" #LightSalmon
+  control MlApi
+  entity MlModel
+end box
+
+== Initialization ==
+
+User -> UiMobile : Track activity
+UiMobile -> UiMobileControl : Init tracking
+UiMobileControl -> Band : Start data stream
+
+== Data stream ==
+
+Band --> UiMobileControl : Data
+UiMobileControl -> UiMobileControl : Aggregate data
+
+== Classification ==
+
+UiMobileControl -> MlBridge : Aggregated data
+note left: with activity type label or unknown
+MlBridge -> MlBridge : Preprocess data
+MlBridge -> MlApi : Preprocessed data
+MlApi -> MlModel : Classify
+MlModel -> MlApi : Classification result
+
+MlApi --> MlBridge : Classification result
+note left: with activity type label or unknown
+
+MlBridge --> UiMobileControl : Classification result
+UiMobileControl -> UiMobileControl : Save classification result
+
+== Feedback ==
+
+UiMobileControl -> UiMobileControl : Recalculate statictics
+UiMobileControl -> UiMobile : Update view
+UiMobile -> User
+
+== Teardown ==
+
+User -> UiMobile : Stop activity tracking
+UiMobile -> UiMobileControl : Stop tracking
+UiMobileControl -> Band : Stop data stream
+
+
+@enduml
