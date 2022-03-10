@@ -1,0 +1,65 @@
+@startuml ActivityData
+title Activity Data
+skinparam Linetype ortho
+
+package Luxon {
+  class DateTime <<external>>
+  class Interval <<external>>
+
+  Interval o-left-> "2" DateTime
+}
+
+enum ActivityType {
+  UNKNOWN
+  ==
+  RUN
+  WALK
+  SQUATS
+  PUSHUPS
+  STAR_JUMPS
+}
+
+interface ActivityTrackingDTO<Meta extends ActivityTrackingMeta>{
+  meta: Meta
+  interval: Interval
+  data: SensorBasicSample[]
+}
+
+interface ActivityTrackingMeta{
+  type: ActivityType
+  timestamp: DateTime
+}
+
+interface RunTrackingMeta extends ActivityTrackingMeta{
+  type: ActivityType.RUN
+  steps: number
+}
+
+interface WalkTrackingMeta extends ActivityTrackingMeta{
+  type: ActivityType.WALK
+  steps: number
+}
+
+interface SquatsTrackingMeta extends ActivityTrackingMeta{
+  type: ActivityType.SQUATS
+  repeats: number
+}
+
+interface SensorBasicSample {
+  acceleration: [number, number, number]
+  angularVelocity: [number, number, number]
+  magneticField: [number, number, number]
+}
+
+interface SensorExtendedSample extends SensorBasicSample {
+  altitude?: number
+  pressure?: number
+  illuminance?: number
+}
+
+ActivityTrackingMeta --> ActivityType
+ActivityTrackingDTO -> Interval
+ActivityTrackingDTO  *--> "1..*" SensorBasicSample
+ActivityTrackingDTO  *-->  ActivityTrackingMeta
+
+@enduml
