@@ -105,6 +105,8 @@ apps/fitly-e2e/artifacts
 
 node_modules/
 
+apps/ui-mobile/node_modules
+
 apps/ui-mobile-e2e/artifacts
 
 
