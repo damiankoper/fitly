@@ -6,15 +6,15 @@ import { DataService } from './data.service';
 @ApiTags('Data')
 @Controller('data')
 export class DataController {
-    constructor(private readonly dataService: DataService) {}
-    
-    @Get()
-    getData() {
-        return this.dataService.getData();
-    }
+  constructor(private readonly dataService: DataService) {}
 
-    @Post()
-    async postData(@Body() body: PostDataRequest) {
-        return await this.dataService.saveDataToFTP(body);
-    }
+  @Get()
+  getData() {
+    return this.dataService.getData();
+  }
+
+  @Post()
+  async postData(@Body() body: PostDataRequest) {
+    return await this.dataService.saveDataToFTP(body);
+  }
 }

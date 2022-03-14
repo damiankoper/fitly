@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class PostDataRequest {
-    @ApiProperty({
-        type: String,
-        description: "Wiadomość do zapisania w pliku .txt na FTP"
-    })
-    message!: string;
+  @ApiProperty({
+    type: String,
+    description: 'Wiadomość do zapisania w pliku .txt na FTP',
+  })
+  message!: string;
 }
