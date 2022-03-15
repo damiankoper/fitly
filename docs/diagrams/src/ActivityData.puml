@@ -12,15 +12,14 @@ package Luxon {
 enum ActivityType {
   UNKNOWN
   ==
-  RUN
-  WALK
+  SITUPS
   SQUATS
   PUSHUPS
   STAR_JUMPS
 }
 
-interface ActivityTrackingDTO<Meta extends ActivityTrackingMeta>{
-  meta: Meta
+interface ActivityTrackingDTO{
+  meta: ActivityTrackingMeta
   interval: Interval
   data: SensorBasicSample[]
 }
@@ -28,22 +27,9 @@ interface ActivityTrackingDTO<Meta extends ActivityTrackingMeta>{
 interface ActivityTrackingMeta{
   type: ActivityType
   timestamp: DateTime
-}
-
-interface RunTrackingMeta extends ActivityTrackingMeta{
-  type: ActivityType.RUN
-  steps: number
-}
-
-interface WalkTrackingMeta extends ActivityTrackingMeta{
-  type: ActivityType.WALK
-  steps: number
-}
-
-interface SquatsTrackingMeta extends ActivityTrackingMeta{
-  type: ActivityType.SQUATS
   repeats: number
 }
+
 
 interface SensorBasicSample {
   acceleration: [number, number, number]
