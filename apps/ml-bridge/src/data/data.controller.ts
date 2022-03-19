@@ -1,4 +1,4 @@
-import { PostDataRequest } from '@fitly/shared/meta';
+import { ActivityTrackingDTO } from '@fitly/shared/meta';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DataService } from './data.service';
@@ -14,7 +14,7 @@ export class DataController {
   }
 
   @Post()
-  async postData(@Body() body: PostDataRequest) {
+  async postData(@Body() body: ActivityTrackingDTO) {
     return await this.dataService.saveDataToFTP(body);
   }
 }
