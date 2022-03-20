@@ -5,10 +5,10 @@ import { IConnectionOptions } from 'nestjs-ftp';
 export class ConfigService {
   createFTPOptions(): IConnectionOptions {
     return {
-      host: 'ftp.dlptest.com',
-      user: 'dlpuser',
-      password: 'rNrKYTX9g7z3RgJRmxWuGHbeu',
-      port: 21,
+      host: process.env.FTP_HOST || 'ftp.dlptest.com',
+      user: process.env.FTP_USER || 'dlpuser',
+      password: process.env.FTP_PASSWORD || 'rNrKYTX9g7z3RgJRmxWuGHbeu',
+      port: +process.env.FTP_PORT || 21,
     };
   }
 }

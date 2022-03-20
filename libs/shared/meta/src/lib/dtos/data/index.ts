@@ -1,1 +1,0 @@
-export * from './postData.request';
