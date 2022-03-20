@@ -15,10 +15,7 @@ export class DataService {
     try {
       const json = JSON.stringify(data);
 
-      await this.ftpService.upload(
-        Readable.from(json),
-        'fitly_file.json'
-      );
+      await this.ftpService.upload(Readable.from(json), 'fitly_file.json');
     } catch (error) {
       throw new Error(error);
     }

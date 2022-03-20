@@ -87,7 +87,7 @@ export class ActivityTrackingDTO {
     description: 'Dane śledzenia aktywności',
   })
   meta!: ActivityTrackingMeta;
-  
+
   @ApiProperty({
     type: Date,
     description: 'Czas wykonywania aktywności',
