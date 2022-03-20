@@ -15,8 +15,9 @@ export class ActivityTrackingDTO {
   meta: ActivityTrackingMeta;
 
   @ApiProperty({
-    type: Interval,
-    description: 'Tracking interval',
+    type: String,
+    example: '2007-03-01T13:00:00Z/2008-05-11T15:30:00Z',
+    description: 'Tracking interval (ISO)',
   })
   @Transform(({ value }) => Interval.fromISO(value), { toClassOnly: true })
   @Transform(({ value }) => value.toISO(), { toPlainOnly: true })

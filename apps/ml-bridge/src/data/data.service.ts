@@ -1,5 +1,6 @@
 import { ActivityTrackingDTO } from '@fitly/shared/meta';
 import { Injectable } from '@nestjs/common';
+import { instanceToPlain } from 'class-transformer';
 import { FtpService } from 'nestjs-ftp';
 import { Readable } from 'stream';
 
@@ -13,7 +14,7 @@ export class DataService {
 
   async saveDataToFTP(data: ActivityTrackingDTO) {
     try {
-      const json = JSON.stringify(data);
+      const json = JSON.stringify(instanceToPlain(data));
 
       await this.ftpService.upload(Readable.from(json), 'fitly_file.json');
     } catch (error) {
