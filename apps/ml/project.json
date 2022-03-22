@@ -1,0 +1,32 @@
+{
+  "root": "apps/ml",
+  "projectType": "application",
+  "sourceRoot": "apps/ml/src",
+  "targets": {
+    "install-all": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pipenv install --skip-lock",
+        "cwd": "./"
+      }
+    },
+    "install": {
+      "executor": "./tools/executors/pipenv-install:pipenv-install"
+    },
+    "shell": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pipenv shell",
+        "cwd": "./"
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pipenv run uvicorn main:app --app-dir=apps/ml/src --reload",
+        "cwd": "./"
+      }
+    }
+  },
+  "tags": []
+}

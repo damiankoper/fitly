@@ -29,5 +29,5 @@
       }
     ]
   },
-  "defaultProject": "ml-bridge"
+  "defaultProject": "./"
 }

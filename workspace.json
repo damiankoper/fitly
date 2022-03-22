@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "ml": "apps/ml",
     "ml-bridge": "apps/ml-bridge",
     "shared-meta": "libs/shared/meta",
     "ui-mobile": "apps/ui-mobile",
