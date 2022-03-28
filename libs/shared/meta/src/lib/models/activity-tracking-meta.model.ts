@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { ActivityType } from '../enums';
 import { DateTime } from 'luxon';
 import { Transform } from 'class-transformer';
