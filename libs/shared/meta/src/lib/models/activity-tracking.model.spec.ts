@@ -1,11 +1,11 @@
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { DateTime, Interval } from 'luxon';
 import { ActivityType } from '../enums';
-import { ActivityTrackingMeta } from '../models/activity-tracking-meta.model';
-import { AxesData } from '../models/axes-data.model';
-import { SensorBasicSample } from '../models/sensor-basic-sample.model';
-import { ActivityTrackingDTO } from './activity-tracking.dto';
-describe('ActivityTrackingDTO parse/serialize', () => {
+import { ActivityTrackingMeta } from './activity-tracking-meta.model';
+import { AxesData } from './axes-data.model';
+import { SensorBasicSample } from './sensor-basic-sample.model';
+import { ActivityTracking } from './activity-tracking.model';
+describe('ActivityTracking parse/serialize', () => {
   it('should parse plain object', () => {
     //given
     const interval = Interval.before(DateTime.now(), 3600);
@@ -27,10 +27,10 @@ describe('ActivityTrackingDTO parse/serialize', () => {
     };
 
     //when
-    const atDTO = plainToInstance(ActivityTrackingDTO, plainObject);
+    const atDTO = plainToInstance(ActivityTracking, plainObject);
 
     //then
-    expect(atDTO).toBeInstanceOf(ActivityTrackingDTO);
+    expect(atDTO).toBeInstanceOf(ActivityTracking);
     expect(atDTO.interval).toBeInstanceOf(Interval);
     expect(atDTO.meta).toBeInstanceOf(ActivityTrackingMeta);
     expect(atDTO.data).toBeInstanceOf(Array);
@@ -48,7 +48,7 @@ describe('ActivityTrackingDTO parse/serialize', () => {
     const sensorSample = new SensorBasicSample(axesData, axesData, axesData);
     const data = [sensorSample];
 
-    const classObject = new ActivityTrackingDTO(meta, interval, data);
+    const classObject = new ActivityTracking(meta, interval, data);
     const plainObject = {
       interval: interval.toISO(),
       data: [

@@ -18,7 +18,7 @@ enum ActivityType {
   STAR_JUMPS
 }
 
-interface ActivityTrackingDTO{
+interface ActivityTracking{
   meta: ActivityTrackingMeta
   interval: Interval
   data: SensorBasicSample[]
@@ -44,8 +44,8 @@ interface SensorExtendedSample extends SensorBasicSample {
 }
 
 ActivityTrackingMeta --> ActivityType
-ActivityTrackingDTO -> Interval
-ActivityTrackingDTO  *--> "1..*" SensorBasicSample
-ActivityTrackingDTO  *-->  ActivityTrackingMeta
+ActivityTracking -> Interval
+ActivityTracking  *--> "1..*" SensorBasicSample
+ActivityTracking  *-->  ActivityTrackingMeta
 
 @enduml

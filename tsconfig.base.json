@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@fitly/ml-bridge/dto": ["libs/ml-bridge/dto/src/index.ts"],
       "@fitly/shared/meta": ["libs/shared/meta/src/index.ts"]
     }
   },

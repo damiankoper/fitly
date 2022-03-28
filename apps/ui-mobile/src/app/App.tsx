@@ -25,12 +25,13 @@ import NxCloud from './icons/nx-cloud.svg';
 import GitHub from './icons/github.svg';
 import Terminal from './icons/terminal.svg';
 import Heart from './icons/heart.svg';
-import { sharedMeta } from '@fitly/shared/meta';
+
+import { AxesData } from '@fitly/shared/meta';
 
 export const App = () => {
   const [whatsNextYCoord, setWhatsNextYCoord] = useState<number>(0);
   const scrollViewRef = useRef<null | ScrollView>(null);
-
+  console.log(new AxesData(1, 2, 3));
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -45,7 +46,7 @@ export const App = () => {
           <View style={styles.section}>
             <Text style={styles.textLg}>Hello there,</Text>
             <Text style={[styles.textXL, styles.appTitleText]} testID="heading">
-              Welcome UiMobile 👋 {sharedMeta()}
+              Welcome UiMobile 👋
             </Text>
           </View>
           <View style={styles.section}>

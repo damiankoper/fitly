@@ -1,4 +1,4 @@
-import { ActivityTrackingDTO } from '@fitly/shared/meta';
+import { ActivityTrackingDTO } from '@fitly/ml-bridge/dto';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DataService } from './data.service';

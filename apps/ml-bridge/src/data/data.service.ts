@@ -1,4 +1,4 @@
-import { ActivityTrackingDTO } from '@fitly/shared/meta';
+import { ActivityTracking } from '@fitly/shared/meta';
 import { Injectable } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { FtpService } from 'nestjs-ftp';
@@ -12,7 +12,7 @@ export class DataService {
     return { message: 'siemanko witam w moim serwisie!' };
   }
 
-  async saveDataToFTP(data: ActivityTrackingDTO) {
+  async saveDataToFTP(data: ActivityTracking) {
     try {
       const json = JSON.stringify(instanceToPlain(data));
 
