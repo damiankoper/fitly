@@ -1,18 +1,33 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { FtpModule, FtpService } from 'nestjs-ftp';
+import { ConfigService } from '../config/config.service';
 import { DataService } from './data.service';
+import { ConfigModule } from '../config/config.module'
 
 describe('DataService', () => {
   let service: DataService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [DataService],
+  beforeAll(async () => {
+    const app = await Test.createTestingModule({
+      imports: [
+        FtpModule.forRootFtpAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) =>
+            configService.createFTPOptions(),
+        }),
+      ],
+      providers: [DataService, FtpService],
     }).compile();
 
-    service = module.get<DataService>(DataService);
+    service = app.get<DataService>(DataService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('getData', () => {
+    it('should return "siemanko witam w moim serwisie!"', () => {
+      expect(service.getData()).toEqual({
+        message: 'siemanko witam w moim serwisie!',
+      });
+    });
   });
 });

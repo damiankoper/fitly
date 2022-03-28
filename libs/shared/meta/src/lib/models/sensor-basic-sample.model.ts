@@ -1,6 +1,7 @@
 import { AxesData } from './axes-data.model';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
+import 'reflect-metadata';
 
 export class SensorBasicSample {
   @ValidateNested()
