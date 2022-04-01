@@ -12,6 +12,7 @@ import { BottomNav } from './components/navigation/bottom-nav';
 import { ServiceModeScreen } from './screens/service-mode-screen';
 import { TopNav } from './components/navigation/top-nav';
 import { SettingScreen } from './screens/settings-screen';
+import { ProfileScreen } from './screens/profile-screen';
 
 export default () => (
   <>
@@ -21,7 +22,8 @@ export default () => (
         <TopNav />
         <Layout style={styles.screenWrapper} level="1">
           {/* <ServiceModeScreen /> */}
-          <SettingScreen />
+          {/* <SettingScreen /> */}
+          <ProfileScreen />
         </Layout>
         <BottomNav />
       </Layout>
