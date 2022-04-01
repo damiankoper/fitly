@@ -18,7 +18,7 @@ export const SelectSimple: React.FC<Props> = ({ options, placeholder }) => {
         onSelect={(index) => setSelectedIndex(index)}
       >
         {options.map((option) => (
-          <SelectItem title={option} key={option}/>
+          <SelectItem title={option} key={option} />
         ))}
       </Select>
     </Layout>

@@ -18,7 +18,7 @@ export default () => (
     <ApplicationProvider {...eva} theme={eva.light}>
       <Layout style={styles.container}>
         <TopNav />
-        <Layout style={styles.screenWrapper} level='1'>
+        <Layout style={styles.screenWrapper} level="1">
           <ServiceModeScreen />
         </Layout>
         <BottomNav />

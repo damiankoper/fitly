@@ -1,1 +1,1 @@
-export const EXERCISES = ['Push ups', 'Squats', 'Running']
+export const EXERCISES = ['Push ups', 'Squats', 'Running'];
