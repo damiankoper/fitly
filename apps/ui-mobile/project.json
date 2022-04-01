@@ -12,7 +12,7 @@
     "serve": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "nx start ui-mobile"
+        "command": "nx start ui-mobile -- --reset-cache"
       }
     },
     "run-ios": {
