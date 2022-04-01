@@ -17,7 +17,5 @@ export const BluetoothButton = () => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    margin: 2,
-  },
+  button: {},
 });
