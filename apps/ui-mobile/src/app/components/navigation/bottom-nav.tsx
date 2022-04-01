@@ -15,13 +15,6 @@ const HistoryIcon = (props) => <Icon {...props} name="bar-chart-outline" />;
 
 const SettingsIcon = (props) => <Icon {...props} name="settings-outline" />;
 
-export enum IconNames {
-  HOME = 'home',
-  EXERCISE = 'exercise',
-  GUESS = 'guess',
-  HISTORY = 'history',
-}
-
 export const BottomNav: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 

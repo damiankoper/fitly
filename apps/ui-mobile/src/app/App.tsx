@@ -4,7 +4,6 @@ import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { BottomNav } from './components/navigation/bottom-nav';
 
-
 export default () => (
   <>
     <IconRegistry icons={EvaIconsPack} />
