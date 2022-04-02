@@ -23,6 +23,7 @@
     "react-native-screens": "*",
     "react-native-safe-area-context": "*",
     "react-native-gesture-handler": "*",
-    "react-native-reanimated": "*"
+    "react-native-reanimated": "*",
+    "@react-navigation/bottom-tabs": "*"
   }
 }

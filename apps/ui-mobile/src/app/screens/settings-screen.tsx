@@ -13,7 +13,7 @@ const useToggleState = (initialState = false) => {
   return { checked, onChange: onCheckedChange };
 };
 
-export const SettingScreen = () => {
+export const SettingScreen = ({ navigation }) => {
   const controlToggleState = useToggleState();
 
   return (
@@ -26,7 +26,12 @@ export const SettingScreen = () => {
 
       <View style={styles.buttonColumn}>
         <View>
-          <Button style={styles.button} size="giant" appearance="outline">
+          <Button
+            style={styles.button}
+            size="giant"
+            appearance="outline"
+            onPress={() => navigation.navigate('Profile')}
+          >
             Change data
           </Button>
           <Button
@@ -42,6 +47,7 @@ export const SettingScreen = () => {
             size="giant"
             status="basic"
             appearance="outline"
+            onPress={() => navigation.navigate('Service')}
           >
             Service mode
           </Button>
