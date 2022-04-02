@@ -16,6 +16,13 @@
     "class-transformer": "*",
     "class-validator": "*",
     "@eva-design/eva": "*",
-    "@ui-kitten/components": "*"
+    "@ui-kitten/components": "*",
+    "@ui-kitten/eva-icons": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/stack": "*",
+    "react-native-screens": "*",
+    "react-native-safe-area-context": "*",
+    "react-native-gesture-handler": "*",
+    "react-native-reanimated": "*"
   }
 }

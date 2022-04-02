@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -15,13 +15,11 @@ const HistoryIcon = (props) => <Icon {...props} name="bar-chart-outline" />;
 
 const SettingsIcon = (props) => <Icon {...props} name="settings-outline" />;
 
-export const BottomNav: React.FC = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
+export const BottomNav = ({ navigation, state }) => {
   return (
     <BottomNavigation
-      selectedIndex={selectedIndex}
-      onSelect={(index) => setSelectedIndex(index)}
+      selectedIndex={state.index}
+      onSelect={(index) => navigation.navigate(state.routeNames[index])}
     >
       <BottomNavigationTab icon={HomeIcon} title="Home" />
       <BottomNavigationTab icon={ExerciseIcon} title="Exercise" />

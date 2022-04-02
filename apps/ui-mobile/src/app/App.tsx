@@ -1,32 +1,23 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import * as eva from '@eva-design/eva';
-import {
-  ApplicationProvider,
-  IconRegistry,
-  Layout,
-} from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { BottomNav } from './components/navigation/bottom-nav';
+import { AppNavigator } from './components/navigation/app-nav';
 
-import { ServiceModeScreen } from './screens/service-mode-screen';
 import { TopNav } from './components/navigation/top-nav';
-import { SettingScreen } from './screens/settings-screen';
-import { ProfileScreen } from './screens/profile-screen';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+]);
 
 export default () => (
   <>
     <IconRegistry icons={EvaIconsPack} />
     <ApplicationProvider {...eva} theme={eva.light}>
-      <Layout style={styles.container}>
-        <TopNav />
-        <Layout style={styles.screenWrapper} level="1">
-          {/* <ServiceModeScreen /> */}
-          {/* <SettingScreen /> */}
-          <ProfileScreen />
-        </Layout>
-        <BottomNav />
-      </Layout>
+      <TopNav />
+      <AppNavigator />
     </ApplicationProvider>
   </>
 );

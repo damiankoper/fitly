@@ -50,7 +50,9 @@
     },
     "sync-deps": {
       "executor": "@nrwl/react-native:sync-deps",
-      "options": {}
+      "options": {
+        "include": "react-native-gesture-handler,react-native-reanimated,react-native-gesture-handler,react-native-screens,react-native-safe-area-context"
+      }
     },
     "ensure-symlink": {
       "executor": "@nrwl/react-native:ensure-symlink",
