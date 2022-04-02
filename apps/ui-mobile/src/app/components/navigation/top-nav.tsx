@@ -10,11 +10,7 @@ import { StyleSheet } from 'react-native';
 const PeronIcon = (props) => <Icon {...props} name="person-outline" />;
 
 export const TopNav = () => {
-  const renderRightActions = () => (
-    <>
-      <TopNavigationAction icon={PeronIcon} />
-    </>
-  );
+  const renderRightActions = () => <TopNavigationAction icon={PeronIcon} />;
 
   return (
     <Layout>
