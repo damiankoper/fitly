@@ -112,3 +112,4 @@ apps/ui-mobile-e2e/artifacts
 
 .eslintcache
 package-lock.json
+.env
