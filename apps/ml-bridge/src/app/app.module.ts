@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AnalyzeModule } from '../analyze/analyze.module';
-import { ConfigModule } from '../config/config.module';
+import { ConfigModule } from '@nestjs/config';
 import { DataModule } from '../data/data.module';
 
 import { AppController } from './app.controller';
