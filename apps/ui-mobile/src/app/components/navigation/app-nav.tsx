@@ -9,10 +9,19 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ProfileScreen } from '../../screens/profile-screen';
 import { ServiceModeScreen } from '../../screens/service-mode-screen';
 import { BottomNav } from './bottom-nav';
+import { Layout } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-// TODO: padding only for screens
+const wrapScreen = (Component) => (props) => {
+  return (
+    <Layout style={styles.wrapper}>
+      <Component {...props} />
+    </Layout>
+  );
+};
+
 const TabNavigator = () => (
   <Navigator
     tabBar={(props) => <BottomNav {...props} />}
@@ -20,13 +29,13 @@ const TabNavigator = () => (
       headerShown: false,
     }}
   >
-    <Screen name="Home" component={HomeScreen} />
-    <Screen name="Exercise" component={ExerciseScreen} />
-    <Screen name="Guess" component={GuessScreen} />
-    <Screen name="History" component={HistoryScreen} />
-    <Screen name="Settings" component={SettingScreen} />
-    <Screen name="Profile" component={ProfileScreen} />
-    <Screen name="Service" component={ServiceModeScreen} />
+    <Screen name="Home" component={wrapScreen(HomeScreen)} />
+    <Screen name="Exercise" component={wrapScreen(ExerciseScreen)} />
+    <Screen name="Guess" component={wrapScreen(GuessScreen)} />
+    <Screen name="History" component={wrapScreen(HistoryScreen)} />
+    <Screen name="Settings" component={wrapScreen(SettingScreen)} />
+    <Screen name="Profile" component={wrapScreen(ProfileScreen)} />
+    <Screen name="Service" component={wrapScreen(ServiceModeScreen)} />
   </Navigator>
 );
 
@@ -35,3 +44,10 @@ export const AppNavigator = () => (
     <TabNavigator />
   </NavigationContainer>
 );
+
+const styles = StyleSheet.create({
+  wrapper: {
+    padding: 8,
+    flex: 1,
+  },
+});
