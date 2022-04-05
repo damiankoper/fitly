@@ -1,0 +1,45 @@
+@startuml UiBandPlugin
+title UiBandPlugin
+
+interface BandPlugin extends EventEmitter{
+  + discover(): Promise<Band[]>
+  + connect(band: Band): Promise<void>
+  + disconnect(): Promise<void>
+
+  + start(config: AsyncSensorConfig): Promise<void>
+  + stop(): Promise<void>
+
+  + getAltitude()?: number
+  + getPressure()?: number
+  + getTemperature()?: number
+  + getIlluminance()?: number
+
+  * <<event>> data:acceleration(payload: AxesData)
+  * <<event>> data:gyroscope(payload: AxesData)
+  * <<event>> data:magnetometer(payload: AxesData)
+}
+
+interface AxesData {
+  + x: number
+  + y: number
+  + z: number
+}
+
+interface Band {
+  + name: string
+  + mac: string
+  + battery: number
+  **other data upon discovery**
+}
+
+interface AsyncSensorConfig {
+  samplingAccelerometer: number
+  samplingGyroscope: number
+  samplingMagnetometer: number
+}
+
+
+BandPlugin ..> AxesData
+BandPlugin ..> AsyncSensorConfig
+BandPlugin -> Band : <<creates>>
+@enduml

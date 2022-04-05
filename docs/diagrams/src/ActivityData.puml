@@ -20,32 +20,41 @@ enum ActivityType {
 
 interface ActivityTracking{
   meta: ActivityTrackingMeta
-  interval: Interval
-  data: SensorBasicSample[]
+  accelerometer: SensorAsyncSample[]
+  gyroscope: SensorAsyncSample[]
+  magnetometer: SensorAsyncSample[]
 }
 
 interface ActivityTrackingMeta{
   type: ActivityType
-  timestamp: DateTime
+  interval: Interval
   repeats: number
 }
 
 
-interface SensorBasicSample {
-  acceleration: [number, number, number]
-  angularVelocity: [number, number, number]
-  magneticField: [number, number, number]
+interface SensorAsyncSample {
+  timestamp: DateTime
+  data: AxesData
 }
 
-interface SensorExtendedSample extends SensorBasicSample {
+interface AxesData {
+  x: number
+  y: number
+  z: number
+}
+
+interface SensorForcedSample {
   altitude?: number
   pressure?: number
+  temperature?: number
   illuminance?: number
 }
 
 ActivityTrackingMeta --> ActivityType
-ActivityTracking -> Interval
-ActivityTracking  *--> "1..*" SensorBasicSample
-ActivityTracking  *-->  ActivityTrackingMeta
+SensorAsyncSample *--> DateTime
+ActivityTrackingMeta *--> Interval
+ActivityTracking "1..*" *-->  SensorAsyncSample
+ActivityTracking "1" *-->  ActivityTrackingMeta
 
+SensorAsyncSample *--> AxesData
 @enduml
