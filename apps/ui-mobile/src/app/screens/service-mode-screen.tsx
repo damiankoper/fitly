@@ -5,7 +5,7 @@ import { SelectSimple } from '../components/inputs/select-simple';
 import { EXERCISES } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
 
-export const ServiceModeScreen = () => {
+export const ServiceModeScreen = ({ navigation }) => {
   return (
     <Layout style={styles.container}>
       <SelectSimple options={EXERCISES} placeholder="Exercise name" />
@@ -14,7 +14,12 @@ export const ServiceModeScreen = () => {
         <Button style={styles.button} size="giant" appearance="outline">
           Start
         </Button>
-        <Button style={styles.button} size="giant" appearance="outline">
+        <Button
+          style={styles.button}
+          size="giant"
+          appearance="outline"
+          onPress={() => navigation.goBack()}
+        >
           Stop
         </Button>
       </Layout>

@@ -11,6 +11,7 @@ import { ServiceModeScreen } from '../../screens/service-mode-screen';
 import { BottomNav } from './bottom-nav';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
+import { NotConnectedScreen } from '../../screens/not-connected-screen';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -29,7 +30,7 @@ const TabNavigator = () => (
       headerShown: false,
     }}
   >
-    <Screen name="Home" component={wrapScreen(HomeScreen)} />
+    <Screen name="Home" component={wrapScreen(NotConnectedScreen)} />
     <Screen name="Exercise" component={wrapScreen(ExerciseScreen)} />
     <Screen name="Guess" component={wrapScreen(GuessScreen)} />
     <Screen name="History" component={wrapScreen(HistoryScreen)} />
