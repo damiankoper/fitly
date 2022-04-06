@@ -1,4 +1,4 @@
-import { Layout, Text, Icon, useTheme } from '@ui-kitten/components';
+import { Text, Icon, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 

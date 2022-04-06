@@ -9,10 +9,7 @@ interface Props {
 export const NoActivityUserCard: React.FC<Props> = ({ name }) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../assets/images/user-avatar.png')}
-        style={styles.image}
-      />
+      <Image source={require('../../assets/images/user-avatar.png')} />
       <Text style={styles.name}>{name}</Text>
     </View>
   );
