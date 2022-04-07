@@ -69,6 +69,7 @@ export const HomeScreen = () => {
         <View style={styles.bottomCard}>
           <ActivityCard
             activity={EXERCISES_ENUM.SQUATS}
+            date="Yesterday, 8 Mar"
             kcal={231}
             time="2:32"
             count={31}

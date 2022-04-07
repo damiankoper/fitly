@@ -2,13 +2,16 @@ import { Layout, Button, Input } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { SelectSimple } from '../components/inputs/select-simple';
-import { EXERCISES } from '../config';
+import { EXERCISES_ENUM } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
 
 export const ServiceModeScreen = ({ navigation }) => {
   return (
     <Layout style={styles.container}>
-      <SelectSimple options={EXERCISES} placeholder="Exercise name" />
+      <SelectSimple
+        options={Object.values(EXERCISES_ENUM)}
+        placeholder="Exercise name"
+      />
 
       <Layout style={styles.buttonsWrapper}>
         <Button style={styles.button} size="giant" appearance="outline">

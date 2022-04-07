@@ -10,10 +10,12 @@ interface Props {
   count: number;
   time: string;
   kcal: number;
+  date: string;
 }
 
 export const ActivityCard: React.FC<Props> = ({
   activity,
+  date,
   count,
   time,
   kcal,
@@ -49,7 +51,7 @@ export const ActivityCard: React.FC<Props> = ({
           styles.dateText,
         ]}
       >
-        Yesterday, 8 Mar
+        {date}
       </Text>
     </View>
   );

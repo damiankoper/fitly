@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, Toggle, Text, Divider, Button } from '@ui-kitten/components';
 import { StyleSheet, View } from 'react-native';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
+import { commonStyles } from '../assets/common/styles';
 
 const useToggleState = (initialState = false) => {
   const [checked, setChecked] = React.useState(initialState);
@@ -18,7 +19,7 @@ export const SettingScreen = ({ navigation }) => {
 
   return (
     <Layout style={styles.container}>
-      <View style={styles.controlContainer}>
+      <View style={[commonStyles.defaultBorder, styles.controlContainer]}>
         <Text style={styles.modeText}>Dark mode</Text>
         <Toggle status="primary" {...controlToggleState} />
       </View>
@@ -70,10 +71,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
-    borderColor: 'lightgray',
-    color: 'black',
-    borderWidth: 1,
   },
   modeText: {
     fontWeight: '700',
