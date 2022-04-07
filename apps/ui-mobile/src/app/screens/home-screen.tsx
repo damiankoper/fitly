@@ -1,10 +1,12 @@
 import { Icon, Layout, Text, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { UserCard } from '../components/cards/user-card';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { BigStatsCard } from '../components/cards/large-data-card';
 import { BluetoothStatus } from '../components/icons/bluetooth-status';
 import { SmallDataCard } from '../components/cards/small-data-card';
+import { ActivityCard } from '../components/cards/activity-card';
+import { EXERCISES_ENUM } from '../config';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -45,22 +47,34 @@ export const TimeIcon = () => {
 export const HomeScreen = () => {
   return (
     <Layout>
-      <UserCard name="Jan Nikodem" title="Master of squats" />
-      <Text style={styles.placeholder}>placeholder wykresu</Text>
-      <View style={styles.cardRow}>
-        <View style={[styles.cardColumn, styles.leftColumn]}>
-          <BigStatsCard Icon={StepsIcon} name="Steps" quantity={2137} />
-          <BigStatsCard Icon={CaloriesIcon} name="Calories" quantity={1690} />
-        </View>
-        <View style={[styles.cardColumn, styles.rightColumn]}>
-          <View style={styles.smallCardRow}>
-            <BluetoothStatus connected={true} />
-            <View style={styles.separator} />
-            <SmallDataCard data="45" activity="running" />
+      <ScrollView>
+        <UserCard name="Jan Nikodem" title="Master of squats" />
+        <Text style={styles.placeholder}>placeholder wykresu</Text>
+
+        <View style={styles.cardRow}>
+          <View style={[styles.cardColumn, styles.leftColumn]}>
+            <BigStatsCard Icon={StepsIcon} name="Steps" quantity={2137} />
+            <BigStatsCard Icon={CaloriesIcon} name="Calories" quantity={1690} />
           </View>
-          <BigStatsCard Icon={TimeIcon} name="Time spent" quantity={3723} />
+          <View style={[styles.cardColumn, styles.rightColumn]}>
+            <View style={styles.smallCardRow}>
+              <BluetoothStatus connected={true} />
+              <View style={styles.separator} />
+              <SmallDataCard data="45" activity="running" />
+            </View>
+            <BigStatsCard Icon={TimeIcon} name="Time spent" quantity={3723} />
+          </View>
         </View>
-      </View>
+
+        <View style={styles.bottomCard}>
+          <ActivityCard
+            activity={EXERCISES_ENUM.SQUATS}
+            kcal={231}
+            time="2:32"
+            count={31}
+          />
+        </View>
+      </ScrollView>
     </Layout>
   );
 };
@@ -68,7 +82,7 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   placeholder: {
     marginVertical: 16,
-    height: 150,
+    height: 170,
   },
   cardColumn: {
     flex: 1,
@@ -96,5 +110,8 @@ const styles = StyleSheet.create({
   },
   separator: {
     width: 8,
+  },
+  bottomCard: {
+    marginVertical: 8,
   },
 });
