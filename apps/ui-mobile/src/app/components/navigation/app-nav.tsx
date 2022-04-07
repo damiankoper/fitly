@@ -11,6 +11,7 @@ import { ServiceModeScreen } from '../../screens/service-mode-screen';
 import { BottomNav } from './bottom-nav';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
+import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -36,6 +37,10 @@ const TabNavigator = () => (
     <Screen name="Settings" component={wrapScreen(SettingScreen)} />
     <Screen name="Profile" component={wrapScreen(ProfileScreen)} />
     <Screen name="Service" component={wrapScreen(ServiceModeScreen)} />
+    <Screen
+      name="BluetoothConnection"
+      component={wrapScreen(BluetoothConnectionScreen)}
+    />
   </Navigator>
 );
 

@@ -13,7 +13,11 @@ const useToggleState = (initialState = false) => {
   return { checked, onChange: onCheckedChange };
 };
 
-export const SettingScreen = ({ navigation }) => {
+interface SettingScreenProps {
+  navigation: any;
+}
+
+export const SettingScreen: React.FC<SettingScreenProps> = ({ navigation }) => {
   const controlToggleState = useToggleState();
 
   return (
@@ -53,7 +57,7 @@ export const SettingScreen = ({ navigation }) => {
           </Button>
         </View>
 
-        <BluetoothButton />
+        <BluetoothButton navigation={navigation} />
       </View>
     </Layout>
   );

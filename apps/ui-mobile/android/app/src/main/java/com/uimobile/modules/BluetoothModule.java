@@ -58,10 +58,10 @@ public class BluetoothModule extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void startSearchingForBluetoothDevices() {
+  public void startSearchingForBluetoothDevices(Promise promise) {
     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
     application.registerReceiver(receiver, filter);
-    bluetoothAdapter.startDiscovery();
+    promise.resolve(bluetoothAdapter.startDiscovery());
   }
 
   @ReactMethod

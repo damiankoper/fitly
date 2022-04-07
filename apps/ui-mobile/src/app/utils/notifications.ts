@@ -1,6 +1,6 @@
 import { ToastAndroid } from 'react-native';
 
-export const showToast = (message: string): void =>
+export const showNotification = (message: string): void =>
 	ToastAndroid.showWithGravity(
 		message,
 		ToastAndroid.SHORT,
