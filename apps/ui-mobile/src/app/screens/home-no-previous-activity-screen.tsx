@@ -1,7 +1,7 @@
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { NoActivityUserCard } from '../components/cards/no-activity-user-card';
+import { NoActivityUserCard } from '../components/cards/user-card-no-activity';
 
 export const NoPreviousActivityScreen = () => {
   return (

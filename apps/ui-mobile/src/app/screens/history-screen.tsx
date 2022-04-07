@@ -1,7 +1,7 @@
 import { Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityCard } from '../components/cards/activity-card';
+import { ActivityCard } from '../components/cards/activity-card-large';
 import { EXERCISES_ENUM } from '../config';
 
 export const HistoryScreen = () => {

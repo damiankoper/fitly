@@ -1,5 +1,5 @@
 export const EXERCISES_DATA = {
-  'Push ups': { icon: require('./assets/images/pushups.png') },
+  'Push ups': { icon: require('./assets/images/squats.png') },
   Squats: { icon: require('./assets/images/squats.png') },
   Rompers: { icon: require('./assets/images/squats.png') },
   Crunches: { icon: require('./assets/images/squats.png') },

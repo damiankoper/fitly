@@ -60,9 +60,6 @@ export const ActivityCard: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderRadius: 4,
-    borderColor: 'lightgray',
-    borderWidth: 1,
     padding: 16,
   },
   leftColumn: {

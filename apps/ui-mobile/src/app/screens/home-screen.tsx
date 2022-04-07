@@ -2,10 +2,10 @@ import { Icon, Layout, Text, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { UserCard } from '../components/cards/user-card';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { BigStatsCard } from '../components/cards/large-data-card';
+import { BigStatsCard } from '../components/cards/data-card-large';
 import { BluetoothStatus } from '../components/icons/bluetooth-status';
-import { SmallDataCard } from '../components/cards/small-data-card';
-import { ActivityCard } from '../components/cards/activity-card';
+import { SmallDataCard } from '../components/cards/data-card-small';
+import { ActivityCard } from '../components/cards/activity-card-large';
 import { EXERCISES_ENUM } from '../config';
 
 export const StepsIcon = () => {
