@@ -1,11 +1,43 @@
 import { Layout, Button, Input } from '@ui-kitten/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NativeModules, StyleSheet } from 'react-native';
 import { SelectSimple } from '../components/inputs/select-simple';
 import { EXERCISES } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
+import {
+	addEventListenerToAcceleometerModule
+} from '../events/accelerometer-module.listener';
+import {
+	addEventListenerToGyroModule
+} from '../events/gyroscope-module.listener';
+import {
+	addEventListenerToMagnetometerModule
+} from '../events/magnetometer-module.listener';
 
 export const ServiceModeScreen = () => {
+  useEffect(()=>{
+    addEventListenerToAcceleometerModule(
+			'onAccelerometerDataEmit',
+			(newDevice) => {
+				console.log(newDevice)
+			}
+		);
+
+    addEventListenerToMagnetometerModule(
+			'onMagnetometerDataEmit',
+			(newDevice) => {
+				console.log(newDevice)
+			}
+		);
+
+    addEventListenerToGyroModule(
+			'onGyroscopeDataEmit',
+			(newDevice) => {
+				console.log(newDevice)
+			}
+		);
+
+	}, []);
   return (
     <Layout style={styles.container}>
       <SelectSimple options={EXERCISES} placeholder="Exercise name" />
@@ -57,3 +89,4 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 });
+

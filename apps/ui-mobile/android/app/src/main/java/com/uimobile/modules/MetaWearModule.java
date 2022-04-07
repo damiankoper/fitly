@@ -18,80 +18,90 @@ import bolts.Continuation;
 import bolts.Task;
 
 public class MetaWearModule extends ReactContextBaseJavaModule {
-  private MainApplication application;
-  private MetaWearBoard board;
+	private MainApplication application;
+	private MetaWearBoard board;
+	private AccelerometerModule accelerometerModule;
+	private MagnetometerModule magnetometerModule;
+	private GyroscopeModule gyroscopeModule;
 
-  public MetaWearModule(ReactApplicationContext context) {
-    super(context);
-    application = (MainApplication) context.getApplicationContext();
-  }
+	public MetaWearModule(ReactApplicationContext context, AccelerometerModule acc, MagnetometerModule mag, GyroscopeModule gyro) {
+		super(context);
+		application = (MainApplication) context.getApplicationContext();
+		accelerometerModule = acc;
+		magnetometerModule = mag;
+		gyroscopeModule = gyro;
+	}
 
-  @Override
-  public String getName() {
-    return "MetaWearModule";
-  }
+	@Override
+	public String getName() {
+		return "MetaWearModule";
+	}
 
-  @ReactMethod
-  public void connectToMetaWearDevice(String deviceAddress, Promise promise) {
-    Log.i("MainActivity", "Received device MAC:" + deviceAddress);
-    this.retrieveBoard(deviceAddress, promise);
-  }
+	@ReactMethod
+	public void connectToMetaWearDevice(String deviceAddress, Promise promise) {
+		Log.i("MainActivity", "Received device MAC:" + deviceAddress);
+		this.retrieveBoard(deviceAddress, promise);
+	}
 
-  @ReactMethod
-  public void blinkBlueLED(int reapeatTimes) {
-    if (this.board.isConnected()) {
-      Led led;
-      if ((led = board.getModule(Led.class)) != null) {
-        led.editPattern(Led.Color.BLUE, Led.PatternPreset.BLINK)
-          .repeatCount((byte) reapeatTimes)
-          .commit();
-        led.play();
-      }
-    } else {
-      Log.i("MainActivity", "Board is not connected");
-    }
-  }
+	@ReactMethod
+	public void blinkBlueLED(int reapeatTimes) {
+		if (this.board.isConnected()) {
+			Led led;
+			if ((led = board.getModule(Led.class)) != null) {
+				led.editPattern(Led.Color.BLUE, Led.PatternPreset.BLINK)
+					.repeatCount((byte) reapeatTimes)
+					.commit();
+				led.play();
+			}
+		} else {
+			Log.i("MainActivity", "Board is not connected");
+		}
+	}
 
-  private void retrieveBoard(String metaWearMacAddress, Promise promise) {
-    final BluetoothManager btManager = this.application.getBluetoothManager();
-    final BluetoothDevice remoteDevice =
-      btManager.getAdapter().getRemoteDevice(metaWearMacAddress);
+	private void retrieveBoard(String metaWearMacAddress, Promise promise) {
+		final BluetoothManager btManager = this.application.getBluetoothManager();
+		final BluetoothDevice remoteDevice =
+			btManager.getAdapter().getRemoteDevice(metaWearMacAddress);
 
-    board = this.application.getMetaWearBoardFromDevice(remoteDevice);
-    this.application.setBoard(board);
-    Log.i("MainActivity", board.toString());
+		board = this.application.getMetaWearBoardFromDevice(remoteDevice);
+		this.application.setBoard(board);
+		Log.i("MainActivity", board.toString());
 
-    board.connectAsync().continueWith(new Continuation<Void, Void>() {
-      @Override
-      public Void then(Task<Void> task) throws Exception {
-        if (task.isFaulted()) {
-          Log.i("MainActivity", "Failed to connect");
-          promise.reject("Failed to connect", task.getError());
-        } else {
-          Log.i("MainActivity", "Connected");
-          promise.resolve("Connected");
-          board.readDeviceInformationAsync()
-            .continueWith(new Continuation<DeviceInformation, Void>() {
-              @Override
-              public Void then(Task<DeviceInformation> task) throws Exception {
-                Log.i("MainActivity", "Device Information: " + task.getResult());
-                return null;
-              }
-            });
-        }
-        return null;
-      }
-    });
-  }
-  
-  @ReactMethod
-  public void startMetaWearModules() {    
-    application.startModules();
-  }
+		board.connectAsync().continueWith(new Continuation<Void, Void>() {
+			@Override
+			public Void then(Task<Void> task) throws Exception {
+				if (task.isFaulted()) {
+					Log.i("MainActivity", "Failed to connect");
+					promise.reject("Failed to connect", task.getError());
+				} else {
+					Log.i("MainActivity", "Connected");
+					promise.resolve("Connected");
+					board.readDeviceInformationAsync()
+						.continueWith(new Continuation<DeviceInformation, Void>() {
+							@Override
+							public Void then(Task<DeviceInformation> task) throws Exception {
+								Log.i("MainActivity", "Device Information: " + task.getResult());
+								return null;
+							}
+						});
+				}
+				return null;
+			}
+		});
+	}
 
-  @ReactMethod
-  public void stopMetaWearModules() {
-    application.stopModules();
-  }
+	@ReactMethod
+	public void startMetaWearModules() {
+		accelerometerModule.startModule();
+		magnetometerModule.startModule();
+		gyroscopeModule.startModule();
+	}
 
+	@ReactMethod
+	public void stopMetaWearModules() {
+		accelerometerModule.stopModule();
+		magnetometerModule.stopModule();
+		gyroscopeModule.stopModule();
+		//application.getBoard().tearDown();
+	}
 }

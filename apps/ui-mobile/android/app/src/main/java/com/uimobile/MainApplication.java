@@ -41,9 +41,6 @@ public class MainApplication extends Application implements ReactApplication, Se
 
 	private BtleService.LocalBinder serviceBinder;
 	private MetaWearBoard board;
-	private Accelerometer accelerometer;
-	private Gyro gyroscope;
-	private MagnetometerBmm150 magnetometer;
 
   public MetaWearBoard getBoard(){
     return this.board;
@@ -114,76 +111,6 @@ public class MainApplication extends Application implements ReactApplication, Se
 		}
 		Log.i("MainActivity", "ServiceBinder is Null");
 		return null;
-	}
-
-	public void configModules() {
-
-		accelerometer = board.getModule(Accelerometer.class);
-		accelerometer.configure()
-			.odr(25f) // Set sampling frequency to 25Hz, or closest valid ODR
-			.commit();
-		Log.i("MainActivity", "Accelometer started");
-
-		magnetometer = board.getModule(MagnetometerBmm150.class);
-		magnetometer.configure()
-			.outputDataRate(MagnetometerBmm150.OutputDataRate.ODR_25_HZ)
-			// Set sampling frequency to 25Hz, or closest valid ODR
-			.commit();
-		Log.i("MainActivity", "Magnetometer started");
-
-		gyroscope = board.getModule(Gyro.class);
-		gyroscope.configure()
-			.odr(Gyro.OutputDataRate.ODR_25_HZ) // Set sampling frequency to 25Hz, or closest valid ODR
-			.commit();
-		Log.i("MainActivity", "Gyroscope started");
-	}
-
-	public void startModules() {
-    configModules();
-		accelerometer.acceleration().addRouteAsync(routeComponent -> routeComponent
-			.stream(
-				(Subscriber) (data, objects) -> Log.i("MainActivity",
-					"Acc: " + data.value(Acceleration.class).toString())))
-			.continueWith((Continuation<Route, Void>) task -> {
-				accelerometer.acceleration().start();
-				accelerometer.start();
-				return null;
-			});
-
-		magnetometer.magneticField().addRouteAsync(routeComponent -> routeComponent
-			.stream(
-				(Subscriber) (data, objects) -> Log.i("MainActivity",
-					"Mag: " + data.value(MagneticField.class).toString())))
-			.continueWith((Continuation<Route, Void>) task -> {
-				magnetometer.magneticField().start();
-				magnetometer.start();
-				return null;
-			});
-
-		gyroscope.angularVelocity().addRouteAsync(routeComponent -> routeComponent
-			.stream((Subscriber) (data, objects) -> Log.i("MainActivity",
-				"Gyro: " + data.value(AngularVelocity.class).toString())))
-			.continueWith((Continuation<Route, Void>) task -> {
-				gyroscope.angularVelocity().start();
-				gyroscope.start();
-				return null;
-			});
-	}
-
-	public void stopModules() {
-		accelerometer.stop();
-		accelerometer.acceleration().stop();
-		Log.i("MainActivity", "Accelometer stoped");
-
-		magnetometer.stop();
-		magnetometer.magneticField().stop();
-		Log.i("MainActivity", "Magnetometer stoped");
-
-		gyroscope.stop();
-		gyroscope.angularVelocity().stop();
-		Log.i("MainActivity", "Gyroscope stoped");
-
-		board.tearDown();
 	}
 
 	/**
