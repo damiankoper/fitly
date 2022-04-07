@@ -1,12 +1,12 @@
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { NoActivityUserCard } from '../components/cards/user-card-no-activity';
+import { UserCardNoActivity } from '../components/cards/user-card-no-activity';
 
 export const NoPreviousActivityScreen = () => {
   return (
     <Layout style={styles.container}>
-      <NoActivityUserCard name="Jan Nikodem" />
+      <UserCardNoActivity name="Jan Nikodem" />
       <Text category="h4" style={styles.manual}>
         <Text category="h4" status="primary">
           Start

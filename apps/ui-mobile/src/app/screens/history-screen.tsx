@@ -1,7 +1,7 @@
 import { Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityCard } from '../components/cards/activity-card-large';
+import { ActivityCardLarge } from '../components/cards/activity-card-large';
 import { EXERCISES_ENUM } from '../config';
 
 export const HistoryScreen = () => {
@@ -12,7 +12,7 @@ export const HistoryScreen = () => {
           Yesterday
         </Text>
         <View style={styles.cardWrapper}>
-          <ActivityCard
+          <ActivityCardLarge
             activity={EXERCISES_ENUM.SQUATS}
             count={35}
             time="7:34"
@@ -21,7 +21,7 @@ export const HistoryScreen = () => {
           />
         </View>
         <View style={styles.cardWrapper}>
-          <ActivityCard
+          <ActivityCardLarge
             activity={EXERCISES_ENUM.SQUATS}
             count={35}
             time="7:34"
@@ -33,7 +33,7 @@ export const HistoryScreen = () => {
           10 march 2022
         </Text>
         <View style={styles.cardWrapper}>
-          <ActivityCard
+          <ActivityCardLarge
             activity={EXERCISES_ENUM.SQUATS}
             count={35}
             time="7:34"
@@ -42,7 +42,7 @@ export const HistoryScreen = () => {
           />
         </View>
         <View style={styles.cardWrapper}>
-          <ActivityCard
+          <ActivityCardLarge
             activity={EXERCISES_ENUM.SQUATS}
             count={35}
             time="7:34"
@@ -51,7 +51,7 @@ export const HistoryScreen = () => {
           />
         </View>
         <View style={styles.cardWrapper}>
-          <ActivityCard
+          <ActivityCardLarge
             activity={EXERCISES_ENUM.SQUATS}
             count={35}
             time="7:34"

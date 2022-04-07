@@ -13,7 +13,7 @@ interface Props {
   date: string;
 }
 
-export const ActivityCard: React.FC<Props> = ({
+export const ActivityCardLarge: React.FC<Props> = ({
   activity,
   date,
   count,

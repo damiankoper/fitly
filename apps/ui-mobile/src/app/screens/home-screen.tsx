@@ -2,10 +2,10 @@ import { Icon, Layout, Text, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { UserCard } from '../components/cards/user-card';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { BigStatsCard } from '../components/cards/data-card-large';
+import { DataCardLarge } from '../components/cards/data-card-large';
 import { BluetoothStatus } from '../components/icons/bluetooth-status';
-import { SmallDataCard } from '../components/cards/data-card-small';
-import { ActivityCard } from '../components/cards/activity-card-large';
+import { DataCardSmall } from '../components/cards/data-card-small';
+import { ActivityCardLarge } from '../components/cards/activity-card-large';
 import { EXERCISES_ENUM } from '../config';
 
 export const StepsIcon = () => {
@@ -53,21 +53,25 @@ export const HomeScreen = () => {
 
         <View style={styles.cardRow}>
           <View style={[styles.cardColumn, styles.leftColumn]}>
-            <BigStatsCard Icon={StepsIcon} name="Steps" quantity={2137} />
-            <BigStatsCard Icon={CaloriesIcon} name="Calories" quantity={1690} />
+            <DataCardLarge Icon={StepsIcon} name="Steps" quantity={2137} />
+            <DataCardLarge
+              Icon={CaloriesIcon}
+              name="Calories"
+              quantity={1690}
+            />
           </View>
           <View style={[styles.cardColumn, styles.rightColumn]}>
             <View style={styles.smallCardRow}>
               <BluetoothStatus connected={true} />
               <View style={styles.separator} />
-              <SmallDataCard data="45" activity="running" />
+              <DataCardSmall data="45" activity="running" />
             </View>
-            <BigStatsCard Icon={TimeIcon} name="Time spent" quantity={3723} />
+            <DataCardLarge Icon={TimeIcon} name="Time spent" quantity={3723} />
           </View>
         </View>
 
         <View style={styles.bottomCard}>
-          <ActivityCard
+          <ActivityCardLarge
             activity={EXERCISES_ENUM.SQUATS}
             date="Yesterday, 8 Mar"
             kcal={231}

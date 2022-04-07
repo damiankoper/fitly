@@ -41,7 +41,7 @@ const TabNavigator = () => (
   </Navigator>
 );
 
-export const AppNavigator = () => (
+export const AppNav = () => (
   <NavigationContainer>
     <TabNavigator />
   </NavigationContainer>

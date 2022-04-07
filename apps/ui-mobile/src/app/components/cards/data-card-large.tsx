@@ -9,7 +9,7 @@ interface Props {
   Icon: React.FC;
 }
 
-export const BigStatsCard: React.FC<Props> = ({ Icon, name, quantity }) => {
+export const DataCardLarge: React.FC<Props> = ({ Icon, name, quantity }) => {
   return (
     <View style={[commonStyles.defaultBorder, styles.container]}>
       <Icon />

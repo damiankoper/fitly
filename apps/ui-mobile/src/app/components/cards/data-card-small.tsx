@@ -8,7 +8,7 @@ interface Props {
   activity: string;
 }
 
-export const SmallDataCard: React.FC<Props> = ({ data, activity }) => {
+export const DataCardSmall: React.FC<Props> = ({ data, activity }) => {
   return (
     <View style={[commonStyles.defaultBorder, styles.container]}>
       <Text style={styles.data}>

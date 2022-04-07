@@ -7,7 +7,7 @@ interface Props {
   name: string;
 }
 
-export const NoActivityUserCard: React.FC<Props> = ({ name }) => {
+export const UserCardNoActivity: React.FC<Props> = ({ name }) => {
   return (
     <View style={[commonStyles.defaultBorder, styles.container]}>
       <Image source={require('../../assets/images/user-avatar.png')} />
