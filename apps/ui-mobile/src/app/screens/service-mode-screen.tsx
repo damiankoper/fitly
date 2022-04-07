@@ -1,6 +1,6 @@
 import { Layout, Button, Input } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { NativeModules, StyleSheet } from 'react-native';
 import { SelectSimple } from '../components/inputs/select-simple';
 import { EXERCISES } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
@@ -11,11 +11,11 @@ export const ServiceModeScreen = () => {
       <SelectSimple options={EXERCISES} placeholder="Exercise name" />
 
       <Layout style={styles.buttonsWrapper}>
-        <Button style={styles.button} size="giant" appearance="outline">
+        <Button style={styles.button} size="giant" appearance="outline" onPress={startModules}>
           Start
         </Button>
-        <Button style={styles.button} size="giant" appearance="outline">
-          Stop
+        <Button style={styles.button} size="giant" appearance="outline" onPress={stopModules}>
+          Stop 
         </Button>
       </Layout>
 
@@ -30,6 +30,14 @@ export const ServiceModeScreen = () => {
     </Layout>
   );
 };
+
+const startModules = () => {
+  NativeModules.MetaWearModule.startMetaWearModules()
+}
+
+const stopModules = () => {
+  NativeModules.MetaWearModule.stopMetaWearModules()
+}
 
 const styles = StyleSheet.create({
   container: {

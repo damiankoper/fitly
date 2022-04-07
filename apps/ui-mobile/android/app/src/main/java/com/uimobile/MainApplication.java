@@ -45,6 +45,14 @@ public class MainApplication extends Application implements ReactApplication, Se
 	private Gyro gyroscope;
 	private MagnetometerBmm150 magnetometer;
 
+  public MetaWearBoard getBoard(){
+    return this.board;
+  }
+
+  public void setBoard(MetaWearBoard MWBoard){
+    this.board = MWBoard;
+  }
+
 	private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 		@Override
 		public boolean getUseDeveloperSupport() {
@@ -131,6 +139,7 @@ public class MainApplication extends Application implements ReactApplication, Se
 	}
 
 	public void startModules() {
+    configModules();
 		accelerometer.acceleration().addRouteAsync(routeComponent -> routeComponent
 			.stream(
 				(Subscriber) (data, objects) -> Log.i("MainActivity",

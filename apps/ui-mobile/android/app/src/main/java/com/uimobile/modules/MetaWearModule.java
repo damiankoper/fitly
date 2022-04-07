@@ -58,6 +58,7 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
       btManager.getAdapter().getRemoteDevice(metaWearMacAddress);
 
     board = this.application.getMetaWearBoardFromDevice(remoteDevice);
+    this.application.setBoard(board);
     Log.i("MainActivity", board.toString());
 
     board.connectAsync().continueWith(new Continuation<Void, Void>() {
@@ -81,7 +82,16 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
         return null;
       }
     });
+  }
+  
+  @ReactMethod
+  public void startMetaWearModules() {    
+    application.startModules();
+  }
 
+  @ReactMethod
+  public void stopMetaWearModules() {
+    application.stopModules();
   }
 
 }
