@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '@ui-kitten/components';
+import { commonStyles } from '../../assets/common/styles';
 
 interface Props {
   quantity: number;
@@ -10,7 +11,7 @@ interface Props {
 
 export const BigStatsCard: React.FC<Props> = ({ Icon, name, quantity }) => {
   return (
-    <View style={styles.container}>
+    <View style={[commonStyles.defaultBorder, styles.container]}>
       <Icon />
       <View style={styles.column}>
         <Text style={styles.quantityText}>{quantity}</Text>
@@ -22,9 +23,6 @@ export const BigStatsCard: React.FC<Props> = ({ Icon, name, quantity }) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 4,
-    borderColor: 'lightgray',
-    borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

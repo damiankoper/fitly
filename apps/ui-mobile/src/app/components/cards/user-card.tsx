@@ -1,6 +1,7 @@
 import { Text, Icon, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, Image, View } from 'react-native';
+import { commonStyles } from '../../assets/common/styles';
 
 interface Props {
   name: string;
@@ -11,7 +12,7 @@ export const UserCard: React.FC<Props> = ({ name, title }) => {
   const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[commonStyles.defaultBorder, styles.container]}>
       <Image source={require('../../assets/images/user-avatar.png')} />
       <View>
         <Text style={styles.name}>{name}</Text>
@@ -34,9 +35,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     height: 80,
-    borderRadius: 4,
-    borderColor: 'lightgray',
-    borderWidth: 1,
   },
   name: {
     fontSize: 20,

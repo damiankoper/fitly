@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { ActivityIcon } from '../icons/activity-icon';
 import { Text, useTheme } from '@ui-kitten/components';
 import { EXERCISES_ENUM } from '../../config';
+import { commonStyles } from '../../assets/common/styles';
 
 interface Props {
   activity: EXERCISES_ENUM;
@@ -20,7 +21,7 @@ export const ActivityCard: React.FC<Props> = ({
   const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[commonStyles.defaultBorder, styles.container]}>
       <View style={styles.leftColumn}>
         <ActivityIcon activity={activity} />
         <Text category="h4">{activity}</Text>

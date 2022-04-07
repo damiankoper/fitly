@@ -1,6 +1,7 @@
 import { Text } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, Image, View } from 'react-native';
+import { commonStyles } from '../../assets/common/styles';
 
 interface Props {
   name: string;
@@ -8,7 +9,7 @@ interface Props {
 
 export const NoActivityUserCard: React.FC<Props> = ({ name }) => {
   return (
-    <View style={styles.container}>
+    <View style={[commonStyles.defaultBorder, styles.container]}>
       <Image source={require('../../assets/images/user-avatar.png')} />
       <Text style={styles.name}>{name}</Text>
     </View>

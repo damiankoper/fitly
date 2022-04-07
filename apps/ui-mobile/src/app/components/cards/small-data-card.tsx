@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '@ui-kitten/components';
+import { commonStyles } from '../../assets/common/styles';
 
 interface Props {
   data: string;
@@ -9,7 +10,7 @@ interface Props {
 
 export const SmallDataCard: React.FC<Props> = ({ data, activity }) => {
   return (
-    <View style={styles.container}>
+    <View style={[commonStyles.defaultBorder, styles.container]}>
       <Text style={styles.data}>
         {data}
         <Text style={styles.procent}>%</Text>
@@ -17,7 +18,7 @@ export const SmallDataCard: React.FC<Props> = ({ data, activity }) => {
       <Text style={styles.smallText}>
         of activities is{' '}
         <Text style={styles.smallText} status="primary">
-          Running
+          {activity}
         </Text>
       </Text>
     </View>
@@ -27,9 +28,6 @@ export const SmallDataCard: React.FC<Props> = ({ data, activity }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderRadius: 4,
-    borderColor: 'lightgray',
-    borderWidth: 1,
     height: 80,
     justifyContent: 'center',
     alignItems: 'center',
