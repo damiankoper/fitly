@@ -15,7 +15,7 @@ import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen
 import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
 import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
 const wrapScreen = (Component) => (props) => {
 	return (
@@ -28,6 +28,8 @@ const wrapScreen = (Component) => (props) => {
 const TabNavigator = () => (
 	<Navigator
 		tabBar={(props) => <BottomNav {...props} />}
+		initialRouteName="Home"
+		backBehavior="history"
 		screenOptions={{
 			headerShown: false,
 		}}
@@ -39,10 +41,9 @@ const TabNavigator = () => (
 		<Screen name="Settings" component={wrapScreen(SettingScreen)} />
 		<Screen name="Profile" component={wrapScreen(ProfileScreen)} />
 		<Screen name="Service" component={wrapScreen(ServiceModeScreen)} />
-		<Screen
-			name="BluetoothConnection"
-			component={wrapScreen(BluetoothConnectionScreen)}
-		/>
+		<Screen name="BluetoothConnection" component={wrapScreen(BluetoothConnectionScreen)} />
+		<Screen name="NotConnectedScreen" component={wrapScreen(NotConnectedScreen)} />
+		<Screen name="NoPreviousActivityScreen" component={wrapScreen(NoPreviousActivityScreen)} />
 	</Navigator>
 );
 

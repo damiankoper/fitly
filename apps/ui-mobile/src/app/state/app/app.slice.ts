@@ -17,4 +17,4 @@ const appSlice = createSlice({
 
 export default appSlice;
 
-export const {} = appSlice.actions;
+export const { connectedToDevice } = appSlice.actions;
