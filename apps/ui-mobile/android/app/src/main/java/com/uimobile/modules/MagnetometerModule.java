@@ -38,6 +38,8 @@ import bolts.Continuation;
 
 public class MagnetometerModule extends ReactContextBaseJavaModule {
 
+	private static final MagnetometerBmm150.OutputDataRate magnetometerDataRate = MagnetometerBmm150.OutputDataRate.ODR_25_HZ;
+
 	private MainApplication application;
 	private ReactApplicationContext reactContext;
 	private MagnetometerBmm150 magnetometer;
@@ -78,7 +80,7 @@ public class MagnetometerModule extends ReactContextBaseJavaModule {
 
 		magnetometer = application.getBoard().getModule(MagnetometerBmm150.class);
 		magnetometer.configure()
-			.outputDataRate(MagnetometerBmm150.OutputDataRate.ODR_25_HZ)
+			.outputDataRate(magnetometerDataRate)
 			.commit();
 		Log.i("MainActivity", "Magnetometer started");
 
