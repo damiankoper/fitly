@@ -102,6 +102,5 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 		accelerometerModule.stopModule();
 		magnetometerModule.stopModule();
 		gyroscopeModule.stopModule();
-		//application.getBoard().tearDown();
 	}
 }

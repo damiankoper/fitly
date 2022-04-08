@@ -78,14 +78,12 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 
 		gyroscope = application.getBoard().getModule(Gyro.class);
 		gyroscope.configure()
-			.odr(Gyro.OutputDataRate.ODR_25_HZ) // Set sampling frequency to 25Hz, or closest valid ODR
+			.odr(Gyro.OutputDataRate.ODR_25_HZ)
 			.commit();
 		Log.i("MainActivity", "Gyroscope started");
 
 		gyroscope.angularVelocity().addRouteAsync(routeComponent -> routeComponent
 			.stream((Subscriber) (data, objects) -> emitGyroEvent(data.value(AngularVelocity.class))
-				// Log.i("MainActivity",
-				//	"Gyro: " + data.value(AngularVelocity.class).toString())
 			))
 			.continueWith((Continuation<Route, Void>) task -> {
 				gyroscope.angularVelocity().start();

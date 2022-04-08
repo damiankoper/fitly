@@ -13,8 +13,10 @@ import {
 import {
 	addEventListenerToMagnetometerModule
 } from '../events/magnetometer-module.listener';
+import MetaWearModule from '../native-modules/MetaWearModule';
 
 export const ServiceModeScreen = () => {
+
   useEffect(()=>{
     addEventListenerToAcceleometerModule(
 			'onAccelerometerDataEmit',
@@ -64,11 +66,11 @@ export const ServiceModeScreen = () => {
 };
 
 const startModules = () => {
-  NativeModules.MetaWearModule.startMetaWearModules()
+  MetaWearModule.startMetaWearModules()
 }
 
 const stopModules = () => {
-  NativeModules.MetaWearModule.stopMetaWearModules()
+  MetaWearModule.stopMetaWearModules()
 }
 
 const styles = StyleSheet.create({
