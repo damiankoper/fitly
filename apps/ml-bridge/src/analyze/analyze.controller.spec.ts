@@ -17,11 +17,12 @@ describe('AnalyzeController', () => {
   describe('analyzeData', () => {
     it('should return "Welcome to ml-bridge!"', () => {
       const controller = app.get<AnalyzeController>(AnalyzeController);
-      const meta = new ActivityTrackingMeta()
       const date1 = DateTime.fromISO("2020-09-06T12:00");
       const date2 = DateTime.fromISO("2019-06-10T14:00");
       const interval = Interval.fromDateTimes(date1, date2);
-      const dto = new ActivityTracking(meta, interval)
+      const meta = new ActivityTrackingMeta(interval);
+
+      const dto = new ActivityTracking(meta);
       expect(controller.analyzeData(dto)).toBeDefined();
     });
   });

@@ -1,6 +1,5 @@
 import { ActivityTracking } from '@fitly/shared/meta';
 import { ApiProperty } from '@nestjs/swagger';
-import { Interval } from 'luxon';
 import { ActivityTrackingMetaDTO } from './activity-tracking-meta.dto';
 import { SensorAsyncSampleDTO } from './sensor-async-sample.dto';
 

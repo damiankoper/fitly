@@ -1,6 +1,6 @@
-import { DateTime } from 'luxon';
 import { ActivityTrackingMeta, ActivityType } from '@fitly/shared/meta';
 import { ApiProperty } from '@nestjs/swagger';
+import { Interval } from 'luxon';
 
 export class ActivityTrackingMetaDTO extends ActivityTrackingMeta {
   @ApiProperty({

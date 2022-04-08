@@ -1,6 +1,5 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
-import { Interval } from 'luxon';
 import { ActivityTrackingMeta } from './activity-tracking-meta.model';
 import { SensorAsyncSample } from './sensor-async-sample.model';
 

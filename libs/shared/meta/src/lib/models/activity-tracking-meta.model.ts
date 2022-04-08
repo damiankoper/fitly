@@ -1,7 +1,7 @@
 import { ActivityType } from '../enums';
-import { DateTime } from 'luxon';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsObject } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
+import { Interval } from 'luxon';
 
 export class ActivityTrackingMeta {
   @IsEnum(ActivityType)
@@ -14,9 +14,9 @@ export class ActivityTrackingMeta {
   @IsNumber()
   repeats = 0;
 
-  constructor(type?: ActivityType, interval?: Interval, repeats?: number) {
+  constructor(interval: Interval, type?: ActivityType, repeats?: number) {
     if (type) this.type = type;
     if (repeats) this.repeats = repeats;
-    if (interval) this.interval = interval;
+    this.interval = interval;
   }
 }

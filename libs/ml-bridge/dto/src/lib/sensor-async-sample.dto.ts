@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SensorAsyncSample } from '@fitly/shared/meta';
 import { AxesDataDTO } from './axes-data.dto';
+import { DateTime } from 'luxon';
 
 export class SensorAsyncSampleDTO extends SensorAsyncSample {
 

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AnalyzeService {
     async sendToML(data: ActivityTracking): Promise<ActivityTrackingMeta> {
-        let result = new ActivityTrackingMeta()
-        return result
+        const result = new ActivityTrackingMeta(data.meta.interval);
+        return result;
     }
 }

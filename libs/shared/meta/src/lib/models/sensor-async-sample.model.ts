@@ -1,7 +1,8 @@
 import { AxesData } from './axes-data.model';
-import { Type } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsObject, ValidateNested } from 'class-validator';
 import 'reflect-metadata';
+import { DateTime } from 'luxon';
 
 export class SensorAsyncSample {
 
