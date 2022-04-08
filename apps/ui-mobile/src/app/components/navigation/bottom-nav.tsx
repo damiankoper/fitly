@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -16,9 +16,20 @@ const HistoryIcon = (props) => <Icon {...props} name="bar-chart-outline" />;
 const SettingsIcon = (props) => <Icon {...props} name="settings-outline" />;
 
 export const BottomNav = ({ navigation, state }) => {
+  const [customNavState, setCustomNavState] = useState<number>(state.index);
+  useEffect(() => {
+    if (state.index !== customNavState) {
+      if (state.index >= 4) {
+        setCustomNavState(4);
+      } else {
+        setCustomNavState(state.index);
+      }
+    }
+  }, [state.index]);
+  console.log(customNavState);
   return (
     <BottomNavigation
-      selectedIndex={state.index}
+      selectedIndex={customNavState}
       onSelect={(index) => navigation.navigate(state.routeNames[index])}
     >
       <BottomNavigationTab icon={HomeIcon} title="Home" />
