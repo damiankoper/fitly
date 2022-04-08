@@ -2,7 +2,7 @@ import { ActivityTracking } from '@fitly/shared/meta';
 import { ApiProperty } from '@nestjs/swagger';
 import { Interval } from 'luxon';
 import { ActivityTrackingMetaDTO } from './activity-tracking-meta.dto';
-import { SensorBasicSampleDTO } from './sensor-basic-sample.dto';
+import { SensorAsyncSampleDTO } from './sensor-async-sample.dto';
 
 export class ActivityTrackingDTO extends ActivityTracking {
   @ApiProperty({
@@ -12,15 +12,20 @@ export class ActivityTrackingDTO extends ActivityTracking {
   override meta!: ActivityTrackingMetaDTO;
 
   @ApiProperty({
-    type: String,
-    example: '2007-03-01T13:00:00Z/2008-05-11T15:30:00Z',
-    description: 'Tracking interval (ISO)',
+    type: SensorAsyncSampleDTO,
+    description: 'Samples from accelerometer sensor',
   })
-  override interval!: Interval;
+  override accelerometer!: SensorAsyncSampleDTO[];
 
   @ApiProperty({
-    type: SensorBasicSampleDTO,
-    description: 'Samples from sensor',
+    type: SensorAsyncSampleDTO,
+    description: 'Samples from gyroscope sensor',
   })
-  override data!: SensorBasicSampleDTO[];
+  override gyroscope!: SensorAsyncSampleDTO[];
+
+  @ApiProperty({
+    type: SensorAsyncSampleDTO,
+    description: 'Samples from magnetometer sensor',
+  })
+  override magnetometer!: SensorAsyncSampleDTO[];
 }

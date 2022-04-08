@@ -10,11 +10,11 @@ export class ActivityTrackingMetaDTO extends ActivityTrackingMeta {
   override type!: ActivityType;
 
   @ApiProperty({
-    type: DateTime,
-    example: '2007-03-01T13:00:00Z',
-    description: 'Timestamp measurements were taken (ISO)',
+    type: String,
+    example: '2007-03-01T13:00:00Z/2008-05-11T15:30:00Z',
+    description: 'Tracking interval (ISO)',
   })
-  override timestamp!: DateTime;
+  override interval!: Interval;
 
   @ApiProperty({
     type: Number,
