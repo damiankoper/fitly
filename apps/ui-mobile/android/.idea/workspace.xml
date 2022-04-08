@@ -10,19 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1503b7bc-5860-49d1-b3c6-cb5972f43a17" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.prettierrc" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.prettierrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/BluetoothModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/BluetoothModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/components/buttons/bluetooth-button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/components/buttons/bluetooth-button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/components/navigation/app-nav.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/components/navigation/app-nav.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/native-modules/BluetoothModule.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/native-modules/BluetoothModule.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/screens/settings-screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/screens/settings-screen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/utils/notifications.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/utils/notifications.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../tools/executors/pipenv-install/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../../../tools/executors/pipenv-install/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/GyroscopeModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/GyroscopeModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MagnetometerModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MagnetometerModule.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
