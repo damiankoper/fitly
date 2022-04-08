@@ -1,12 +1,14 @@
 import { Button, Card, List, ListItem, Text } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { ListRenderItemInfo, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 import {
 	addEventListenerToBluetoothModule,
 	DeviceInfo,
 } from '../events/bluetooth-module.listener';
 import BluetoothModule from '../native-modules/BluetoothModule';
 import MetaWearModule from '../native-modules/MetaWearModule';
+import { RootState } from '../state/root.reducer';
 import { showNotification } from '../utils/notifications';
 
 const SEARCHING_TIME = 10 * 1000;
@@ -41,11 +43,16 @@ export interface BluetoothConnectionScreenProps {
 const BluetoothConnectionScreen: React.FC<
 	BluetoothConnectionScreenProps
 > = ({}) => {
+	const connectedDevice = useSelector(
+		(state: RootState) => state.app.connectedDevice
+	);
+
 	const [foundDevicesList, setFoundDevicesList] =
 		useState<DeviceInfo[]>(null);
-	const [selectedDevice, setSelectedDevice] = useState<DeviceInfo>(null);
-	const [isSearching, setIsSearching] = useState(false);
-	const [isConnected, setIsConnected] = useState(false);
+	const [selectedDevice, setSelectedDevice] =
+		useState<DeviceInfo>(connectedDevice);
+	const [isSearching, setIsSearching] = useState<boolean>(false);
+	const [isConnected, setIsConnected] = useState<boolean>(!!connectedDevice);
 
 	useEffect(() => {
 		addEventListenerToBluetoothModule(
