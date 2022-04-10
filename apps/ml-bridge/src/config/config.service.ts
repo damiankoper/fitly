@@ -3,12 +3,12 @@ import { IConnectionOptions } from 'nestjs-ftp';
 
 @Injectable()
 export class ConfigService {
-  createFTPOptions(): IConnectionOptions {    
+  createFTPOptions(): IConnectionOptions {
     return {
       host: process.env.FTP_HOST,
       user: process.env.FTP_USER,
       password: process.env.FTP_PASSWORD,
-      port: +process.env.FTP_PORT
+      port: +process.env.FTP_PORT,
     };
   }
 }

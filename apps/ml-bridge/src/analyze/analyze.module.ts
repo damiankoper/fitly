@@ -4,6 +4,6 @@ import { AnalyzeService } from './analyze.service';
 
 @Module({
   controllers: [AnalyzeController],
-  providers: [AnalyzeService]
+  providers: [AnalyzeService],
 })
 export class AnalyzeModule {}

@@ -7,10 +7,12 @@ import { AnalyzeService } from './analyze.service';
 @ApiTags('Analyze')
 @Controller('analyze')
 export class AnalyzeController {
-    constructor(private readonly analyzeService: AnalyzeService) {}
+  constructor(private readonly analyzeService: AnalyzeService) {}
 
-    @Post()
-    async analyzeData(@Body() body: ActivityTrackingDTO) : Promise<ActivityTrackingMeta> {
-      return await this.analyzeService.sendToML(body);
-    }
+  @Post()
+  async analyzeData(
+    @Body() body: ActivityTrackingDTO
+  ): Promise<ActivityTrackingMeta> {
+    return await this.analyzeService.sendToML(body);
+  }
 }

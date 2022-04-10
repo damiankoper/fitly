@@ -17,8 +17,8 @@ describe('AnalyzeController', () => {
   describe('analyzeData', () => {
     it('should return "Welcome to ml-bridge!"', () => {
       const controller = app.get<AnalyzeController>(AnalyzeController);
-      const date1 = DateTime.fromISO("2020-09-06T12:00");
-      const date2 = DateTime.fromISO("2019-06-10T14:00");
+      const date1 = DateTime.fromISO('2020-09-06T12:00');
+      const date2 = DateTime.fromISO('2019-06-10T14:00');
       const interval = Interval.fromDateTimes(date1, date2);
       const meta = new ActivityTrackingMeta(interval);
 

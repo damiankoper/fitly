@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { FtpModule, FtpService } from 'nestjs-ftp';
 import { ConfigService } from '../config/config.service';
 import { DataService } from './data.service';
-import { ConfigModule } from '../config/config.module'
+import { ConfigModule } from '../config/config.module';
 
 describe('DataService', () => {
   let service: DataService;
