@@ -1,33 +1,52 @@
+import {
+  ActivityTracking,
+  ActivityTrackingMeta,
+  ActivityType,
+} from '@fitly/shared/meta';
 import { Test } from '@nestjs/testing';
-import { FtpModule, FtpService } from 'nestjs-ftp';
-import { ConfigService } from '../config/config.service';
+import { DateTime, Interval } from 'luxon';
+import { FtpService } from 'nestjs-ftp';
+import { Readable } from 'stream';
 import { DataService } from './data.service';
-import { ConfigModule } from '../config/config.module';
 
 describe('DataService', () => {
   let service: DataService;
 
+  const MockFtpService = {
+    upload: jest.fn(),
+  };
+
   beforeAll(async () => {
     const app = await Test.createTestingModule({
-      imports: [
-        FtpModule.forRootFtpAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) =>
-            configService.createFTPOptions(),
-        }),
+      imports: [],
+      providers: [
+        DataService,
+        { provide: FtpService, useValue: MockFtpService },
       ],
-      providers: [DataService, FtpService],
     }).compile();
 
     service = app.get<DataService>(DataService);
   });
 
-  describe('getData', () => {
-    it('should return "siemanko witam w moim serwisie!"', () => {
-      expect(service.getData()).toEqual({
-        message: 'siemanko witam w moim serwisie!',
-      });
-    });
+  it('should compute file path and send activity to ftp', async () => {
+    // given
+    const start = DateTime.now();
+    const stop = start.plus({ hour: 1 });
+    const interval = Interval.fromDateTimes(start, stop);
+    const type = ActivityType.STAR_JUMPS;
+    const meta = new ActivityTrackingMeta(interval, type, 10);
+    const tracking = new ActivityTracking(meta);
+
+    // when
+    const result = await service.saveDataToFTP(tracking);
+
+    // then
+    expect(result).toBeUndefined();
+
+    const filePath = `/${type}/${start.toMillis()}.json`;
+    expect(MockFtpService.upload).toBeCalledWith(
+      expect.any(Readable),
+      filePath
+    );
   });
 });

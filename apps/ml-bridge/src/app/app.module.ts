@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AnalyzeModule } from '../analyze/analyze.module';
-import { ConfigModule } from '@nestjs/config';
 import { DataModule } from '../data/data.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [DataModule, AnalyzeModule, ConfigModule.forRoot()],
+  imports: [DataModule, AnalyzeModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -13,6 +13,6 @@ export class AnalyzeController {
   async analyzeData(
     @Body() body: ActivityTrackingDTO
   ): Promise<ActivityTrackingMeta> {
-    return await this.analyzeService.sendToML(body);
+    return this.analyzeService.sendToML(body);
   }
 }

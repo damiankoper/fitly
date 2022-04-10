@@ -1,8 +1,8 @@
 export enum ActivityType {
-  UNKNOWN = 0,
+  UNKNOWN = 'unknown',
 
-  SITUPS = 1,
-  SQUATS = 2,
-  PUSHUPS = 3,
-  STAR_JUMPS = 4,
+  SITUPS = 'situps',
+  SQUATS = 'squats',
+  PUSHUPS = 'pushups',
+  STAR_JUMPS = 'star_jumps',
 }

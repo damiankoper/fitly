@@ -1,10 +1,22 @@
 import { ActivityTracking, ActivityTrackingMeta } from '@fitly/shared/meta';
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AnalyzeService {
+  constructor(private httpService: HttpService) {}
+
   async sendToML(data: ActivityTracking): Promise<ActivityTrackingMeta> {
-    const result = new ActivityTrackingMeta(data.meta.interval);
-    return result;
+    const plainData = instanceToPlain(data);
+    const result = await firstValueFrom(
+      this.httpService.post('analyse', plainData)
+    );
+    const responseMeta = plainToInstance(ActivityTrackingMeta, result.data);
+    await validateOrReject(responseMeta);
+
+    return responseMeta;
   }
 }
