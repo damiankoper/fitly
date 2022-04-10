@@ -10,18 +10,17 @@ describe('ActivityTracking parse/serialize', () => {
     //given
     const interval = Interval.before(DateTime.now(), 3600);
     const timestamp = DateTime.now();
+    const plainSensorAsync = {
+      timestamp: timestamp.toISO(),
+      data: { x: 1, y: 1, z: 1 },
+    };
     const plainObject = {
-      interval: interval.toISO(),
-      data: [
-        {
-          angularVelocity: { x: 1, y: 1, z: 1 },
-          acceleration: { x: 1, y: 1, z: 1 },
-          magneticField: { x: 1, y: 1, z: 1 },
-        },
-      ],
+      accelerometer: [plainSensorAsync],
+      gyroscope: [plainSensorAsync],
+      magnetometer: [plainSensorAsync],
       meta: {
         repeats: 0,
-        timestamp: timestamp.toISO(),
+        interval: interval.toISO(),
         type: ActivityType.UNKNOWN,
       },
     };
@@ -46,6 +45,10 @@ describe('ActivityTracking parse/serialize', () => {
     //given
     const interval = Interval.before(DateTime.now(), 3600);
     const timestamp = DateTime.now();
+    const plainSensorAsync = {
+      timestamp: timestamp.toISO(),
+      data: { x: 1, y: 1, z: 1 },
+    };
     const meta = new ActivityTrackingMeta(interval, ActivityType.UNKNOWN, 0);
     const axesData = new AxesData(1, 1, 1);
 
@@ -58,17 +61,12 @@ describe('ActivityTracking parse/serialize', () => {
 
     const classObject = new ActivityTracking(meta, accData, gyroData, magnData);
     const plainObject = {
-      interval: interval.toISO(),
-      data: [
-        {
-          angularVelocity: { x: 1, y: 1, z: 1 },
-          acceleration: { x: 1, y: 1, z: 1 },
-          magneticField: { x: 1, y: 1, z: 1 },
-        },
-      ],
+      accelerometer: [plainSensorAsync],
+      gyroscope: [plainSensorAsync],
+      magnetometer: [plainSensorAsync],
       meta: {
         repeats: 0,
-        timestamp: timestamp.toISO(),
+        interval: interval.toISO(),
         type: ActivityType.UNKNOWN,
       },
     };
