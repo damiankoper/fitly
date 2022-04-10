@@ -1,23 +1,22 @@
 import { ActivityType } from '../enums';
-import { DateTime } from 'luxon';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsObject } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
+import { Interval } from 'luxon';
 
 export class ActivityTrackingMeta {
   @IsEnum(ActivityType)
   type: ActivityType = ActivityType.UNKNOWN;
 
-  @Transform(({ value }) => DateTime.fromISO(value), { toClassOnly: true })
+  @Transform(({ value }) => Interval.fromISO(value), { toClassOnly: true })
   @Transform(({ value }) => value.toISO(), { toPlainOnly: true })
-  @IsObject()
-  timestamp: DateTime = DateTime.now();
+  interval: Interval;
 
   @IsNumber()
   repeats = 0;
 
-  constructor(type?: ActivityType, repeats?: number, timestamp?: DateTime) {
+  constructor(interval: Interval, type?: ActivityType, repeats?: number) {
     if (type) this.type = type;
     if (repeats) this.repeats = repeats;
-    if (timestamp) this.timestamp = timestamp;
+    this.interval = interval;
   }
 }

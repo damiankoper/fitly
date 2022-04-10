@@ -8,11 +8,6 @@ import { DataService } from './data.service';
 export class DataController {
   constructor(private readonly dataService: DataService) {}
 
-  @Get()
-  getData() {
-    return this.dataService.getData();
-  }
-
   @Post()
   async postData(@Body() body: ActivityTrackingDTO) {
     return await this.dataService.saveDataToFTP(body);

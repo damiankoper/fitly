@@ -1,7 +1,7 @@
-import { SensorExtendedSample } from '@fitly/shared/meta';
+import { SensorForcedSample } from '@fitly/shared/meta';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SensorExtendedSampleDTO extends SensorExtendedSample {
+export class SensorForcedSampleDTO extends SensorForcedSample {
   @ApiProperty({
     type: Number,
     description: 'Altitude',
@@ -13,6 +13,12 @@ export class SensorExtendedSampleDTO extends SensorExtendedSample {
     description: 'Pressure',
   })
   override pressure?: number;
+
+  @ApiProperty({
+    type: Number,
+    description: 'Temperature',
+  })
+  override temperature?: number;
 
   @ApiProperty({
     type: Number,

@@ -8,17 +8,15 @@ import { Readable } from 'stream';
 export class DataService {
   constructor(private readonly ftpService: FtpService) {}
 
-  getData(): { message: string } {
-    return { message: 'siemanko witam w moim serwisie!' };
+  async saveDataToFTP(data: ActivityTracking) {
+    const json = JSON.stringify(instanceToPlain(data));
+    const path = this.getFilePath(data);
+    await this.ftpService.upload(Readable.from(json), path);
   }
 
-  async saveDataToFTP(data: ActivityTracking) {
-    try {
-      const json = JSON.stringify(instanceToPlain(data));
-
-      await this.ftpService.upload(Readable.from(json), 'fitly_file.json');
-    } catch (error) {
-      throw new Error(error);
-    }
+  private getFilePath(data: ActivityTracking): string {
+    const start = data.meta.interval.start.toMillis();
+    const type = data.meta.type;
+    return `/${type}/${start}.json`;
   }
 }
