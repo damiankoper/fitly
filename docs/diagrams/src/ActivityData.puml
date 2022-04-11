@@ -18,32 +18,32 @@ enum ActivityType {
   STAR_JUMPS
 }
 
-interface ActivityTracking{
+class ActivityTracking{
   meta: ActivityTrackingMeta
   accelerometer: SensorAsyncSample[]
   gyroscope: SensorAsyncSample[]
   magnetometer: SensorAsyncSample[]
 }
 
-interface ActivityTrackingMeta{
+class ActivityTrackingMeta{
   type: ActivityType
   interval: Interval
   repeats: number
 }
 
 
-interface SensorAsyncSample {
+class SensorAsyncSample {
   timestamp: DateTime
   data: AxesData
 }
 
-interface AxesData {
+class AxesData {
   x: number
   y: number
   z: number
 }
 
-interface SensorForcedSample {
+class SensorForcedSample {
   altitude?: number
   pressure?: number
   temperature?: number
