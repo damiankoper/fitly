@@ -1,5 +1,6 @@
 import shutil
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -12,7 +13,14 @@ async def root():
 @app.post("/api/v1/load_data")
 async def getData(info : Request):
     req_info = await info.json()
-    return {
-      "status": "SUCCESS",
-      "data": req_info
+
+# TODO pass req_info to clasificator and return content for response
+    json_response = {
+      "ActivityTrackingMeta": {
+        "type": "squats",
+        "interval": {},
+        "repeats": 0
+      }
     }
+
+    return JSONResponse(content=json_response)
