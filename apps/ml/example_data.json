@@ -1,35 +1,28 @@
 {
   "ActivityTracking": {
-    "meta": {
-      "ActivityTrackingMeta": {
-        "type": "ActivityType",
-        "interval": {},
-        "repeats": 0
-      }
-    },
-    "accelerometer": {
+    "accelerometer": [{
       "timestamp": "14-04-2022-16-33-21T02",
       "data": {
         "x": "",
         "y": "",
         "z": ""
       }
-    },
-    "gyroscope": {
+    }],
+    "gyroscope": [{
       "timestamp": "14-04-2022-16-33-21T02",
       "data": {
         "x": "",
         "y": "",
         "z": ""
       }
-    },
-    "magnetometer": {
+    }],
+    "magnetometer": [{
       "timestamp": "14-04-2022-16-33-21T02",
       "data": {
         "x": "",
         "y": "",
         "z": ""
       }
-    }
+    }]
   }
 }
