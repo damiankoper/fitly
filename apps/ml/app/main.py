@@ -1,26 +1,22 @@
-import shutil
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 app = FastAPI()
 
 
-@app.get("/api/v1")
-async def root():
-    return {"message": "Hello fitly"}
-
+class ActivityTrackingMeta(BaseModel):
+    type: str
+    interval: str
+    repeats: int
 
 @app.post("/api/v1/load_data")
-async def getData(info : Request):
+async def classify_data(info : Request):
     req_info = await info.json()
 
 # TODO pass req_info to clasificator and return content for response
     json_response = {
-      "ActivityTrackingMeta": {
-        "type": "squats",
-        "interval": {},
-        "repeats": 0
-      }
+      "ActivityTrackingMeta": ActivityTrackingMeta
     }
 
     return JSONResponse(content=json_response)

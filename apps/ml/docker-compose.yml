@@ -1,9 +1,11 @@
-version: '3'
+version: '3.9'
 services:
   core_api:
     build: .
-    container_name: "core-api-container"
+    container_name: "ml-api-container"
     ports:
-      - "8000:15400"
+      - "8000:80"
     volumes:
       - ./app/:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 15400 --reload
+    restart: unless-stopped
