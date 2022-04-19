@@ -8,9 +8,15 @@ import { AppNavigator } from './components/navigation/app-nav';
 import { TopNav } from './components/navigation/top-nav';
 import { LogBox } from 'react-native';
 
+import { ActivityTrackingMeta } from '@fitly/shared/meta';
+
+import { instanceToPlain } from 'class-transformer';
+
 LogBox.ignoreLogs([
 	"[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
 ]);
+
+console.log(instanceToPlain(new ActivityTrackingMeta()));
 
 const App: React.FC<{}> = () => {
 	React.useEffect(() => {

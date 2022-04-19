@@ -43,12 +43,9 @@ allprojects {
             url "https://mbientlab.com/releases/ivyrep"
             layout "gradle"
         }
-        
         maven {
             // All of the Detox artifacts are provided via the npm module
             url("$rootDir/../../../node_modules/detox/Detox-android")
         }
-        
-
     }
 }

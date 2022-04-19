@@ -18,34 +18,43 @@ enum ActivityType {
   STAR_JUMPS
 }
 
-interface ActivityTrackingDTO{
+class ActivityTracking{
   meta: ActivityTrackingMeta
-  interval: Interval
-  data: SensorBasicSample[]
+  accelerometer: SensorAsyncSample[]
+  gyroscope: SensorAsyncSample[]
+  magnetometer: SensorAsyncSample[]
 }
 
-interface ActivityTrackingMeta{
+class ActivityTrackingMeta{
   type: ActivityType
-  timestamp: DateTime
+  interval: Interval
   repeats: number
 }
 
 
-interface SensorBasicSample {
-  acceleration: [number, number, number]
-  angularVelocity: [number, number, number]
-  magneticField: [number, number, number]
+class SensorAsyncSample {
+  timestamp: DateTime
+  data: AxesData
 }
 
-interface SensorExtendedSample extends SensorBasicSample {
+class AxesData {
+  x: number
+  y: number
+  z: number
+}
+
+class SensorForcedSample {
   altitude?: number
   pressure?: number
+  temperature?: number
   illuminance?: number
 }
 
 ActivityTrackingMeta --> ActivityType
-ActivityTrackingDTO -> Interval
-ActivityTrackingDTO  *--> "1..*" SensorBasicSample
-ActivityTrackingDTO  *-->  ActivityTrackingMeta
+SensorAsyncSample *--> DateTime
+ActivityTrackingMeta *--> Interval
+ActivityTracking "1..*" *-->  SensorAsyncSample
+ActivityTracking "1" *-->  ActivityTrackingMeta
 
+SensorAsyncSample *--> AxesData
 @enduml

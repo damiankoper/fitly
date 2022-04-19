@@ -11,4 +11,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/shared/meta',
+  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
 };

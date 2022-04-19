@@ -1,0 +1,134 @@
+@startuml UiControl
+title UI Control
+scale 5
+
+rectangle UserData{
+  enum Sex{
+    MALE
+    FEMALE
+  }
+
+  class User{
+    + name: string
+    + surname: string
+    + age: number
+    + weight: number
+    + height: number
+    + sex: Sex
+  }
+}
+
+
+
+rectangle TrackingData{
+  class ActivitySession <<tracked>>{
+    id: number
+    interval: Interval
+    activities: ActivityTrackingMeta[]
+  }
+
+
+  class ActivityTrackingMeta <<tracked>>{
+    type: ActivityType
+    interval: Interval
+    repeats: number
+  }
+
+}
+
+  enum ActivityType {
+    UNKNOWN
+    ==
+    SITUPS
+    SQUATS
+    PUSHUPS
+    STAR_JUMPS
+  }
+
+interface IUiControlDataStore {
+  + {abstract} getUser(): User
+  + {abstract} setUser(user: User): void
+  + {abstract} resetUser(): void
+
+  + {abstract} getActivitySessions(): ActivitySession[]
+  + {abstract} clearActivitySessions(): void
+  + {abstract} pushActivitySession(activitySession: ActivitySession): void
+}
+
+class UiControlDataStore {}
+class UiControlFakeDataStore  {}
+UiControlDataStore <|--  IUiControlDataStore
+UiControlFakeDataStore <|--  IUiControlDataStore
+
+class UiControl{
+  - dataStore: IUiControlDataStore
+  + construcor(dataStore: IUiControlDataStore)
+
+  + clearData(): void
+
+  ..Global stats..
+  + getTotalCalories(): number
+  + getTotalRepeats(): number
+  + getCaloriesDailyChart(): ChartData
+  + getTimeDailyChart(): ChartData
+  + getTimeStats(): ActivityTimeStats
+
+  ..ActivitySession data..
+  + getSession(id: number): ActivitySession
+  + getSessions(): ActivitySession[]
+  + getLastSession(): ActivitySession
+  + saveSession(session: ActivitySession): void
+
+  ..User data..
+  + getUser(): User
+  + setUser(user: User): void
+  + resetUser(): void
+
+  ..ActivitySession stats..
+  + getSessionSummary(session: ActivitySession): ActivitySummary
+  + getSessionPaceChart(session: ActivitySession): ChartData
+}
+
+note left of UiControl
+<b>Wykresy zgrupowane dzienne
+* getCaloriesDailyChart: spalone kalorie
+* getTimeDailyChart: czas spędzony na danym ćwiczeniu
+\t - wykres słupkowy skumulowany
+\t - niżej legenda, każde ćwiczenie inny kolor
+* getSessionPaceChart: tempo ćwiczenia (częstotliwość powtórzeń)
+\t - wykres liniowy tempa
+\t - tło wykresu symbolizuje rodzaj aktywności
+\t - niżej legenda, każde ćwiczenie inny kolor
+
+
+end note
+
+class ActivitySummary <<computed>> {
+  id: number
+  timestamp: DateTime
+  type: ActivityType
+  repeats: number
+  calories: number
+}
+
+class ActivityTimeStats <<computed>>{
+  + [ActivityType]: number
+}
+
+class ChartData {}
+
+ActivitySummary ..> ActivityType
+
+UiControl --> ActivitySummary : <<creates>>
+UiControl --> ActivityTimeStats : <<creates>>
+UiControl --> ActivitySession : <<saves>> \n <<fetches>>
+UiControl --> User : <<saves>> \n <<fetches>>
+
+IUiControlDataStore <--o UiControl
+ActivitySession "1  " o--> "1..*  " ActivityTrackingMeta
+ActivityTrackingMeta ..> ActivityType
+User .> Sex
+
+UiControl ---> ChartData : <<creates>>
+
+@enduml
