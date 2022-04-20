@@ -24,6 +24,7 @@
     "react-native-safe-area-context": "*",
     "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
-    "@react-navigation/bottom-tabs": "*"
+    "@react-navigation/bottom-tabs": "*",
+    "lodash": "*"
   }
 }
