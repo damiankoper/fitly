@@ -1,77 +1,204 @@
 import { Layout, Button, Input } from '@ui-kitten/components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeModules, StyleSheet } from 'react-native';
 import { SelectSimple } from '../components/inputs/select-simple';
 import { EXERCISES } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
 import {
-	addEventListenerToAcceleometerModule
+  AccelerometerData,
+  addEventListenerToAcceleometerModule,
 } from '../events/accelerometer-module.listener';
 import {
-	addEventListenerToGyroModule
+  addEventListenerToGyroModule,
+  GyroscopeData,
 } from '../events/gyroscope-module.listener';
 import {
-	addEventListenerToMagnetometerModule
+  addEventListenerToMagnetometerModule,
+  MagnetometerData,
 } from '../events/magnetometer-module.listener';
 import MetaWearModule from '../native-modules/MetaWearModule';
+import _ from 'lodash';
+import { DateTime, Interval } from 'luxon';
+import { AxesData } from 'libs/shared/meta/src/lib/models/axes-data.model';
+import {
+  ActivityTracking,
+  ActivityTrackingMeta,
+  SensorAsyncSample,
+} from 'libs/shared/meta/src/lib/models';
+import { instanceToPlain } from 'class-transformer';
 
-export const ServiceModeScreen = () => {
+interface ServiceModeScreenProps {
+  navigation: any;
+}
 
-  useEffect(()=>{
+export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
+  navigation,
+}) => {
+  let tempValue = '';
+  let repeats = 0;
+  const [inputValue, setInputValue] = useState<string>('');
+  let accData: SensorAsyncSample[] = [];
+  let gyroData: SensorAsyncSample[] = [];
+  let magData: SensorAsyncSample[] = [];
+
+  let activityTrackingMeta: ActivityTrackingMeta;
+
+  let intervalID;
+  let setInputValueThrottled = _.throttle(setInputValue, 1000);
+
+  const addRepetition = () => {
+    repeats += 1;
+  };
+
+  const sendData = (activityTracking: ActivityTracking) => {
+    //interwal w modelu to data poczatkowa(czyszczenie danych) i data koncowa(wysylanie danych)
+    //start->odpala sie interval(zwraca swoj id)->pierwsze odpalenie, nic nie wysylasz->przy kolejnych wysylasz i czyscisz
+    //czyscic interval przy kazdej mozliwosci zamkniecia komponentu(zmiana komponentu, przycisk stop itp)
+    //instanceToPlain(activityTracking);
+  };
+
+  const startModules = () => {
+    intervalID = setInterval(() => {
+      if (activityTrackingMeta) {
+        activityTrackingMeta.interval.set({ end: DateTime.now() });
+        activityTrackingMeta.repeats = repeats;
+
+        let activityTracking = new ActivityTracking(
+          activityTrackingMeta,
+          accData,
+          gyroData,
+          magData
+        );
+
+        console.log(instanceToPlain(activityTracking));
+      }
+      accData = [];
+      gyroData = [];
+      magData = [];
+      activityTrackingMeta = new ActivityTrackingMeta(
+        Interval.fromDateTimes(DateTime.now(), DateTime.now())
+      );
+    }, 1000);
+
+    console.log(intervalID)
+    repeats = 0;
+    tempValue = '';
+    setInputValue('');
+    MetaWearModule.startMetaWearModules();
+  };
+
+  //!!!!
+  //naUnmounted tez trzeba dac clearInterval()
+  //!!!!
+
+  const stopModules = () => {
+    clearInterval(intervalID);
+
+    // sendData();
+    MetaWearModule.stopMetaWearModules();
+  };
+
+  const addToArray = (
+    array: SensorAsyncSample[],
+    x: String,
+    y: String,
+    z: String
+  ) => {
+    const sas = new SensorAsyncSample(
+      new AxesData(Number(x), Number(y), Number(z))
+    );
+    array.push(sas);
+  };
+
+  const createTempValue = (name: string, x: String, y: String, z: String) => {
+    return 'Device: ' + name + ' x: ' + x + ' y: ' + y + ' z: ' + z + '\n';
+  };
+
+  useEffect(() => {
     addEventListenerToAcceleometerModule(
-			'onAccelerometerDataEmit',
-			(newDevice) => {
-				console.log(newDevice)
-			}
-		);
+      'onAccelerometerDataEmit',
+      (newDevice) => {
+        tempValue += createTempValue(
+          'acc',
+          newDevice.x,
+          newDevice.y,
+          newDevice.z
+        );
+        setInputValueThrottled(tempValue);
+        addToArray(accData, newDevice.x, newDevice.y, newDevice.z);
+      }
+    );
 
     addEventListenerToMagnetometerModule(
-			'onMagnetometerDataEmit',
-			(newDevice) => {
-				console.log(newDevice)
-			}
-		);
+      'onMagnetometerDataEmit',
+      (newDevice) => {
+        tempValue += createTempValue(
+          'mag',
+          newDevice.x,
+          newDevice.y,
+          newDevice.z
+        );
+        setInputValueThrottled(tempValue);
+        addToArray(magData, newDevice.x, newDevice.y, newDevice.z);
+      }
+    );
 
-    addEventListenerToGyroModule(
-			'onGyroscopeDataEmit',
-			(newDevice) => {
-				console.log(newDevice)
-			}
-		);
+    addEventListenerToGyroModule('onGyroscopeDataEmit', (newDevice) => {
+      tempValue += createTempValue(
+        'gyro',
+        newDevice.x,
+        newDevice.y,
+        newDevice.z
+      );
+      setInputValueThrottled(tempValue);
+      addToArray(gyroData, newDevice.x, newDevice.y, newDevice.z);
+    });
+  }, []);
 
-	}, []);
   return (
     <Layout style={styles.container}>
       <SelectSimple options={EXERCISES} placeholder="Exercise name" />
 
       <Layout style={styles.buttonsWrapper}>
-        <Button style={styles.button} size="giant" appearance="outline" onPress={startModules}>
+        <Button
+          style={styles.button}
+          size="giant"
+          appearance="outline"
+          onPress={startModules}
+        >
           Start
         </Button>
-        <Button style={styles.button} size="giant" appearance="outline" onPress={stopModules}>
-          Stop 
+        <Button
+          style={styles.button}
+          size="giant"
+          appearance="outline"
+          onPress={stopModules}
+        >
+          Stop
         </Button>
       </Layout>
 
       <Input
+        value={inputValue}
         multiline={true}
-        textStyle={{ minHeight: 256 }}
+        editable={false}
+        textStyle={{ minHeight: 256, maxHeight: 256 }}
         placeholder="Here incoming data should appear"
         style={styles.multiline}
       />
 
-      <BluetoothButton />
+      <Button
+        style={styles.buttonRepeat}
+        size="giant"
+        appearance="outline"
+        onPress={addRepetition}
+      >
+        Increment
+      </Button>
+      <BluetoothButton navigation={navigation} />
     </Layout>
   );
 };
-
-const startModules = () => {
-  MetaWearModule.startMetaWearModules()
-}
-
-const stopModules = () => {
-  MetaWearModule.stopMetaWearModules()
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -86,9 +213,20 @@ const styles = StyleSheet.create({
     width: 150,
     margin: 2,
   },
+  buttonRepeat: {
+    width: window.innerWidth,
+    marginBottom: 2
+  },
   multiline: {
     marginTop: 24,
     marginBottom: 24,
   },
 });
 
+//TODO: 
+//setInterval sie nie wylacza, po kliknieciu stop dalej leci 
+//tempValue sie chyba nie czysci, input po wyczyszczeniu przy pierwszym podaniu tempValue ma duzo wpisow
+//repeats sie nie przekazuje dobrze lub nie inkrementuje(zawsze daje 0 do SensorAsyncSample)
+//przekazac typ cwiczenia do SensorAsyncSample
+//wysylanie axiosem SensorAsyncSample
+//
