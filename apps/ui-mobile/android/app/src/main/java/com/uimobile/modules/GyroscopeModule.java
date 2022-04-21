@@ -71,6 +71,7 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 			map.putString(entry.getKey(), entry.getValue());
 		}
 
+		Log.i("MainActivity", "Gyroscope emits");
 		reactContext
 			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
 			.emit("onGyroscopeDataEmit", map);

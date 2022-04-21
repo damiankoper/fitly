@@ -26,7 +26,7 @@
   <component name="EditorConfigPreviewManager">
     <editorConfig file="$PROJECT_DIR$/../../../.editorconfig" previewFile="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/BluetoothModule.java" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[b5ace79b]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\krzys\.android\avd\Pixel_5_API_30.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
