@@ -10,10 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1503b7bc-5860-49d1-b3c6-cb5972f43a17" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/GyroscopeModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/GyroscopeModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MagnetometerModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MagnetometerModule.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +20,7 @@
   <component name="EditorConfigPreviewManager">
     <editorConfig file="$PROJECT_DIR$/../../../.editorconfig" previewFile="$PROJECT_DIR$/app/src/main/java/com/uimobile/MainApplication.java" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[b5ace79b]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\krzys\.android\avd\Pixel_5_API_30.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

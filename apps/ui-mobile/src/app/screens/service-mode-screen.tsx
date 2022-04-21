@@ -31,23 +31,31 @@ interface ServiceModeScreenProps {
   navigation: any;
 }
 
+let tempValue = '';
+let repeats = 0;
+
 export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
   navigation,
 }) => {
-  let tempValue = '';
-  let repeats = 0;
   const [inputValue, setInputValue] = useState<string>('');
+  const [idInterval, setIdInterval] = useState<NodeJS.Timer>(null);
+
   let accData: SensorAsyncSample[] = [];
   let gyroData: SensorAsyncSample[] = [];
   let magData: SensorAsyncSample[] = [];
 
   let activityTrackingMeta: ActivityTrackingMeta;
 
-  let intervalID;
   let setInputValueThrottled = _.throttle(setInputValue, 1000);
 
   const addRepetition = () => {
     repeats += 1;
+  };
+
+  const resetData = () => {
+    repeats = 0;
+    tempValue = '';
+    setInputValue('');
   };
 
   const sendData = (activityTracking: ActivityTracking) => {
@@ -58,7 +66,7 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
   };
 
   const startModules = () => {
-    intervalID = setInterval(() => {
+    const intervalID = setInterval(() => {
       if (activityTrackingMeta) {
         activityTrackingMeta.interval.set({ end: DateTime.now() });
         activityTrackingMeta.repeats = repeats;
@@ -80,10 +88,8 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
       );
     }, 1000);
 
-    console.log(intervalID)
-    repeats = 0;
-    tempValue = '';
-    setInputValue('');
+    setIdInterval(intervalID);
+    resetData();
     MetaWearModule.startMetaWearModules();
   };
 
@@ -92,7 +98,9 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
   //!!!!
 
   const stopModules = () => {
-    clearInterval(intervalID);
+    console.log('CLEARING_INTERVAL:', idInterval);
+    clearInterval(idInterval);
+    console.log('tempValue', tempValue.length);
 
     // sendData();
     MetaWearModule.stopMetaWearModules();
@@ -138,6 +146,7 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
           newDevice.y,
           newDevice.z
         );
+
         setInputValueThrottled(tempValue);
         addToArray(magData, newDevice.x, newDevice.y, newDevice.z);
       }
@@ -153,6 +162,12 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
       setInputValueThrottled(tempValue);
       addToArray(gyroData, newDevice.x, newDevice.y, newDevice.z);
     });
+
+    // componentWillUnmount
+    return () => {
+      clearInterval(idInterval);
+      resetData();
+    };
   }, []);
 
   return (
@@ -215,7 +230,7 @@ const styles = StyleSheet.create({
   },
   buttonRepeat: {
     width: window.innerWidth,
-    marginBottom: 2
+    marginBottom: 2,
   },
   multiline: {
     marginTop: 24,
@@ -223,8 +238,8 @@ const styles = StyleSheet.create({
   },
 });
 
-//TODO: 
-//setInterval sie nie wylacza, po kliknieciu stop dalej leci 
+//TODO:
+//setInterval sie nie wylacza, po kliknieciu stop dalej leci
 //tempValue sie chyba nie czysci, input po wyczyszczeniu przy pierwszym podaniu tempValue ma duzo wpisow
 //repeats sie nie przekazuje dobrze lub nie inkrementuje(zawsze daje 0 do SensorAsyncSample)
 //przekazac typ cwiczenia do SensorAsyncSample
