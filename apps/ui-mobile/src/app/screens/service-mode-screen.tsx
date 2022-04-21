@@ -1,12 +1,14 @@
 import { Layout, Button, Input } from '@ui-kitten/components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeModules, StyleSheet } from 'react-native';
 import { SelectSimple } from '../components/inputs/select-simple';
-import { EXERCISES_ENUM } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
 import { addEventListenerToAcceleometerModule } from '../events/accelerometer-module.listener';
 import { addEventListenerToGyroModule } from '../events/gyroscope-module.listener';
 import { addEventListenerToMagnetometerModule } from '../events/magnetometer-module.listener';
+import { IndexPath } from '@ui-kitten/components';
+import { EXERCISES_ENUM } from '../config';
+
 
 export const ServiceModeScreen = ({ navigation }) => {
 	useEffect(() => {
@@ -28,10 +30,18 @@ export const ServiceModeScreen = ({ navigation }) => {
 			console.log(newDevice);
 		});
 	}, []);
+	const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+
+	const exercises = Object.values(EXERCISES_ENUM)
+
+	// Get exercise name
+	console.log(exercises[selectedIndex.row])
+
 	return (
 		<Layout style={styles.container}>
 			<SelectSimple
-				options={Object.values(EXERCISES_ENUM)}
+				selectedIndex={selectedIndex}
+				setSelectedIndex={setSelectedIndex}
 				placeholder="Exercise name"
 			/>
 
