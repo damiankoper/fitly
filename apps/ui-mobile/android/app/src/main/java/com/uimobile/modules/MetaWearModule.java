@@ -1,5 +1,7 @@
 package com.uimobile.modules;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -11,6 +13,7 @@ import com.uimobile.MainApplication;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import bolts.Continuation;
@@ -36,6 +39,17 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 		environmentData = envData;
 		barometer = baro;
 		ambientLight = ambLight;
+	}
+
+	@ReactMethod
+	public void setupPreviouslyConnectedMetaWear(Promise promise){
+		SharedPreferences settings = application.getSharedPreferences("bluetooth",MODE_PRIVATE);
+		String previousMetaWearMacAddress = settings.getString("lastMetaWearMacAddress", null);
+
+		if(previousMetaWearMacAddress != null){
+			Log.i("MainActivity", "Received device MAC:" + previousMetaWearMacAddress);
+			this.retrieveBoard(previousMetaWearMacAddress, promise);
+		}
 	}
 
 	@Override
