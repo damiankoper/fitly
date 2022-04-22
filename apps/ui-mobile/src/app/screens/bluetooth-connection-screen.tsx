@@ -82,7 +82,7 @@ const BluetoothConnectionScreen: React.FC<
 		}
 		await MetaWearModule.connectToMetaWearDevice(device.deviceAddress);
 		setIsConnected(true);
-		await MetaWearModule.blinkBlueLED(10 + 1);
+		await MetaWearModule.blinkBlueLED(3 + 1);
 	};
 
 	return (

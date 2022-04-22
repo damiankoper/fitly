@@ -11,7 +11,6 @@ import com.uimobile.MainApplication;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.content.Context;
 import android.util.Log;
 
 import bolts.Continuation;
@@ -23,13 +22,20 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 	private AccelerometerModule accelerometerModule;
 	private MagnetometerModule magnetometerModule;
 	private GyroscopeModule gyroscopeModule;
+	private AmbientLightModule ambientLightModule;
+	private EnvironmentDataModule environmentData;
+	private AmbientLightModule ambientLight;
+	private BarometerModule barometer;
 
-	public MetaWearModule(ReactApplicationContext context, AccelerometerModule acc, MagnetometerModule mag, GyroscopeModule gyro) {
+	public MetaWearModule(ReactApplicationContext context, AccelerometerModule acc, MagnetometerModule mag, GyroscopeModule gyro, BarometerModule baro, AmbientLightModule ambLight, EnvironmentDataModule envData) {
 		super(context);
 		application = (MainApplication) context.getApplicationContext();
 		accelerometerModule = acc;
 		magnetometerModule = mag;
 		gyroscopeModule = gyro;
+		environmentData = envData;
+		barometer = baro;
+		ambientLight = ambLight;
 	}
 
 	@Override
@@ -95,6 +101,13 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 		accelerometerModule.startModule();
 		magnetometerModule.startModule();
 		gyroscopeModule.startModule();
+		ambientLight.startModule();
+		barometer.startModule();
+	}
+
+	@ReactMethod
+	public void setupEnvironmentDataReaders(){
+		environmentData.setupReaders();
 	}
 
 	@ReactMethod
@@ -102,5 +115,7 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 		accelerometerModule.stopModule();
 		magnetometerModule.stopModule();
 		gyroscopeModule.stopModule();
+		ambientLight.startModule();
+		barometer.stopModule();
 	}
 }
