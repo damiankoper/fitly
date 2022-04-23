@@ -10,10 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1503b7bc-5860-49d1-b3c6-cb5972f43a17" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.vscode/launch.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/GyroscopeModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/GyroscopeModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MagnetometerModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MagnetometerModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/BluetoothModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/BluetoothModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MetaWearModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/MetaWearModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/interfaces/NativeModulesInterface.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/interfaces/NativeModulesInterface.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/screens/bluetooth-connection-screen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/screens/bluetooth-connection-screen.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +24,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EditorConfigPreviewManager">
-    <editorConfig file="$PROJECT_DIR$/../../../.editorconfig" previewFile="$PROJECT_DIR$/app/src/main/java/com/uimobile/MainApplication.java" />
+    <editorConfig file="$PROJECT_DIR$/../../../.editorconfig" previewFile="$PROJECT_DIR$/app/src/main/java/com/uimobile/modules/BluetoothModule.java" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[b5ace79b]" />
   <component name="ExternalProjectsData">
@@ -76,6 +79,12 @@
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.uimobile.modules" />
+      <recent name="com.uimobile.modules.forceddata" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
