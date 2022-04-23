@@ -25,6 +25,7 @@
     "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
     "@react-navigation/bottom-tabs": "*",
-    "lodash": "*"
+    "lodash": "*",
+    "axios": "*"
   }
 }

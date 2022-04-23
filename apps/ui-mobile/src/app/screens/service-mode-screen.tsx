@@ -28,6 +28,8 @@ import {
 import { instanceToPlain } from 'class-transformer';
 import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:3333/api';
+
 interface ServiceModeScreenProps {
   navigation: any;
 }
@@ -76,13 +78,14 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
       magData
     );
 
+    //console.log(instanceToPlain(activityTracking));
     axios.post('/data', instanceToPlain(activityTracking));
   };
 
   const startModules = () => {
     const intervalID = setInterval(() => {
       if (activityTrackingMeta) {
-        sendData(activityTrackingMeta,accData,gyroData,magData);
+        sendData(activityTrackingMeta, accData, gyroData, magData);
       }
       accData = [];
       gyroData = [];
@@ -101,8 +104,9 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     console.log('CLEARING_INTERVAL:', idInterval);
     clearInterval(idInterval);
     console.log('tempValue', tempValue.length);
-
-    sendData(activityTrackingMeta, accData, gyroData, magData);
+    if (activityTrackingMeta) {
+      sendData(activityTrackingMeta, accData, gyroData, magData);
+    }
     MetaWearModule.stopMetaWearModules();
   };
 
@@ -167,6 +171,9 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     return () => {
       clearInterval(idInterval);
       resetData();
+      accData = [];
+      gyroData = [];
+      magData = [];
     };
   }, []);
 
@@ -239,5 +246,5 @@ const styles = StyleSheet.create({
 });
 
 //TODO:
-//tablice czasem przesylaja sie puste po tworzeniu nowego interwalu(nowe ID)
-//dodac typ cwiczenia do meta danych
+//ponowne wlaczenie interval nie pobiera danych z tablic?
+//przekazac typ cwiczenia do SensorAsyncSample
