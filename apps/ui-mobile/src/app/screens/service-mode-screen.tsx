@@ -28,7 +28,7 @@ import {
 import { instanceToPlain } from 'class-transformer';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3333/api';
+axios.defaults.baseURL = 'http://10.0.2.2:3333/api';
 
 interface ServiceModeScreenProps {
   navigation: any;
