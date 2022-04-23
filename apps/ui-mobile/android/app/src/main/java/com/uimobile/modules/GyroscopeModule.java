@@ -38,6 +38,8 @@ import bolts.Continuation;
 
 public class GyroscopeModule extends ReactContextBaseJavaModule {
 
+	private final static Gyro.OutputDataRate outputDataRate = Gyro.OutputDataRate.ODR_25_HZ;
+
 	private MainApplication application;
 	private ReactApplicationContext reactContext;
 	private Gyro gyroscope;
@@ -56,7 +58,7 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 	public void emitGyroEvent(AngularVelocity gyro) {
 		HashMap<String, String> hm = new HashMap<>();
         hm.put("tag", "Gyroscope");
-		
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			hm.put("timeStamp", LocalDateTime.now().toString());
 		}
@@ -69,6 +71,7 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 			map.putString(entry.getKey(), entry.getValue());
 		}
 
+		Log.i("MainActivity", "Gyroscope emits");
 		reactContext
 			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
 			.emit("onGyroscopeDataEmit", map);
@@ -78,14 +81,12 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 
 		gyroscope = application.getBoard().getModule(Gyro.class);
 		gyroscope.configure()
-			.odr(Gyro.OutputDataRate.ODR_25_HZ) // Set sampling frequency to 25Hz, or closest valid ODR
+			.odr(outputDataRate)
 			.commit();
 		Log.i("MainActivity", "Gyroscope started");
 
 		gyroscope.angularVelocity().addRouteAsync(routeComponent -> routeComponent
 			.stream((Subscriber) (data, objects) -> emitGyroEvent(data.value(AngularVelocity.class))
-				// Log.i("MainActivity",
-				//	"Gyro: " + data.value(AngularVelocity.class).toString())
 			))
 			.continueWith((Continuation<Route, Void>) task -> {
 				gyroscope.angularVelocity().start();

@@ -1,7 +1,7 @@
 import { Button, Card, List, ListItem, Text } from '@ui-kitten/components';
+import { resolveObjectURL } from 'buffer';
 import React, { useEffect, useState } from 'react';
 import { ListRenderItemInfo, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { addEventListenerToBluetoothModule, DeviceInfo } from '../events/bluetooth-module.listener';
 import BluetoothModule from '../native-modules/BluetoothModule';
 import MetaWearModule from '../native-modules/MetaWearModule';
@@ -25,18 +25,30 @@ const renderItem =
 		);
 	};
 
+// stupid but works
+const filterDuplicates = function (array: DeviceInfo[]) {
+	const obj = {};
+	for (const device of array) {
+		obj[device.deviceAddress] = device.deviceName;
+	}
+
+	let newArray: DeviceInfo[] = [];
+	for (const deviceAddress of Object.keys(obj)) {
+		newArray.push({ deviceName: obj[deviceAddress], deviceAddress });
+	}
+
+	return newArray;
+};
+
 export interface BluetoothConnectionScreenProps {
 	navigation: any;
 }
 
 const BluetoothConnectionScreen: React.FC<BluetoothConnectionScreenProps> = ({}) => {
-	const dispatch = useDispatch();
-	const connectedDevice = useSelector((state: RootState) => state.app.connectedDevice);
-
-	const [foundDevicesList, setFoundDevicesList] = useState<DeviceInfo[]>(null);
-	const [selectedDevice, setSelectedDevice] = useState<DeviceInfo>(connectedDevice);
-	const [isSearching, setIsSearching] = useState<boolean>(false);
-	const [isConnected, setIsConnected] = useState<boolean>(!!connectedDevice);
+	const [foundDevicesList, setFoundDevicesList] = useState<DeviceInfo[]>([]);
+	const [selectedDevice, setSelectedDevice] = useState<DeviceInfo>(null);
+	const [isSearching, setIsSearching] = useState(false);
+	const [isConnected, setIsConnected] = useState(false);
 
 	useEffect(() => {
 		addEventListenerToBluetoothModule('onBluetoothFoundNewDevice', (newDevice) => {
@@ -45,7 +57,7 @@ const BluetoothConnectionScreen: React.FC<BluetoothConnectionScreenProps> = ({})
 	}, []);
 
 	const handleStartSearchForBluetoothDevices = async () => {
-		setFoundDevicesList(null);
+		setFoundDevicesList([]);
 		setIsSearching(true);
 		const result = await BluetoothModule.startSearchingForBluetoothDevices();
 		if (!result) {
@@ -66,8 +78,8 @@ const BluetoothConnectionScreen: React.FC<BluetoothConnectionScreenProps> = ({})
 		}
 		await MetaWearModule.connectToMetaWearDevice(device.deviceAddress);
 		setIsConnected(true);
-		await MetaWearModule.blinkBlueLED(10 + 1);
-		dispatch(connectedToDevice(device));
+		await MetaWearModule.blinkBlueLED(3 + 1);
+		await BluetoothModule.saveConnectedBluetoothDevice(device.deviceAddress);
 	};
 
 	return (
@@ -90,7 +102,7 @@ const BluetoothConnectionScreen: React.FC<BluetoothConnectionScreenProps> = ({})
 			{foundDevicesList && (
 				<List
 					style={styles.container}
-					data={foundDevicesList}
+					data={filterDuplicates(foundDevicesList)}
 					renderItem={renderItem(handleDeviceSelect, selectedDevice, isConnected)}
 				/>
 			)}

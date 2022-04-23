@@ -38,6 +38,8 @@ import bolts.Continuation;
 
 public class MagnetometerModule extends ReactContextBaseJavaModule {
 
+	private static final MagnetometerBmm150.OutputDataRate magnetometerDataRate = MagnetometerBmm150.OutputDataRate.ODR_25_HZ;
+
 	private MainApplication application;
 	private ReactApplicationContext reactContext;
 	private MagnetometerBmm150 magnetometer;
@@ -69,6 +71,7 @@ public class MagnetometerModule extends ReactContextBaseJavaModule {
 			map.putString(entry.getKey(), entry.getValue());
 		}
 
+		Log.i("MainActivity", "Magnetometer emits");
 		reactContext
 			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
 			.emit("onMagnetometerDataEmit", map);
@@ -78,16 +81,13 @@ public class MagnetometerModule extends ReactContextBaseJavaModule {
 
 		magnetometer = application.getBoard().getModule(MagnetometerBmm150.class);
 		magnetometer.configure()
-			.outputDataRate(MagnetometerBmm150.OutputDataRate.ODR_25_HZ)
-			// Set sampling frequency to 25Hz, or closest valid ODR
+			.outputDataRate(magnetometerDataRate)
 			.commit();
 		Log.i("MainActivity", "Magnetometer started");
 
 		magnetometer.magneticField().addRouteAsync(routeComponent -> routeComponent
 			.stream(
 				(Subscriber) (data, objects) -> emitMagEvent(data.value(MagneticField.class))
-				// Log.i("MainActivity",
-				// 	"Mag: " + data.value(MagneticField.class).toString())
 			))
 			.continueWith((Continuation<Route, Void>) task -> {
 				magnetometer.magneticField().start();

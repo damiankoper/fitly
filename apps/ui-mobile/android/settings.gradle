@@ -7,3 +7,8 @@ apply from: file("../node_modules/@react-native-community/cli-platform-android/n
 applyNativeModulesSettingsGradle(settings)
 
 include ':app'
+
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+}

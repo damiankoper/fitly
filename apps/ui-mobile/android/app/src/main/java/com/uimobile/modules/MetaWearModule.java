@@ -1,5 +1,7 @@
 package com.uimobile.modules;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -11,7 +13,7 @@ import com.uimobile.MainApplication;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import bolts.Continuation;
@@ -23,13 +25,31 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 	private AccelerometerModule accelerometerModule;
 	private MagnetometerModule magnetometerModule;
 	private GyroscopeModule gyroscopeModule;
+	private AmbientLightModule ambientLightModule;
+	private EnvironmentDataModule environmentData;
+	private AmbientLightModule ambientLight;
+	private BarometerModule barometer;
 
-	public MetaWearModule(ReactApplicationContext context, AccelerometerModule acc, MagnetometerModule mag, GyroscopeModule gyro) {
+	public MetaWearModule(ReactApplicationContext context, AccelerometerModule acc, MagnetometerModule mag, GyroscopeModule gyro, BarometerModule baro, AmbientLightModule ambLight, EnvironmentDataModule envData) {
 		super(context);
 		application = (MainApplication) context.getApplicationContext();
 		accelerometerModule = acc;
 		magnetometerModule = mag;
 		gyroscopeModule = gyro;
+		environmentData = envData;
+		barometer = baro;
+		ambientLight = ambLight;
+	}
+
+	@ReactMethod
+	public void setupPreviouslyConnectedMetaWear(Promise promise){
+		SharedPreferences settings = application.getSharedPreferences("bluetooth",MODE_PRIVATE);
+		String previousMetaWearMacAddress = settings.getString("lastMetaWearMacAddress", null);
+
+		if(previousMetaWearMacAddress != null){
+			Log.i("MainActivity", "Received device MAC:" + previousMetaWearMacAddress);
+			this.retrieveBoard(previousMetaWearMacAddress, promise);
+		}
 	}
 
 	@Override
@@ -95,6 +115,13 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 		accelerometerModule.startModule();
 		magnetometerModule.startModule();
 		gyroscopeModule.startModule();
+		ambientLight.startModule();
+		barometer.startModule();
+	}
+
+	@ReactMethod
+	public void setupEnvironmentDataReaders(){
+		environmentData.setupReaders();
 	}
 
 	@ReactMethod
@@ -102,6 +129,7 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 		accelerometerModule.stopModule();
 		magnetometerModule.stopModule();
 		gyroscopeModule.stopModule();
-		//application.getBoard().tearDown();
+		ambientLight.startModule();
+		barometer.stopModule();
 	}
 }

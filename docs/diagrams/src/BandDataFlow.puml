@@ -1,0 +1,60 @@
+@startuml DataTransferFlow
+title Data transfer flow
+
+box "Java" #LightBlue
+  boundary UiBandPlugin
+end box
+
+box "React" #LightGoldenRodYellow
+  control UiMobile
+end box
+
+== Initialization ==
+activate UiBandPlugin
+UiMobile -> UiBandPlugin : bandPlugin.addEventListener('data:accelerometer', aggregateAcc)
+UiMobile -> UiBandPlugin : bandPlugin.addEventListener('data:gyroscope', aggregateGyro)
+UiMobile -> UiBandPlugin : bandPlugin.addEventListener('data:magnetometer', aggregateMag)
+UiMobile -> UiBandPlugin : start(config)
+note left
+**config** may consist of sampling
+for each sensor
+end note
+== Async data stream ==
+UiBandPlugin --> UiMobile : @data:accelerometer, axesData: AxesData
+UiMobile -> UiMobile : aggregateAcc(axesData)
+
+
+UiBandPlugin --> UiMobile : @data:gyroscope, axesData: AxesData
+UiMobile -> UiMobile : aggregateGyro(axesData)
+
+UiBandPlugin --> UiMobile : @data:magnetometer, axesData: AxesData
+UiMobile -> UiMobile : aggregateMag(axesData)
+
+== Teardown ==
+
+UiMobile -> UiBandPlugin : stop()
+UiMobile -> UiBandPlugin : bandPlugin.removeEventListener('data:accelerometer', aggregateAcc)
+UiMobile -> UiBandPlugin : bandPlugin.removeEventListener('data:gyroscope', aggregateGyro)
+UiMobile -> UiBandPlugin : bandPlugin.removeEventListener('data:magnetometer', aggregateMag)
+deactivate UiBandPlugin
+
+== Forced sensors data ==
+
+UiMobile -> UiBandPlugin : getPressure()
+UiBandPlugin -> UiMobile : number
+UiMobile -> UiMobile : save
+
+UiMobile -> UiBandPlugin : getAltitude()
+UiBandPlugin -> UiMobile : number
+UiMobile -> UiMobile : save
+
+UiMobile -> UiBandPlugin : getTemperature()
+UiBandPlugin -> UiMobile : number
+UiMobile -> UiMobile : save
+
+UiMobile -> UiBandPlugin : getIlluminance()
+UiBandPlugin -> UiMobile : number
+UiMobile -> UiMobile : save
+
+
+@enduml

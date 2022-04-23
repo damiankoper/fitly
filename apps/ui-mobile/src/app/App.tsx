@@ -10,12 +10,28 @@ import { TopNav } from './components/navigation/top-nav';
 import { LogBox } from 'react-native';
 import store from './state/store';
 
+import { ActivityTrackingMeta } from '@fitly/shared/meta';
+
+import { instanceToPlain } from 'class-transformer';
+import MetaWearModule from './native-modules/MetaWearModule';
+import { showNotification } from './utils/notifications';
+
 LogBox.ignoreLogs([
 	"[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
 ]);
 
+console.log(instanceToPlain(new ActivityTrackingMeta()));
+
 const App: React.FC<{}> = () => {
 	React.useEffect(() => {
+		MetaWearModule.setupPreviouslyConnectedMetaWear()
+			.then(() => {
+				showNotification('Przywrócono połączenie z urządzeniem MetaWear!');
+				MetaWearModule.blinkBlueLED(1 + 1);
+			})
+			.catch(() => {
+				showNotification('Niw wykryto urządzenia MetaWear, połącz się ponownie!');
+			});
 		// On app close
 		return () => {
 			DeviceEventEmitter.removeAllListeners();

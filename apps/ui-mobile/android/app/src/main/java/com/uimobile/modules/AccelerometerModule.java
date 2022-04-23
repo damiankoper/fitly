@@ -26,10 +26,11 @@ import bolts.Continuation;
 
 public class AccelerometerModule extends ReactContextBaseJavaModule {
 
-
 	private MainApplication application;
 	private ReactApplicationContext reactContext;
 	private Accelerometer accelerometer;
+	
+	private static float ACC_ODR = 25f;
 
 	public AccelerometerModule(ReactApplicationContext context) {
 		super(context);
@@ -60,6 +61,7 @@ public class AccelerometerModule extends ReactContextBaseJavaModule {
 			map.putString(entry.getKey(), entry.getValue());
 		}
 
+		Log.i("MainActivity", "Accelometer emits");
 		reactContext
 			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
 			.emit("onAccelerometerDataEmit", map);
@@ -69,15 +71,13 @@ public class AccelerometerModule extends ReactContextBaseJavaModule {
 
 		accelerometer = application.getBoard().getModule(Accelerometer.class);
 		accelerometer.configure()
-			.odr(25f) // Set sampling frequency to 25Hz, or closest valid ODR
+			.odr(ACC_ODR)
 			.commit();
 		Log.i("MainActivity", "Accelometer started");
 
 		accelerometer.acceleration().addRouteAsync(routeComponent -> routeComponent
 			.stream(
 				(Subscriber) (data, objects) -> emitAccEvent(data.value(Acceleration.class))
-				// Log.i("MainActivity",
-				// 	"Acc: " + data.value(Acceleration.class).toString())
 			))
 			.continueWith((Continuation<Route, Void>) task -> {
 				accelerometer.acceleration().start();
@@ -91,6 +91,6 @@ public class AccelerometerModule extends ReactContextBaseJavaModule {
 		accelerometer.acceleration().stop();
 		Log.i("MainActivity", "Accelometer stoped");
 
-		//board.tearDown(); ->mozliwe ze czysci wszystkie polaczenia
+		application.getBoard().tearDown();
 	}
 }
