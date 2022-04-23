@@ -61,6 +61,7 @@ public class AccelerometerModule extends ReactContextBaseJavaModule {
 			map.putString(entry.getKey(), entry.getValue());
 		}
 
+		Log.i("MainActivity", "Accelometer emits");
 		reactContext
 			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
 			.emit("onAccelerometerDataEmit", map);

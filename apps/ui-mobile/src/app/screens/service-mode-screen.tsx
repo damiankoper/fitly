@@ -26,6 +26,9 @@ import {
   SensorAsyncSample,
 } from 'libs/shared/meta/src/lib/models';
 import { instanceToPlain } from 'class-transformer';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://localhost:3333/api';
 
 interface ServiceModeScreenProps {
   navigation: any;
@@ -58,51 +61,52 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     setInputValue('');
   };
 
-  const sendData = (activityTracking: ActivityTracking) => {
-    //interwal w modelu to data poczatkowa(czyszczenie danych) i data koncowa(wysylanie danych)
-    //start->odpala sie interval(zwraca swoj id)->pierwsze odpalenie, nic nie wysylasz->przy kolejnych wysylasz i czyscisz
-    //czyscic interval przy kazdej mozliwosci zamkniecia komponentu(zmiana komponentu, przycisk stop itp)
-    //instanceToPlain(activityTracking);
+  const sendData = (
+    activityTrackingMeta: ActivityTrackingMeta,
+    accData: SensorAsyncSample[],
+    gyroData: SensorAsyncSample[],
+    magData: SensorAsyncSample[]
+  ) => {
+    console.log('Send data');
+    activityTrackingMeta.interval.set({ end: DateTime.now() });
+    activityTrackingMeta.repeats = repeats;
+
+    let activityTracking = new ActivityTracking(
+      activityTrackingMeta,
+      accData,
+      gyroData,
+      magData
+    );
+
+    //console.log(instanceToPlain(activityTracking));
+    axios.post('/data', instanceToPlain(activityTracking));
   };
 
   const startModules = () => {
-    // const intervalID = setInterval(() => {
-    //   if (activityTrackingMeta) {
-    //     activityTrackingMeta.interval.set({ end: DateTime.now() });
-    //     activityTrackingMeta.repeats = repeats;
+    const intervalID = setInterval(() => {
+      if (activityTrackingMeta) {
+        sendData(activityTrackingMeta, accData, gyroData, magData);
+      }
+      accData = [];
+      gyroData = [];
+      magData = [];
+      activityTrackingMeta = new ActivityTrackingMeta(
+        Interval.fromDateTimes(DateTime.now(), DateTime.now())
+      );
+    }, 1000);
 
-    //     let activityTracking = new ActivityTracking(
-    //       activityTrackingMeta,
-    //       accData,
-    //       gyroData,
-    //       magData
-    //     );
-
-    //     console.log(instanceToPlain(activityTracking));
-    //   }
-    //   accData = [];
-    //   gyroData = [];
-    //   magData = [];
-    //   activityTrackingMeta = new ActivityTrackingMeta(
-    //     Interval.fromDateTimes(DateTime.now(), DateTime.now())
-    //   );
-    // }, 1000);
-
-    // setIdInterval(intervalID);
-    // resetData();
+    setIdInterval(intervalID);
+    resetData();
     MetaWearModule.startMetaWearModules();
   };
-
-  //!!!!
-  //naUnmounted tez trzeba dac clearInterval()
-  //!!!!
 
   const stopModules = () => {
     console.log('CLEARING_INTERVAL:', idInterval);
     clearInterval(idInterval);
     console.log('tempValue', tempValue.length);
-
-    // sendData();
+    if (activityTrackingMeta) {
+      sendData(activityTrackingMeta, accData, gyroData, magData);
+    }
     MetaWearModule.stopMetaWearModules();
   };
 
@@ -167,6 +171,9 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     return () => {
       clearInterval(idInterval);
       resetData();
+      accData = [];
+      gyroData = [];
+      magData = [];
     };
   }, []);
 
@@ -239,9 +246,5 @@ const styles = StyleSheet.create({
 });
 
 //TODO:
-//setInterval sie nie wylacza, po kliknieciu stop dalej leci
-//tempValue sie chyba nie czysci, input po wyczyszczeniu przy pierwszym podaniu tempValue ma duzo wpisow
-//repeats sie nie przekazuje dobrze lub nie inkrementuje(zawsze daje 0 do SensorAsyncSample)
+//ponowne wlaczenie interval nie pobiera danych z tablic?
 //przekazac typ cwiczenia do SensorAsyncSample
-//wysylanie axiosem SensorAsyncSample
-//
