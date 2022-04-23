@@ -72,7 +72,7 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     gyroData: SensorAsyncSample[],
     magData: SensorAsyncSample[]
   ) => {
-    console.log('Send data');
+    console.log('Send data called');
     activityTrackingMeta.interval.set({ end: DateTime.now() });
     activityTrackingMeta.repeats = repeats;
     //activityTrackingMeta.type = exercises[selectedIndex.row]
@@ -85,7 +85,14 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     );
 
     //console.log(instanceToPlain(activityTracking));
-    axios.post('/data', instanceToPlain(activityTracking));
+    axios.post('/data', instanceToPlain(activityTracking))
+    .then((data) => {
+      console.log('then: ', data)
+    })
+    .catch((error)=>{
+      console.log("catch: post error");
+      alert(error.message)
+    })
   };
 
   const startModules = () => {
