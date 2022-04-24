@@ -5,6 +5,8 @@ import { ListRenderItemInfo, StyleSheet } from 'react-native';
 import { addEventListenerToBluetoothModule, DeviceInfo } from '../events/bluetooth-module.listener';
 import BluetoothModule from '../native-modules/BluetoothModule';
 import MetaWearModule from '../native-modules/MetaWearModule';
+import { connectedToDevice } from '../state/app/app.slice';
+import { RootState } from '../state/root.reducer';
 import { showNotification } from '../utils/notifications';
 
 const SEARCHING_TIME = 10 * 1000;

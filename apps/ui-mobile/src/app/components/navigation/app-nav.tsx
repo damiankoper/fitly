@@ -12,47 +12,50 @@ import { BottomNav } from './bottom-nav';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
 import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
+import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
+import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
 const wrapScreen = (Component) => (props) => {
-  return (
-    <Layout style={styles.wrapper}>
-      <Component {...props} />
-    </Layout>
-  );
+	return (
+		<Layout style={styles.wrapper}>
+			<Component {...props} />
+		</Layout>
+	);
 };
 
 const TabNavigator = () => (
-  <Navigator
-    tabBar={(props) => <BottomNav {...props} />}
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Screen name="Home" component={wrapScreen(HomeScreen)} />
-    <Screen name="Exercise" component={wrapScreen(ExerciseScreen)} />
-    <Screen name="Guess" component={wrapScreen(GuessScreen)} />
-    <Screen name="History" component={wrapScreen(HistoryScreen)} />
-    <Screen name="Settings" component={wrapScreen(SettingScreen)} />
-    <Screen name="Profile" component={wrapScreen(ProfileScreen)} />
-    <Screen name="Service" component={wrapScreen(ServiceModeScreen)} />
-    <Screen
-      name="BluetoothConnection"
-      component={wrapScreen(BluetoothConnectionScreen)}
-    />
-  </Navigator>
+	<Navigator
+		tabBar={(props) => <BottomNav {...props} />}
+		initialRouteName="Home"
+		backBehavior="history"
+		screenOptions={{
+			headerShown: false,
+		}}
+	>
+		<Screen name="Home" component={wrapScreen(HomeScreen)} />
+		<Screen name="Exercise" component={wrapScreen(ExerciseScreen)} />
+		<Screen name="Guess" component={wrapScreen(GuessScreen)} />
+		<Screen name="History" component={wrapScreen(HistoryScreen)} />
+		<Screen name="Settings" component={wrapScreen(SettingScreen)} />
+		<Screen name="Profile" component={wrapScreen(ProfileScreen)} />
+		<Screen name="Service" component={wrapScreen(ServiceModeScreen)} />
+		<Screen name="BluetoothConnection" component={wrapScreen(BluetoothConnectionScreen)} />
+		<Screen name="NotConnectedScreen" component={wrapScreen(NotConnectedScreen)} />
+		<Screen name="NoPreviousActivityScreen" component={wrapScreen(NoPreviousActivityScreen)} />
+	</Navigator>
 );
 
-export const AppNavigator = () => (
-  <NavigationContainer>
-    <TabNavigator />
-  </NavigationContainer>
+export const AppNav = () => (
+	<NavigationContainer>
+		<TabNavigator />
+	</NavigationContainer>
 );
 
 const styles = StyleSheet.create({
-  wrapper: {
-    padding: 8,
-    flex: 1,
-  },
+	wrapper: {
+		padding: 8,
+		flex: 1,
+	},
 });

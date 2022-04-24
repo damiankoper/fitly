@@ -3,10 +3,12 @@ import { DeviceEventEmitter, StyleSheet } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { AppNavigator } from './components/navigation/app-nav';
+import { Provider } from 'react-redux';
+import { AppNav } from './components/navigation/app-nav';
 
 import { TopNav } from './components/navigation/top-nav';
 import { LogBox } from 'react-native';
+import store from './state/store';
 
 import { ActivityTrackingMeta } from '@fitly/shared/meta';
 
@@ -37,24 +39,14 @@ const App: React.FC<{}> = () => {
 	}, []);
 
 	return (
-		<>
+		<Provider store={store}>
 			<IconRegistry icons={EvaIconsPack} />
 			<ApplicationProvider {...eva} theme={eva.light}>
 				<TopNav />
-				<AppNavigator />
+				<AppNav />
 			</ApplicationProvider>
-		</>
+		</Provider>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	screenWrapper: {
-		flex: 1,
-		padding: 16,
-	},
-});
 
 export default App;

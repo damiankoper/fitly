@@ -2,7 +2,6 @@ import { Layout, Button, Input } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { NativeModules, StyleSheet } from 'react-native';
 import { SelectSimple } from '../components/inputs/select-simple';
-import { EXERCISES } from '../config';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
 import {
   AccelerometerData,
@@ -27,8 +26,10 @@ import {
 } from 'libs/shared/meta/src/lib/models';
 import { instanceToPlain } from 'class-transformer';
 import axios from 'axios';
+import { IndexPath } from '@ui-kitten/components';
+import { EXERCISES_ENUM } from '../config';
 
-axios.defaults.baseURL = 'http://localhost:3333/api';
+axios.defaults.baseURL = 'http://10.0.2.2:3333/api';
 
 interface ServiceModeScreenProps {
   navigation: any;
@@ -42,6 +43,10 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState<string>('');
   const [idInterval, setIdInterval] = useState<NodeJS.Timer>(null);
+
+	const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+
+	const exercises = Object.values(EXERCISES_ENUM)
 
   let accData: SensorAsyncSample[] = [];
   let gyroData: SensorAsyncSample[] = [];
@@ -67,9 +72,10 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     gyroData: SensorAsyncSample[],
     magData: SensorAsyncSample[]
   ) => {
-    console.log('Send data');
+    console.log('Send data called');
     activityTrackingMeta.interval.set({ end: DateTime.now() });
     activityTrackingMeta.repeats = repeats;
+    //activityTrackingMeta.type = exercises[selectedIndex.row]
 
     let activityTracking = new ActivityTracking(
       activityTrackingMeta,
@@ -79,7 +85,14 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
     );
 
     //console.log(instanceToPlain(activityTracking));
-    axios.post('/data', instanceToPlain(activityTracking));
+    axios.post('/data', instanceToPlain(activityTracking))
+    .then((data) => {
+      console.log('then: ', data)
+    })
+    .catch((error)=>{
+      console.log("catch: post error");
+      alert(error.message)
+    })
   };
 
   const startModules = () => {
@@ -179,7 +192,11 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
 
   return (
     <Layout style={styles.container}>
-      <SelectSimple options={EXERCISES} placeholder="Exercise name" />
+      <SelectSimple
+				selectedIndex={selectedIndex}
+				setSelectedIndex={setSelectedIndex}
+				placeholder="Exercise name"
+			/>
 
       <Layout style={styles.buttonsWrapper}>
         <Button

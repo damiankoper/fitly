@@ -25,6 +25,9 @@
     "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
     "@react-navigation/bottom-tabs": "*",
+    "react-redux": "*",
+    "@reduxjs/toolkit": "*",
+    "react-native-linear-gradient": "*",
     "lodash": "*",
     "axios": "*"
   }
