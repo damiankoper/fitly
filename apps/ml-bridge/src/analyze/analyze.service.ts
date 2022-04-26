@@ -12,7 +12,7 @@ export class AnalyzeService {
   async sendToML(data: ActivityTracking): Promise<ActivityTrackingMeta> {
     const plainData = instanceToPlain(data);
     const result = await firstValueFrom(
-      this.httpService.post('analyse', plainData)
+      this.httpService.post('analyze', plainData)
     );
     const responseMeta = plainToInstance(ActivityTrackingMeta, result.data);
     await validateOrReject(responseMeta);

@@ -31,7 +31,7 @@ describe('AnalyzeService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should send data to analyse and validate response', async () => {
+  it('should send data to analyze and validate response', async () => {
     const activityTracking = new (jest.fn())() as ActivityTracking;
     const interval = Interval.after(DateTime.now(), 10000);
     const response = {
@@ -55,7 +55,7 @@ describe('AnalyzeService', () => {
     });
   });
 
-  it('should send data to analyse and throw on invalid interval', async () => {
+  it('should send data to analyze and throw on invalid interval', async () => {
     const activityTracking = new (jest.fn())() as ActivityTracking;
     const response = {
       data: { interval: 'dupa', repeats: 'nonnumber', type: 123 },
@@ -69,7 +69,7 @@ describe('AnalyzeService', () => {
     await expect(result).rejects.toThrow(Error);
   });
 
-  it('should send data to analyse and throw on invalid repeats and type', async () => {
+  it('should send data to analyze and throw on invalid repeats and type', async () => {
     const activityTracking = new (jest.fn())() as ActivityTracking;
     const interval = Interval.after(DateTime.now(), 10000);
     const response = {

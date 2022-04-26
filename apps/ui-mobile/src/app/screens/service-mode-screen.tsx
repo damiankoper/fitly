@@ -1,206 +1,140 @@
-import { Layout, Button, Input } from '@ui-kitten/components';
+import {
+  Layout,
+  Button,
+  Select,
+  SelectItem,
+  Text,
+} from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { NativeModules, StyleSheet } from 'react-native';
-import { SelectSimple } from '../components/inputs/select-simple';
+import { StyleSheet } from 'react-native';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
-import {
-  AccelerometerData,
-  addEventListenerToAcceleometerModule,
-} from '../events/accelerometer-module.listener';
-import {
-  addEventListenerToGyroModule,
-  GyroscopeData,
-} from '../events/gyroscope-module.listener';
-import {
-  addEventListenerToMagnetometerModule,
-  MagnetometerData,
-} from '../events/magnetometer-module.listener';
-import MetaWearModule from '../native-modules/MetaWearModule';
 import _ from 'lodash';
-import { DateTime, Interval } from 'luxon';
-import { AxesData } from 'libs/shared/meta/src/lib/models/axes-data.model';
-import {
-  ActivityTracking,
-  ActivityTrackingMeta,
-  SensorAsyncSample,
-} from 'libs/shared/meta/src/lib/models';
-import { instanceToPlain } from 'class-transformer';
-import axios from 'axios';
+import { AxesData, SensorAsyncSample, ActivityType } from '@fitly/shared/meta';
 import { IndexPath } from '@ui-kitten/components';
-import { EXERCISES_ENUM } from '../config';
+import { ActivityNames } from '../assets/common/activity-names';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { MetaWearProps } from '../App';
+import { showNotification } from '@fitly/ui-utils';
 
-axios.defaults.baseURL = 'http://10.0.2.2:3333/api';
-
-interface ServiceModeScreenProps {
-  navigation: any;
-}
-
-let tempValue = '';
-let repeats = 0;
-
-export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
+type NavProps = BottomTabScreenProps<BottomTabParamList, 'Service'>;
+export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
   navigation,
+  metawear,
+  tracker,
 }) => {
-  const [inputValue, setInputValue] = useState<string>('');
-  const [idInterval, setIdInterval] = useState<NodeJS.Timer>(null);
+  const throttleInteval = 1000;
+  const defaultSensorSample = new SensorAsyncSample(new AxesData(0, 0, 0));
+  const [repeats, setRepeats] = useState(0);
+  const [selectedActivity, setSelectedActivity] = useState(
+    ActivityType.UNKNOWN
+  );
 
-	const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+  const [lastAccData, _setLastAccData] = useState(defaultSensorSample);
+  const setLastAccData = _.throttle(_setLastAccData, throttleInteval);
+  const [lastGyroData, _setLastGyroData] = useState(defaultSensorSample);
+  const setLastGyroData = _.throttle(_setLastGyroData, throttleInteval);
+  const [lastMagData, _setLastMagData] = useState(defaultSensorSample);
+  const setLastMagData = _.throttle(_setLastMagData, throttleInteval);
 
-	const exercises = Object.values(EXERCISES_ENUM)
+  function resetData() {
+    setRepeats(0);
+    setLastAccData(defaultSensorSample);
+    setLastGyroData(defaultSensorSample);
+    setLastMagData(defaultSensorSample);
+  }
 
-  let accData: SensorAsyncSample[] = [];
-  let gyroData: SensorAsyncSample[] = [];
-  let magData: SensorAsyncSample[] = [];
-
-  let activityTrackingMeta: ActivityTrackingMeta;
-
-  let setInputValueThrottled = _.throttle(setInputValue, 1000);
-
-  const addRepetition = () => {
-    repeats += 1;
-  };
-
-  const resetData = () => {
-    repeats = 0;
-    tempValue = '';
-    setInputValue('');
-  };
-
-  const sendData = (
-    activityTrackingMeta: ActivityTrackingMeta,
-    accData: SensorAsyncSample[],
-    gyroData: SensorAsyncSample[],
-    magData: SensorAsyncSample[]
-  ) => {
-    console.log('Send data called');
-    activityTrackingMeta.interval.set({ end: DateTime.now() });
-    activityTrackingMeta.repeats = repeats;
-    //activityTrackingMeta.type = exercises[selectedIndex.row]
-
-    let activityTracking = new ActivityTracking(
-      activityTrackingMeta,
-      accData,
-      gyroData,
-      magData
-    );
-
-    //console.log(instanceToPlain(activityTracking));
-    axios.post('/data', instanceToPlain(activityTracking))
-    .then((data) => {
-      console.log('then: ', data)
-    })
-    .catch((error)=>{
-      console.log("catch: post error");
-      alert(error.message)
-    })
-  };
-
-  const startModules = () => {
-    const intervalID = setInterval(() => {
-      if (activityTrackingMeta) {
-        sendData(activityTrackingMeta, accData, gyroData, magData);
-      }
-      accData = [];
-      gyroData = [];
-      magData = [];
-      activityTrackingMeta = new ActivityTrackingMeta(
-        Interval.fromDateTimes(DateTime.now(), DateTime.now())
-      );
-    }, 1000);
-
-    setIdInterval(intervalID);
+  function startModules() {
     resetData();
-    MetaWearModule.startMetaWearModules();
-  };
+    metawear.start();
+    tracker.startService();
+  }
 
-  const stopModules = () => {
-    console.log('CLEARING_INTERVAL:', idInterval);
-    clearInterval(idInterval);
-    console.log('tempValue', tempValue.length);
-    if (activityTrackingMeta) {
-      sendData(activityTrackingMeta, accData, gyroData, magData);
-    }
-    MetaWearModule.stopMetaWearModules();
-  };
+  function stopModules() {
+    tracker.stop();
+    metawear.stop();
+    resetData();
+  }
 
-  const addToArray = (
-    array: SensorAsyncSample[],
-    x: String,
-    y: String,
-    z: String
-  ) => {
-    const sas = new SensorAsyncSample(
-      new AxesData(Number(x), Number(y), Number(z))
-    );
-    array.push(sas);
-  };
-
-  const createTempValue = (name: string, x: String, y: String, z: String) => {
-    return 'Device: ' + name + ' x: ' + x + ' y: ' + y + ' z: ' + z + '\n';
-  };
+  function processData(
+    data: AxesData,
+    setTracker: (x: SensorAsyncSample) => void,
+    setLast: (x: SensorAsyncSample) => void
+  ) {
+    const sample = new SensorAsyncSample(data);
+    setTracker(sample);
+    setLast(sample);
+  }
 
   useEffect(() => {
-    addEventListenerToAcceleometerModule(
-      'onAccelerometerDataEmit',
-      (newDevice) => {
-        tempValue += createTempValue(
-          'acc',
-          newDevice.x,
-          newDevice.y,
-          newDevice.z
-        );
-        setInputValueThrottled(tempValue);
-        addToArray(accData, newDevice.x, newDevice.y, newDevice.z);
-      }
-    );
-
-    addEventListenerToMagnetometerModule(
-      'onMagnetometerDataEmit',
-      (newDevice) => {
-        tempValue += createTempValue(
-          'mag',
-          newDevice.x,
-          newDevice.y,
-          newDevice.z
-        );
-
-        setInputValueThrottled(tempValue);
-        addToArray(magData, newDevice.x, newDevice.y, newDevice.z);
-      }
-    );
-
-    addEventListenerToGyroModule('onGyroscopeDataEmit', (newDevice) => {
-      tempValue += createTempValue(
-        'gyro',
-        newDevice.x,
-        newDevice.y,
-        newDevice.z
+    const events: (() => void)[] = [];
+    const navigationEvents: (() => void)[] = [];
+    navigation.addListener('focus', () => {
+      events.push(
+        metawear.accelerometerData.sub((data) =>
+          processData(
+            data,
+            tracker.addAccelerometerSample.bind(tracker),
+            setLastAccData
+          )
+        ),
+        metawear.gyroscopeData.sub((data) =>
+          processData(
+            data,
+            tracker.addGyroscopeSample.bind(tracker),
+            setLastGyroData
+          )
+        ),
+        metawear.magnetometerData.sub((data) =>
+          processData(
+            data,
+            tracker.addMagnetometerSample.bind(tracker),
+            setLastMagData
+          )
+        ),
+        tracker.onError.sub((error) => {
+          showNotification(error.message);
+        })
       );
-      setInputValueThrottled(tempValue);
-      addToArray(gyroData, newDevice.x, newDevice.y, newDevice.z);
+    });
+    navigation.addListener('blur', () => {
+      resetData();
+      events.forEach((t) => t());
     });
 
-    // componentWillUnmount
     return () => {
-      clearInterval(idInterval);
-      resetData();
-      accData = [];
-      gyroData = [];
-      magData = [];
+      navigationEvents.forEach((t) => t());
     };
   }, []);
 
+  const activityTypeArray = Object.values(ActivityType);
+  function getActivityIndexPath(activity: ActivityType): IndexPath {
+    return new IndexPath(activityTypeArray.findIndex((a) => a === activity));
+  }
+
+  function setActivityFromIndexPath(indexPath: IndexPath | IndexPath[]) {
+    if ('row' in indexPath) {
+      setSelectedActivity(activityTypeArray[indexPath.row]);
+      tracker.setActivityType(activityTypeArray[indexPath.row]);
+    }
+  }
+
   return (
     <Layout style={styles.container}>
-      <SelectSimple
-				selectedIndex={selectedIndex}
-				setSelectedIndex={setSelectedIndex}
-				placeholder="Exercise name"
-			/>
+      <Select
+        size="large"
+        placeholder="Exercise name"
+        onSelect={setActivityFromIndexPath}
+        selectedIndex={getActivityIndexPath(selectedActivity)}
+        value={ActivityNames[selectedActivity]}
+      >
+        {Object.values(ActivityType).map((activity) => (
+          <SelectItem title={ActivityNames[activity]} key={activity} />
+        ))}
+      </Select>
 
       <Layout style={styles.buttonsWrapper}>
         <Button
-          style={styles.button}
+          style={{ ...styles.button, ...styles.buttonLeft }}
           size="giant"
           appearance="outline"
           onPress={startModules}
@@ -208,7 +142,7 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
           Start
         </Button>
         <Button
-          style={styles.button}
+          style={{ ...styles.button, ...styles.buttonRight }}
           size="giant"
           appearance="outline"
           onPress={stopModules}
@@ -217,22 +151,32 @@ export const ServiceModeScreen: React.FC<ServiceModeScreenProps> = ({
         </Button>
       </Layout>
 
-      <Input
-        value={inputValue}
-        multiline={true}
-        editable={false}
-        textStyle={{ minHeight: 256, maxHeight: 256 }}
-        placeholder="Here incoming data should appear"
-        style={styles.multiline}
-      />
+      <Layout style={styles.multiline}>
+        <Text>Repeats: {repeats}</Text>
+        <Text>
+          Acc: {lastAccData.data.x.toFixed(6)} {lastAccData.data.y.toFixed(6)}{' '}
+          {lastAccData.data.z.toFixed(6)}
+        </Text>
+        <Text>
+          Gyro: {lastGyroData.data.x.toFixed(6)}{' '}
+          {lastGyroData.data.y.toFixed(6)} {lastGyroData.data.z.toFixed(6)}
+        </Text>
+        <Text>
+          Mag: {lastMagData.data.x.toFixed(6)} {lastMagData.data.y.toFixed(6)}{' '}
+          {lastMagData.data.z.toFixed(6)}
+        </Text>
+      </Layout>
 
       <Button
         style={styles.buttonRepeat}
         size="giant"
         appearance="outline"
-        onPress={addRepetition}
+        onPress={() => {
+          setRepeats(repeats + 1);
+          tracker.addRepeats();
+        }}
       >
-        Increment
+        Increment repeats
       </Button>
       <BluetoothButton navigation={navigation} />
     </Layout>
@@ -245,23 +189,19 @@ const styles = StyleSheet.create({
   },
   buttonsWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
+    justifyContent: 'space-evenly',
+    marginTop: 12,
   },
   button: {
-    width: 150,
-    margin: 2,
+    flex: 1,
   },
+  buttonLeft: { marginRight: 6 },
+  buttonRight: { marginLeft: 6 },
   buttonRepeat: {
-    width: window.innerWidth,
-    marginBottom: 2,
+    height: 256,
+    marginBottom: 12,
   },
   multiline: {
-    marginTop: 24,
-    marginBottom: 24,
+    margin: 24,
   },
 });
-
-//TODO:
-//ponowne wlaczenie interval nie pobiera danych z tablic?
-//przekazac typ cwiczenia do SensorAsyncSample

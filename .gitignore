@@ -113,3 +113,9 @@ apps/ui-mobile-e2e/artifacts
 .eslintcache
 package-lock.json
 .env
+## Nested node_modules
+
+node_modules/
+## Nested node_modules
+
+node_modules/

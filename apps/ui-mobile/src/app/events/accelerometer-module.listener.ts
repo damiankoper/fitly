@@ -1,18 +1,18 @@
 import { DeviceEventEmitter } from 'react-native';
 
 export interface AccelerometerModuleEvents {
-	onAccelerometerDataEmit: (device: AccelerometerData) => void;
+  onAccelerometerDataEmit: (device: AccelerometerData) => void;
 }
 
 export interface AccelerometerData {
-	timeStamp: string;
-    x: string;
-	y: string;
-    z: string;
+  timeStamp: string;
+  x: string;
+  y: string;
+  z: string;
 }
 
 export function addEventListenerToAcceleometerModule<
-	K extends keyof AccelerometerModuleEvents
+  K extends keyof AccelerometerModuleEvents
 >(eventName: K, callback: AccelerometerModuleEvents[K]) {
-	DeviceEventEmitter.addListener(eventName, callback);
+  DeviceEventEmitter.addListener(eventName, callback);
 }

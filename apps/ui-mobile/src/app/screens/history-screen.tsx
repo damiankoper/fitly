@@ -1,8 +1,8 @@
+import { ActivityType } from '@fitly/shared/meta';
 import { Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityCardLarge } from '../components/cards/activity-card-large';
-import { EXERCISES_ENUM } from '../config';
 
 export const HistoryScreen = () => {
   return (
@@ -13,7 +13,7 @@ export const HistoryScreen = () => {
         </Text>
         <View style={styles.cardWrapper}>
           <ActivityCardLarge
-            activity={EXERCISES_ENUM.SQUATS}
+            activity={ActivityType.SQUATS}
             count={35}
             time="7:34"
             kcal={128}
@@ -22,7 +22,7 @@ export const HistoryScreen = () => {
         </View>
         <View style={styles.cardWrapper}>
           <ActivityCardLarge
-            activity={EXERCISES_ENUM.SQUATS}
+            activity={ActivityType.SQUATS}
             count={35}
             time="7:34"
             kcal={128}
@@ -34,7 +34,7 @@ export const HistoryScreen = () => {
         </Text>
         <View style={styles.cardWrapper}>
           <ActivityCardLarge
-            activity={EXERCISES_ENUM.SQUATS}
+            activity={ActivityType.SQUATS}
             count={35}
             time="7:34"
             kcal={128}
@@ -43,7 +43,7 @@ export const HistoryScreen = () => {
         </View>
         <View style={styles.cardWrapper}>
           <ActivityCardLarge
-            activity={EXERCISES_ENUM.SQUATS}
+            activity={ActivityType.SQUATS}
             count={35}
             time="7:34"
             kcal={128}
@@ -52,7 +52,7 @@ export const HistoryScreen = () => {
         </View>
         <View style={styles.cardWrapper}>
           <ActivityCardLarge
-            activity={EXERCISES_ENUM.SQUATS}
+            activity={ActivityType.SQUATS}
             count={35}
             time="7:34"
             kcal={128}

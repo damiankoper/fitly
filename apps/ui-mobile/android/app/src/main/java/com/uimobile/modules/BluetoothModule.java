@@ -50,20 +50,21 @@ public class BluetoothModule extends ReactContextBaseJavaModule {
   private BluetoothAdapter bluetoothAdapter;
   private ReactApplicationContext reactContext;
   private SharedPreferences.Editor editor;
+  private SharedPreferences settings;
 
   public BluetoothModule(ReactApplicationContext context) {
-	super(context);
-	reactContext = context;
-	application = (MainApplication) context.getApplicationContext();
-	bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		super(context);
+		reactContext = context;
+		application = (MainApplication) context.getApplicationContext();
+		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    SharedPreferences settings = application.getSharedPreferences("bluetooth",MODE_PRIVATE);
+    settings = application.getSharedPreferences("bluetooth",MODE_PRIVATE);
     editor = settings.edit();
   }
 
   @Override
   public String getName() {
-	return "BluetoothModule";
+		return "BluetoothModule";
   }
 
 
@@ -88,6 +89,10 @@ public class BluetoothModule extends ReactContextBaseJavaModule {
 	  editor.apply();
   }
 
+  @ReactMethod
+	public void getSavedConnectedBluetoothDevice(Promise promise) {
+		promise.resolve(settings.getString("lastMetaWearMacAddress", null));
+	}
 
   private void emitNewDeviceEvent(String deviceName, String deviceAddress) {
 	HashMap<String, String> hm = new HashMap<>();

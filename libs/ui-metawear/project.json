@@ -1,0 +1,23 @@
+{
+  "root": "libs/ui-metawear",
+  "sourceRoot": "libs/ui-metawear/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/ui-metawear/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ui-metawear"],
+      "options": {
+        "jestConfig": "libs/ui-metawear/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

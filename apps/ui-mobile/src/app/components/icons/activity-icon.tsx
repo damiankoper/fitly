@@ -1,10 +1,11 @@
+import { ActivityType } from '@fitly/shared/meta';
 import { useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { EXERCISES_ENUM, EXERCISES_DATA } from '../../config';
+import { ActivityIcons } from '../../assets/common/activity-icons';
 
 interface Props {
-  activity: EXERCISES_ENUM;
+  activity: ActivityType;
 }
 
 export const ActivityIcon: React.FC<Props> = ({ activity }) => {
@@ -12,7 +13,7 @@ export const ActivityIcon: React.FC<Props> = ({ activity }) => {
 
   return (
     <View style={[styles.container, { borderColor: theme['color-info-300'] }]}>
-      <Image style={styles.image} source={EXERCISES_DATA[activity].icon} />
+      <Image style={styles.image} source={ActivityIcons[activity]} />
     </View>
   );
 };

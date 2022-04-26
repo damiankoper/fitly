@@ -11,17 +11,17 @@ jest.mock('./analyze.service');
 
 describe('AnalyzeController', () => {
   let app: TestingModule;
-  const MockAnalyseService =
+  const MockAnalyzeService =
     new (AnalyzeService as jest.Mock<AnalyzeService>)() as jest.Mocked<AnalyzeService>;
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
       controllers: [AnalyzeController],
-      providers: [{ provide: AnalyzeService, useValue: MockAnalyseService }],
+      providers: [{ provide: AnalyzeService, useValue: MockAnalyzeService }],
     }).compile();
   });
 
-  it('should analyse and return 10 pushups', async () => {
+  it('should analyze and return 10 pushups', async () => {
     // given
     const controller = app.get<AnalyzeController>(AnalyzeController);
     const date1 = DateTime.fromISO('2020-09-06T12:00:00');
@@ -35,7 +35,7 @@ describe('AnalyzeController', () => {
       ActivityType.PUSHUPS,
       10
     );
-    MockAnalyseService.sendToML.mockResolvedValueOnce(responseMeta);
+    MockAnalyzeService.sendToML.mockResolvedValueOnce(responseMeta);
 
     // when
     const result = await controller.analyzeData(dto);

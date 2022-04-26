@@ -29,6 +29,7 @@
     "@reduxjs/toolkit": "*",
     "react-native-linear-gradient": "*",
     "lodash": "*",
-    "axios": "*"
+    "axios": "*",
+    "strongly-typed-events": "*"
   }
 }

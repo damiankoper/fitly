@@ -1,9 +1,9 @@
 import { DeviceInfo } from '../../events/bluetooth-module.listener';
 
 export interface AppState {
-	connectedDevice: DeviceInfo;
+  connectedDevice: DeviceInfo;
 }
 
 export const initialAppState: AppState = {
-	connectedDevice: null,
+  connectedDevice: null,
 };

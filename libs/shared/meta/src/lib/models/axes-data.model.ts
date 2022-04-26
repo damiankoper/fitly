@@ -11,8 +11,8 @@ export class AxesData {
   z: number;
 
   constructor(x: number, y: number, z: number) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
+    this.x = Number(x);
+    this.y = Number(y);
+    this.z = Number(z);
   }
 }

@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIcon } from '../icons/activity-icon';
 import { Text } from '@ui-kitten/components';
-import { EXERCISES_ENUM } from '../../config';
 import { commonStyles } from '../../assets/common/styles';
+import { ActivityType } from '@fitly/shared/meta';
 
 interface Props {
-  activity: EXERCISES_ENUM;
+  activity: ActivityType;
 }
 
 export const ActivityCardSmall: React.FC<Props> = ({ activity }) => {

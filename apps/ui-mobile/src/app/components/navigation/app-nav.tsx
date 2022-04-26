@@ -14,48 +14,61 @@ import { StyleSheet } from 'react-native';
 import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
 import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
 import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
+import { MetaWear } from '@fitly/ui-metawear';
+import { MetaWearProps } from '../../App';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
-const wrapScreen = (Component) => (props) => {
-	return (
-		<Layout style={styles.wrapper}>
-			<Component {...props} />
-		</Layout>
-	);
-};
+function wrapScreen(Component: any, outerProps: MetaWearProps) {
+  return (props: MetaWearProps) => {
+    return (
+      <Layout style={styles.wrapper}>
+        <Component {...props} {...outerProps} />
+      </Layout>
+    );
+  };
+}
 
-const TabNavigator = () => (
-	<Navigator
-		tabBar={(props) => <BottomNav {...props} />}
-		initialRouteName="Home"
-		backBehavior="history"
-		screenOptions={{
-			headerShown: false,
-		}}
-	>
-		<Screen name="Home" component={wrapScreen(HomeScreen)} />
-		<Screen name="Exercise" component={wrapScreen(ExerciseScreen)} />
-		<Screen name="Guess" component={wrapScreen(GuessScreen)} />
-		<Screen name="History" component={wrapScreen(HistoryScreen)} />
-		<Screen name="Settings" component={wrapScreen(SettingScreen)} />
-		<Screen name="Profile" component={wrapScreen(ProfileScreen)} />
-		<Screen name="Service" component={wrapScreen(ServiceModeScreen)} />
-		<Screen name="BluetoothConnection" component={wrapScreen(BluetoothConnectionScreen)} />
-		<Screen name="NotConnectedScreen" component={wrapScreen(NotConnectedScreen)} />
-		<Screen name="NoPreviousActivityScreen" component={wrapScreen(NoPreviousActivityScreen)} />
-	</Navigator>
+const TabNavigator = (props: MetaWearProps) => (
+  <Navigator
+    tabBar={(props) => <BottomNav {...props} />}
+    initialRouteName="Home"
+    backBehavior="history"
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Screen name="Home" component={wrapScreen(HomeScreen, props)} />
+    <Screen name="Exercise" component={wrapScreen(ExerciseScreen, props)} />
+    <Screen name="Guess" component={wrapScreen(GuessScreen, props)} />
+    <Screen name="History" component={wrapScreen(HistoryScreen, props)} />
+    <Screen name="Settings" component={wrapScreen(SettingScreen, props)} />
+    <Screen name="Profile" component={wrapScreen(ProfileScreen, props)} />
+    <Screen name="Service" component={wrapScreen(ServiceModeScreen, props)} />
+    <Screen
+      name="BluetoothConnection"
+      component={wrapScreen(BluetoothConnectionScreen, props)}
+    />
+    <Screen
+      name="NotConnectedScreen"
+      component={wrapScreen(NotConnectedScreen, props)}
+    />
+    <Screen
+      name="NoPreviousActivityScreen"
+      component={wrapScreen(NoPreviousActivityScreen, props)}
+    />
+  </Navigator>
 );
 
-export const AppNav = () => (
-	<NavigationContainer>
-		<TabNavigator />
-	</NavigationContainer>
+export const AppNav = (props: MetaWearProps) => (
+  <NavigationContainer>
+    <TabNavigator {...props} />
+  </NavigationContainer>
 );
 
 const styles = StyleSheet.create({
-	wrapper: {
-		padding: 8,
-		flex: 1,
-	},
+  wrapper: {
+    padding: 8,
+    flex: 1,
+  },
 });

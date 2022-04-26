@@ -2,11 +2,12 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIcon } from '../icons/activity-icon';
 import { Text, useTheme } from '@ui-kitten/components';
-import { EXERCISES_ENUM } from '../../config';
 import { commonStyles } from '../../assets/common/styles';
+import { ActivityType } from '@fitly/shared/meta';
+import { ActivityNames } from '../../assets/common/activity-names';
 
 interface Props {
-  activity: EXERCISES_ENUM;
+  activity: ActivityType;
   count: number;
   time: string;
   kcal: number;
@@ -26,7 +27,7 @@ export const ActivityCardLarge: React.FC<Props> = ({
     <View style={[commonStyles.defaultBorder, styles.container]}>
       <View style={styles.leftColumn}>
         <ActivityIcon activity={activity} />
-        <Text category="h4">{activity}</Text>
+        <Text category="h4">{ActivityNames[activity]}</Text>
         <Text>Last activity</Text>
       </View>
       <View style={styles.rightColumn}>

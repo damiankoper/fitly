@@ -16,7 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@fitly/ml-bridge/dto": ["libs/ml-bridge/dto/src/index.ts"],
-      "@fitly/shared/meta": ["libs/shared/meta/src/index.ts"]
+      "@fitly/shared/meta": ["libs/shared/meta/src/index.ts"],
+      "@fitly/ui-metawear": ["libs/ui-metawear/src/index.ts"],
+      "@fitly/ui-utils": ["libs/ui-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

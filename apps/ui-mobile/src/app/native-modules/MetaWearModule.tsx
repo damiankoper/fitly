@@ -1,5 +1,5 @@
+import { IMetaMearModule } from '@fitly/ui-metawear';
 import { NativeModules } from 'react-native';
-import { NativeModulesInterface } from '../interfaces/NativeModulesInterface';
 
-const { MetaWearModule } = NativeModules as NativeModulesInterface;
-export default MetaWearModule;
+const { MetaWearModule } = NativeModules;
+export default MetaWearModule as IMetaMearModule;
