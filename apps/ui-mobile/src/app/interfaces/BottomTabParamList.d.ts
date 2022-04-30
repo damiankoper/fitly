@@ -4,6 +4,7 @@ type BottomTabParamList = {
   Home: undefined;
   Exercise: undefined;
   ExerciseCounterScreen: { activity: ActivityType };
+  ExerciseResultsScreen: { activity: ActivityType };
   Guess: undefined;
   History: undefined;
   Settings: undefined;

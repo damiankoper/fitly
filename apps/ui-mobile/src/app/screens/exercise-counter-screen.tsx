@@ -11,8 +11,15 @@ type NavProps = BottomTabScreenProps<
   'ExerciseCounterScreen'
 >;
 
-export const ExerciseCounterScreen: React.FC<NavProps> = ({ route }) => {
+export const ExerciseCounterScreen: React.FC<NavProps> = ({
+  route,
+  navigation,
+}) => {
   const { activity } = route.params;
+
+  const handleStopClick = () => {
+    navigation.navigate('ExerciseResultsScreen', { activity: activity });
+  };
 
   return (
     <Layout style={styles.container}>
@@ -21,11 +28,11 @@ export const ExerciseCounterScreen: React.FC<NavProps> = ({ route }) => {
         <CounterSpinner content="35" />
       </View>
       <View style={styles.buttonContainer}>
-        <Button style={styles.button} appearance="outline" size='giant'>
+        <Button style={styles.button} appearance="outline" size="giant">
           Pause
         </Button>
 
-        <Button style={styles.button} appearance="filled" size='giant'>
+        <Button style={styles.button} appearance="filled" size="giant" onPress={handleStopClick}>
           Stop
         </Button>
       </View>
@@ -36,17 +43,16 @@ export const ExerciseCounterScreen: React.FC<NavProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   spinnerWrapper: {
     alignItems: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
-
+    justifyContent: 'space-between',
   },
-  button:{
+  button: {
     width: 180,
-  }
+  },
 });

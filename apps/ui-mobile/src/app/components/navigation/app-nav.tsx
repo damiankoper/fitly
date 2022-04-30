@@ -17,6 +17,7 @@ import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activit
 import { ExerciseCounterScreen } from '../../screens/exercise-counter-screen';
 import { MetaWearProps } from '../../App';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { ExerciseResultsScreen } from '../../screens/exercise-results-screen';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
@@ -61,6 +62,10 @@ const TabNavigator = (props: MetaWearProps) => (
     <Screen
       name="ExerciseCounterScreen"
       component={wrapScreen(ExerciseCounterScreen, props)}
+    />
+    <Screen
+      name="ExerciseResultsScreen"
+      component={wrapScreen(ExerciseResultsScreen, props)}
     />
   </Navigator>
 );

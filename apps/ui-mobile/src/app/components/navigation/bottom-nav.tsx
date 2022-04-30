@@ -21,7 +21,7 @@ export const BottomNav = ({ navigation, state }) => {
     if (state.index !== customNavState) {
       if (state.index > 3 && state.index < 10) {
         setCustomNavState(4);
-      } else if (state.index == 10){
+      } else if (state.index == 10 || state.index == 11){
         setCustomNavState(1);
       }
       else {
