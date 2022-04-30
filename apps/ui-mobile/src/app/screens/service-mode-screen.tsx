@@ -15,6 +15,7 @@ import { ActivityNames } from '../assets/common/activity-names';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Service'>;
 export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({

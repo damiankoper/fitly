@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { BluetoothButton } from '../components/buttons/bluetooth-button';
 import { commonStyles } from '../assets/common/styles';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 
 const useToggleState = (initialState = false) => {
   const [checked, setChecked] = React.useState(initialState);

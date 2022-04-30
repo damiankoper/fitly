@@ -9,8 +9,8 @@ import { ActivityCardLarge } from '../components/cards/activity-card-large';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/root.reducer';
 import { ActivityType } from '@fitly/shared/meta';
-import { MetaWear } from '@fitly/ui-metawear';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 
 export const StepsIcon = () => {
   const theme = useTheme();

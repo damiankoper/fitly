@@ -8,6 +8,7 @@ import {
   addEventListenerToBluetoothModule,
   DeviceInfo,
 } from '../events/bluetooth-module.listener';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import BluetoothModule from '../native-modules/BluetoothModule';
 
 const SEARCHING_TIME = 10 * 1000;

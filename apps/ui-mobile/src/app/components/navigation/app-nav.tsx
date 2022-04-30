@@ -14,8 +14,9 @@ import { StyleSheet } from 'react-native';
 import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
 import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
 import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
-import { MetaWear } from '@fitly/ui-metawear';
+import { ExerciseCounterScreen } from '../../screens/exercise-counter-screen';
 import { MetaWearProps } from '../../App';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
@@ -56,6 +57,10 @@ const TabNavigator = (props: MetaWearProps) => (
     <Screen
       name="NoPreviousActivityScreen"
       component={wrapScreen(NoPreviousActivityScreen, props)}
+    />
+    <Screen
+      name="ExerciseCounterScreen"
+      component={wrapScreen(ExerciseCounterScreen, props)}
     />
   </Navigator>
 );
