@@ -12,6 +12,7 @@ import { ActivityType } from '@fitly/shared/meta';
 import { MetaWear } from '@fitly/ui-metawear';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import BluetoothModule from '../native-modules/BluetoothModule';
+import ActivityLineChart from '../components/charts/ActivityLineChart';
 
 export const StepsIcon = () => {
 	const theme = useTheme();
@@ -58,8 +59,7 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
 		<Layout>
 			<ScrollView>
 				<UserCard name="Jan Nikodem" title="Master of squats" />
-				<Text style={styles.placeholder}>placeholder wykresu</Text>
-
+				<ActivityLineChart />
 				<View style={styles.cardRow}>
 					<View style={[styles.cardColumn, styles.leftColumn]}>
 						<DataCardLarge
