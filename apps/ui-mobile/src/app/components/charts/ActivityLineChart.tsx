@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-//@ts-expect-error
 import { LineChart, XAxis } from 'react-native-svg-charts';
 import { Text, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-//@ts-expect-error
 import * as shape from 'd3-shape';
-import { Circle } from 'react-native-svg';
+import { Circle, Rect, G, Svg } from 'react-native-svg';
 
 interface DataType {
 	value: number;
@@ -24,23 +22,40 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({}) => {
 		{ value: 5, date: '2022-06-06' },
 		{ value: 30, date: '2022-06-07' },
 	];
-	const backgroundColor = 'white';
-	const [selectedMarker, setSelectedMarker] = useState(data[4]);
+	const backgroundColor = 'rgba(255,255,255,0.5)';
+	const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number>(4);
 
-	const ChartPoints = ({ data, ...props }: any) => {
-		console.log(props);
+	const ChartPoints = ({ data, x, y, ...props }: any) => {
+		return data.map((item: DataType, index: number) => {
+			const isSelected = selectedMarkerIndex === index;
+			const _r = 16;
+			const _largerR = _r * 4.2;
 
-		return data.map((item: DataType, index: number) => (
-			<Circle
-				key={index}
-				cx={props.x(index)}
-				cy={props.y(item.value)}
-				r={50}
-				stroke={props.color}
-				fill="black"
-				onPress={() => console.log(item)}
-			/>
-		));
+			return (
+				<React.Fragment key={index}>
+					<Circle
+						cx={x(index)}
+						cy={y(item.value)}
+						r={_largerR}
+						onPress={() => setSelectedMarkerIndex(index)}
+					/>
+					<Circle
+						cx={x(index)}
+						cy={y(item.value)}
+						r={isSelected ? _r : _r / 2}
+						fill="rgb(89, 139, 255)"
+					/>
+					{isSelected && (
+						<Circle
+							fill="rgb(255, 255, 255)"
+							cx={x(index)}
+							cy={y(item.value)}
+							r={_r / 2}
+						/>
+					)}
+				</React.Fragment>
+			);
+		});
 	};
 
 	const formatXLabelFromData = (_: number, index: number) => {
@@ -52,7 +67,9 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({}) => {
 	};
 	return (
 		<View style={styles.container}>
-			<Text style={styles.selectedDayValue}>{selectedMarker.value}</Text>
+			<Text style={styles.selectedDayValue}>
+				{data[selectedMarkerIndex].value}
+			</Text>
 			<Text style={styles.valueType}>kcal</Text>
 			<LinearGradient
 				start={{ x: 0, y: 0.5 }}
@@ -112,11 +129,15 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 	},
 	lineChart: {
-		height: 300,
-		zIndex: -1,
+		height: 280,
+		zIndex: 0,
+		elevation: -1,
 	},
 	linearGradient: {
-		zIndex: 2,
+		zIndex: 1,
+		elevation: 1,
+		paddingLeft: 15,
+		paddingRight: 15,
 	},
 	selectedDayValue: {
 		fontSize: 32,
