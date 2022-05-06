@@ -92,10 +92,10 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 			public Void then(Task<Void> task) throws Exception {
 				if (task.isFaulted()) {
 					Log.i("MainActivity", "Failed to connect");
-					promise.reject("Failed to connect", task.getError());
+					promise.reject(task.getError());
 				} else {
 					Log.i("MainActivity", "Connected");
-					promise.resolve("Connected");
+					promise.resolve(true);
 					board.readDeviceInformationAsync()
 						.continueWith(new Continuation<DeviceInformation, Void>() {
 							@Override

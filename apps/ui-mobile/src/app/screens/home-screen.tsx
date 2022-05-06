@@ -1,5 +1,5 @@
 import { Icon, Layout, Text, useTheme } from '@ui-kitten/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UserCard } from '../components/cards/user-card';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { DataCardLarge } from '../components/cards/data-card-large';
@@ -11,128 +11,140 @@ import { RootState } from '../state/root.reducer';
 import { ActivityType } from '@fitly/shared/meta';
 import { MetaWear } from '@fitly/ui-metawear';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import BluetoothModule from '../native-modules/BluetoothModule';
 
 export const StepsIcon = () => {
-  const theme = useTheme();
+	const theme = useTheme();
 
-  return (
-    <Icon
-      name="pin-outline"
-      style={styles.icon}
-      fill={theme['color-primary-default']}
-    />
-  );
+	return (
+		<Icon
+			name="pin-outline"
+			style={styles.icon}
+			fill={theme['color-primary-default']}
+		/>
+	);
 };
 
 export const CaloriesIcon = () => {
-  const theme = useTheme();
+	const theme = useTheme();
 
-  return (
-    <Icon
-      name="flash-outline"
-      style={styles.icon}
-      fill={theme['color-danger-default']}
-    />
-  );
+	return (
+		<Icon
+			name="flash-outline"
+			style={styles.icon}
+			fill={theme['color-danger-default']}
+		/>
+	);
 };
 
 export const TimeIcon = () => {
-  const theme = useTheme();
+	const theme = useTheme();
 
-  return (
-    <Icon
-      name="clock-outline"
-      style={styles.icon}
-      fill={theme['color-basic-700']}
-    />
-  );
+	return (
+		<Icon
+			name="clock-outline"
+			style={styles.icon}
+			fill={theme['color-basic-700']}
+		/>
+	);
 };
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Home'>;
 export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
-  const connectedDevice = useSelector(
-    (state: RootState) => state.app.connectedDevice
-  );
+	const handleBluetoothStatusPress = () =>
+		navigation.navigate('BluetoothConnection');
 
-  const handleBluetoothStatusPress = () =>
-    navigation.navigate('BluetoothConnection');
+	return (
+		<Layout>
+			<ScrollView>
+				<UserCard name="Jan Nikodem" title="Master of squats" />
+				<Text style={styles.placeholder}>placeholder wykresu</Text>
 
-  return (
-    <Layout>
-      <ScrollView>
-        <UserCard name="Jan Nikodem" title="Master of squats" />
-        <Text style={styles.placeholder}>placeholder wykresu</Text>
+				<View style={styles.cardRow}>
+					<View style={[styles.cardColumn, styles.leftColumn]}>
+						<DataCardLarge
+							Icon={StepsIcon}
+							name="Steps"
+							quantity={2137}
+						/>
+						<DataCardLarge
+							Icon={CaloriesIcon}
+							name="Calories"
+							quantity={1690}
+							theme="red"
+						/>
+					</View>
+					<View style={[styles.cardColumn, styles.rightColumn]}>
+						<View style={styles.smallCardRow}>
+							<BluetoothStatus
+								touchable
+								touchableStyles={styles.bluetoothWrapper}
+								renderOverlay
+								renderSubText
+								iconSize="large"
+							/>
+							<View style={styles.separator} />
+							<DataCardSmall data="45" activity="running" />
+						</View>
+						<DataCardLarge
+							Icon={TimeIcon}
+							name="Time spent"
+							quantity={3723}
+						/>
+					</View>
+				</View>
 
-        <View style={styles.cardRow}>
-          <View style={[styles.cardColumn, styles.leftColumn]}>
-            <DataCardLarge Icon={StepsIcon} name="Steps" quantity={2137} />
-            <DataCardLarge
-              Icon={CaloriesIcon}
-              name="Calories"
-              quantity={1690}
-              theme="red"
-            />
-          </View>
-          <View style={[styles.cardColumn, styles.rightColumn]}>
-            <View style={styles.smallCardRow}>
-              <BluetoothStatus
-                connected={!!connectedDevice}
-                onPress={handleBluetoothStatusPress}
-              />
-              <View style={styles.separator} />
-              <DataCardSmall data="45" activity="running" />
-            </View>
-            <DataCardLarge Icon={TimeIcon} name="Time spent" quantity={3723} />
-          </View>
-        </View>
-
-        <View style={styles.bottomCard}>
-          <ActivityCardLarge
-            activity={ActivityType.SQUATS}
-            date="Yesterday, 8 Mar"
-            kcal={231}
-            time="2:32"
-            count={31}
-          />
-        </View>
-      </ScrollView>
-    </Layout>
-  );
+				<View style={styles.bottomCard}>
+					<ActivityCardLarge
+						activity={ActivityType.SQUATS}
+						date="Yesterday, 8 Mar"
+						kcal={231}
+						time="2:32"
+						count={31}
+					/>
+				</View>
+			</ScrollView>
+		</Layout>
+	);
 };
 
 const styles = StyleSheet.create({
-  placeholder: {
-    marginVertical: 16,
-    height: 170,
-  },
-  cardColumn: {
-    flex: 1,
-    height: 170,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  leftColumn: {
-    marginRight: 4,
-  },
-  rightColumn: {
-    marginLeft: 4,
-  },
-  cardRow: {
-    flexDirection: 'row',
-    flex: 1,
-    height: 170,
-  },
-  icon: {
-    height: 40,
-    width: 40,
-  },
-  smallCardRow: {
-    flexDirection: 'row',
-  },
-  separator: {
-    width: 8,
-  },
-  bottomCard: {
-    marginVertical: 8,
-  },
+	placeholder: {
+		marginVertical: 16,
+		height: 170,
+	},
+	cardColumn: {
+		flex: 1,
+		height: 170,
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+	},
+	bluetoothWrapper: {
+		flex: 1,
+		padding: 0,
+	},
+	leftColumn: {
+		marginRight: 4,
+	},
+	rightColumn: {
+		marginLeft: 4,
+	},
+	cardRow: {
+		flexDirection: 'row',
+		flex: 1,
+		height: 170,
+	},
+	icon: {
+		height: 40,
+		width: 40,
+	},
+	smallCardRow: {
+		flexDirection: 'row',
+	},
+	separator: {
+		width: 8,
+	},
+	bottomCard: {
+		marginVertical: 8,
+	},
 });

@@ -1,9 +1,9 @@
 import {
-  Layout,
-  Button,
-  Select,
-  SelectItem,
-  Text,
+	Layout,
+	Button,
+	Select,
+	SelectItem,
+	Text,
 } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
@@ -15,193 +15,209 @@ import { ActivityNames } from '../assets/common/activity-names';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state/root.reducer';
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Service'>;
 export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
-  navigation,
-  metawear,
-  tracker,
+	navigation,
+	metawear,
+	tracker,
 }) => {
-  const throttleInteval = 1000;
-  const defaultSensorSample = new SensorAsyncSample(new AxesData(0, 0, 0));
-  const [repeats, setRepeats] = useState(0);
-  const [selectedActivity, setSelectedActivity] = useState(
-    ActivityType.UNKNOWN
-  );
+	const isConnectedToDevice = useSelector((state: RootState) =>
+		Boolean(state.app.connectedDevice)
+	);
 
-  const [lastAccData, _setLastAccData] = useState(defaultSensorSample);
-  const setLastAccData = _.throttle(_setLastAccData, throttleInteval);
-  const [lastGyroData, _setLastGyroData] = useState(defaultSensorSample);
-  const setLastGyroData = _.throttle(_setLastGyroData, throttleInteval);
-  const [lastMagData, _setLastMagData] = useState(defaultSensorSample);
-  const setLastMagData = _.throttle(_setLastMagData, throttleInteval);
+	const throttleInteval = 1000;
+	const defaultSensorSample = new SensorAsyncSample(new AxesData(0, 0, 0));
+	const [repeats, setRepeats] = useState(0);
+	const [selectedActivity, setSelectedActivity] = useState(
+		ActivityType.UNKNOWN
+	);
 
-  function resetData() {
-    setRepeats(0);
-    setLastAccData(defaultSensorSample);
-    setLastGyroData(defaultSensorSample);
-    setLastMagData(defaultSensorSample);
-  }
+	const [lastAccData, _setLastAccData] = useState(defaultSensorSample);
+	const setLastAccData = _.throttle(_setLastAccData, throttleInteval);
+	const [lastGyroData, _setLastGyroData] = useState(defaultSensorSample);
+	const setLastGyroData = _.throttle(_setLastGyroData, throttleInteval);
+	const [lastMagData, _setLastMagData] = useState(defaultSensorSample);
+	const setLastMagData = _.throttle(_setLastMagData, throttleInteval);
 
-  function startModules() {
-    resetData();
-    metawear.start();
-    tracker.startService();
-  }
+	function resetData() {
+		setRepeats(0);
+		setLastAccData(defaultSensorSample);
+		setLastGyroData(defaultSensorSample);
+		setLastMagData(defaultSensorSample);
+	}
 
-  function stopModules() {
-    tracker.stop();
-    metawear.stop();
-    resetData();
-  }
+	function startModules() {
+		resetData();
+		metawear.start();
+		tracker.startService();
+	}
 
-  function processData(
-    data: AxesData,
-    setTracker: (x: SensorAsyncSample) => void,
-    setLast: (x: SensorAsyncSample) => void
-  ) {
-    const sample = new SensorAsyncSample(data);
-    setTracker(sample);
-    setLast(sample);
-  }
+	function stopModules() {
+		tracker.stop();
+		metawear.stop();
+		resetData();
+	}
 
-  useEffect(() => {
-    const events: (() => void)[] = [];
-    const navigationEvents: (() => void)[] = [];
-    navigation.addListener('focus', () => {
-      events.push(
-        metawear.accelerometerData.sub((data) =>
-          processData(
-            data,
-            tracker.addAccelerometerSample.bind(tracker),
-            setLastAccData
-          )
-        ),
-        metawear.gyroscopeData.sub((data) =>
-          processData(
-            data,
-            tracker.addGyroscopeSample.bind(tracker),
-            setLastGyroData
-          )
-        ),
-        metawear.magnetometerData.sub((data) =>
-          processData(
-            data,
-            tracker.addMagnetometerSample.bind(tracker),
-            setLastMagData
-          )
-        ),
-        tracker.onError.sub((error) => {
-          showNotification(error.message);
-        })
-      );
-    });
-    navigation.addListener('blur', () => {
-      resetData();
-      events.forEach((t) => t());
-    });
+	function processData(
+		data: AxesData,
+		setTracker: (x: SensorAsyncSample) => void,
+		setLast: (x: SensorAsyncSample) => void
+	) {
+		const sample = new SensorAsyncSample(data);
+		setTracker(sample);
+		setLast(sample);
+	}
 
-    return () => {
-      navigationEvents.forEach((t) => t());
-    };
-  }, []);
+	useEffect(() => {
+		const events: (() => void)[] = [];
+		const navigationEvents: (() => void)[] = [];
+		navigation.addListener('focus', () => {
+			events.push(
+				metawear.accelerometerData.sub((data) =>
+					processData(
+						data,
+						tracker.addAccelerometerSample.bind(tracker),
+						setLastAccData
+					)
+				),
+				metawear.gyroscopeData.sub((data) =>
+					processData(
+						data,
+						tracker.addGyroscopeSample.bind(tracker),
+						setLastGyroData
+					)
+				),
+				metawear.magnetometerData.sub((data) =>
+					processData(
+						data,
+						tracker.addMagnetometerSample.bind(tracker),
+						setLastMagData
+					)
+				),
+				tracker.onError.sub((error) => {
+					showNotification(error.message);
+				})
+			);
+		});
+		navigation.addListener('blur', () => {
+			resetData();
+			events.forEach((t) => t());
+		});
 
-  const activityTypeArray = Object.values(ActivityType);
-  function getActivityIndexPath(activity: ActivityType): IndexPath {
-    return new IndexPath(activityTypeArray.findIndex((a) => a === activity));
-  }
+		return () => {
+			navigationEvents.forEach((t) => t());
+		};
+	}, []);
 
-  function setActivityFromIndexPath(indexPath: IndexPath | IndexPath[]) {
-    if ('row' in indexPath) {
-      setSelectedActivity(activityTypeArray[indexPath.row]);
-      tracker.setActivityType(activityTypeArray[indexPath.row]);
-    }
-  }
+	const activityTypeArray = Object.values(ActivityType);
+	function getActivityIndexPath(activity: ActivityType): IndexPath {
+		return new IndexPath(
+			activityTypeArray.findIndex((a) => a === activity)
+		);
+	}
 
-  return (
-    <Layout style={styles.container}>
-      <Select
-        size="large"
-        placeholder="Exercise name"
-        onSelect={setActivityFromIndexPath}
-        selectedIndex={getActivityIndexPath(selectedActivity)}
-        value={ActivityNames[selectedActivity]}
-      >
-        {Object.values(ActivityType).map((activity) => (
-          <SelectItem title={ActivityNames[activity]} key={activity} />
-        ))}
-      </Select>
+	function setActivityFromIndexPath(indexPath: IndexPath | IndexPath[]) {
+		if ('row' in indexPath) {
+			setSelectedActivity(activityTypeArray[indexPath.row]);
+			tracker.setActivityType(activityTypeArray[indexPath.row]);
+		}
+	}
 
-      <Layout style={styles.buttonsWrapper}>
-        <Button
-          style={{ ...styles.button, ...styles.buttonLeft }}
-          size="giant"
-          appearance="outline"
-          onPress={startModules}
-        >
-          Start
-        </Button>
-        <Button
-          style={{ ...styles.button, ...styles.buttonRight }}
-          size="giant"
-          appearance="outline"
-          onPress={stopModules}
-        >
-          Stop
-        </Button>
-      </Layout>
+	return (
+		<Layout style={styles.container}>
+			<Select
+				size="large"
+				placeholder="Exercise name"
+				onSelect={setActivityFromIndexPath}
+				selectedIndex={getActivityIndexPath(selectedActivity)}
+				value={ActivityNames[selectedActivity]}
+			>
+				{Object.values(ActivityType).map((activity) => (
+					<SelectItem
+						title={ActivityNames[activity]}
+						key={activity}
+					/>
+				))}
+			</Select>
 
-      <Layout style={styles.multiline}>
-        <Text>Repeats: {repeats}</Text>
-        <Text>
-          Acc: {lastAccData.data.x.toFixed(6)} {lastAccData.data.y.toFixed(6)}{' '}
-          {lastAccData.data.z.toFixed(6)}
-        </Text>
-        <Text>
-          Gyro: {lastGyroData.data.x.toFixed(6)}{' '}
-          {lastGyroData.data.y.toFixed(6)} {lastGyroData.data.z.toFixed(6)}
-        </Text>
-        <Text>
-          Mag: {lastMagData.data.x.toFixed(6)} {lastMagData.data.y.toFixed(6)}{' '}
-          {lastMagData.data.z.toFixed(6)}
-        </Text>
-      </Layout>
+			<Layout style={styles.buttonsWrapper}>
+				<Button
+					style={{ ...styles.button, ...styles.buttonLeft }}
+					size="giant"
+					appearance="outline"
+					onPress={startModules}
+					disabled={!isConnectedToDevice}
+				>
+					Start
+				</Button>
+				<Button
+					style={{ ...styles.button, ...styles.buttonRight }}
+					size="giant"
+					appearance="outline"
+					onPress={stopModules}
+					disabled={!isConnectedToDevice}
+				>
+					Stop
+				</Button>
+			</Layout>
 
-      <Button
-        style={styles.buttonRepeat}
-        size="giant"
-        appearance="outline"
-        onPress={() => {
-          setRepeats(repeats + 1);
-          tracker.addRepeats();
-        }}
-      >
-        Increment repeats
-      </Button>
-      <BluetoothButton navigation={navigation} />
-    </Layout>
-  );
+			<Layout style={styles.multiline}>
+				<Text>Repeats: {repeats}</Text>
+				<Text>
+					Acc: {lastAccData.data.x.toFixed(6)}{' '}
+					{lastAccData.data.y.toFixed(6)}{' '}
+					{lastAccData.data.z.toFixed(6)}
+				</Text>
+				<Text>
+					Gyro: {lastGyroData.data.x.toFixed(6)}{' '}
+					{lastGyroData.data.y.toFixed(6)}{' '}
+					{lastGyroData.data.z.toFixed(6)}
+				</Text>
+				<Text>
+					Mag: {lastMagData.data.x.toFixed(6)}{' '}
+					{lastMagData.data.y.toFixed(6)}{' '}
+					{lastMagData.data.z.toFixed(6)}
+				</Text>
+			</Layout>
+
+			<Button
+				style={styles.buttonRepeat}
+				size="giant"
+				appearance="outline"
+				onPress={() => {
+					setRepeats(repeats + 1);
+					tracker.addRepeats();
+				}}
+			>
+				Increment repeats
+			</Button>
+			{isConnectedToDevice || <BluetoothButton navigation={navigation} />}
+		</Layout>
+	);
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  buttonsWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginTop: 12,
-  },
-  button: {
-    flex: 1,
-  },
-  buttonLeft: { marginRight: 6 },
-  buttonRight: { marginLeft: 6 },
-  buttonRepeat: {
-    height: 256,
-    marginBottom: 12,
-  },
-  multiline: {
-    margin: 24,
-  },
+	container: {
+		flex: 1,
+	},
+	buttonsWrapper: {
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		marginTop: 12,
+	},
+	button: {
+		flex: 1,
+	},
+	buttonLeft: { marginRight: 6 },
+	buttonRight: { marginLeft: 6 },
+	buttonRepeat: {
+		height: 256,
+		marginBottom: 12,
+	},
+	multiline: {
+		margin: 24,
+	},
 });

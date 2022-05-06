@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -10,53 +10,38 @@ import store from './state/store';
 
 import MetaWearModule from './native-modules/MetaWearModule';
 import { ActivityTracker, MetaWear } from '@fitly/ui-metawear';
-import BluetoothModule from './native-modules/BluetoothModule';
-import { showNotification } from '@fitly/ui-utils';
+
+import AppInitScreen from './screens/app-init-screen';
 
 export interface MetaWearProps {
-  metawear: MetaWear;
-  tracker: ActivityTracker;
+	metawear: MetaWear;
+	tracker: ActivityTracker;
 }
 
 const App = () => {
-  const metawear = useRef(new MetaWear(MetaWearModule));
-  const activityTracker = useRef(
-    new ActivityTracker(
-      process.env.BRIDGE_BASE_URL + '/data',
-      process.env.BRIDGE_BASE_URL + '/analyze',
-      10000
-    )
-  );
-  async function restoreConnection() {
-    const lastConnectedMac =
-      await BluetoothModule.getSavedConnectedBluetoothDevice();
-    if (lastConnectedMac) {
-      metawear.current.connect(lastConnectedMac);
-      showNotification('Connection with MetaWear device restored!');
-    } else {
-      showNotification(
-        'Connection with MetaWear device could not be restored!'
-      );
-    }
-  }
+	const metawear = useRef(new MetaWear(MetaWearModule));
+	const activityTracker = useRef(
+		new ActivityTracker(
+			process.env.BRIDGE_BASE_URL + '/data',
+			process.env.BRIDGE_BASE_URL + '/analyze',
+			10000
+		)
+	);
 
-  useEffect(() => {
-    const _metawear = metawear.current;
-    restoreConnection();
-    return () => {
-      _metawear.disconnect();
-    };
-  }, []);
-
-  return (
-    <Provider store={store}>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <TopNav />
-        <AppNav metawear={metawear.current} tracker={activityTracker.current} />
-      </ApplicationProvider>
-    </Provider>
-  );
+	return (
+		<Provider store={store}>
+			<IconRegistry icons={EvaIconsPack} />
+			<ApplicationProvider {...eva} theme={eva.light}>
+				<AppInitScreen metawear={metawear.current}>
+					<TopNav />
+					<AppNav
+						metawear={metawear.current}
+						tracker={activityTracker.current}
+					/>
+				</AppInitScreen>
+			</ApplicationProvider>
+		</Provider>
+	);
 };
 
 export default App;
