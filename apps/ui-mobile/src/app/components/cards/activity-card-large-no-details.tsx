@@ -16,7 +16,7 @@ export const ActivityCardLargeNoDetails: React.FC<Props> = ({ activity }) => {
   return (
     <View style={[commonStyles.defaultBorder, styles.container]}>
       <ActivityIcon activity={activity} large={true} />
-      <Text category="h1">{formattedActivity}</Text>
+      <Text category="h1" style={styles.text} >{formattedActivity}</Text>
     </View>
   );
 };
@@ -24,8 +24,11 @@ export const ActivityCardLargeNoDetails: React.FC<Props> = ({ activity }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    padding: 16,
+    padding: 8,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  text: {
+    marginRight: 16
+  }
 });
