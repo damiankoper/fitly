@@ -1,23 +1,138 @@
-import React from 'react';
-import { LineChart, Grid } from 'react-native-svg-charts';
+import React, { useState } from 'react';
+//@ts-expect-error
+import { LineChart, XAxis } from 'react-native-svg-charts';
+import { Text, StyleSheet, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+//@ts-expect-error
+import * as shape from 'd3-shape';
+import { Circle } from 'react-native-svg';
+
+interface DataType {
+	value: number;
+	date: string;
+}
 
 export interface ActivityLineChartProps {}
 
 const ActivityLineChart: React.FC<ActivityLineChartProps> = ({}) => {
-	const data = [
-		50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80,
+	const data: DataType[] = [
+		{ value: 0, date: '2022-06-01' },
+		{ value: 25, date: '2022-06-02' },
+		{ value: 10, date: '2022-06-03' },
+		{ value: 50, date: '2022-06-04' },
+		{ value: 35, date: '2022-06-05' },
+		{ value: 5, date: '2022-06-06' },
+		{ value: 30, date: '2022-06-07' },
 	];
+	const backgroundColor = 'white';
+	const [selectedMarker, setSelectedMarker] = useState(data[4]);
 
+	const ChartPoints = ({ data, ...props }: any) => {
+		console.log(props);
+
+		return data.map((item: DataType, index: number) => (
+			<Circle
+				key={index}
+				cx={props.x(index)}
+				cy={props.y(item.value)}
+				r={50}
+				stroke={props.color}
+				fill="black"
+				onPress={() => console.log(item)}
+			/>
+		));
+	};
+
+	const formatXLabelFromData = (_: number, index: number) => {
+		const { date } = data[index];
+		const dateString = new Date(date).toLocaleString('en', {
+			weekday: 'short',
+		});
+		return dateString;
+	};
 	return (
-		<LineChart
-			style={{ height: 200 }}
-			data={data}
-			svg={{ stroke: 'rgb(134, 65, 244)' }}
-			contentInset={{ top: 20, bottom: 20 }}
-		>
-			<Grid />
-		</LineChart>
+		<View style={styles.container}>
+			<Text style={styles.selectedDayValue}>{selectedMarker.value}</Text>
+			<Text style={styles.valueType}>kcal</Text>
+			<LinearGradient
+				start={{ x: 0, y: 0.5 }}
+				end={{ x: 1, y: 0.5 }}
+				locations={[0, 0.4, 0.5, 0.6, 1]}
+				colors={[
+					backgroundColor,
+					'transparent',
+					'transparent',
+					'transparent',
+					backgroundColor,
+				]}
+				style={styles.linearGradient}
+				pointerEvents="box-none"
+			>
+				<LineChart
+					data={data}
+					svg={{
+						stroke: 'rgb(89, 139, 255)',
+						strokeWidth: '5px',
+					}}
+					curve={shape.curveBumpX}
+					contentInset={{ top: 20, bottom: 20 }}
+					style={styles.lineChart}
+					ymin={-1}
+					yAccessor={(item: { index: number; item: DataType }) =>
+						item.item.value
+					}
+					animate
+					animateDelay={300}
+				>
+					{/*//@ts-ignore*/}
+					<ChartPoints color="black" />
+				</LineChart>
+			</LinearGradient>
+			<XAxis
+				style={styles.xAxis}
+				data={data}
+				formatLabel={formatXLabelFromData}
+				contentInset={{ left: 10, right: 10 }}
+				svg={{ fontSize: 10, fill: 'black' }}
+			/>
+			<Text style={styles.chartTitle}>Calories burned last week</Text>
+		</View>
 	);
 };
 
 export default ActivityLineChart;
+
+const styles = StyleSheet.create({
+	container: {
+		marginTop: 15,
+	},
+	chartTitle: {
+		textAlign: 'center',
+		marginBottom: 15,
+		fontSize: 14,
+	},
+	lineChart: {
+		height: 300,
+		zIndex: -1,
+	},
+	linearGradient: {
+		zIndex: 2,
+	},
+	selectedDayValue: {
+		fontSize: 32,
+		textAlign: 'center',
+		color: 'black',
+	},
+	valueType: {
+		fontSize: 18,
+
+		textAlign: 'center',
+	},
+	xAxis: {
+		marginHorizontal: -10,
+		fontSize: 20,
+		color: 'white',
+		paddingLeft: 10,
+		paddingRight: 10,
+	},
+});
