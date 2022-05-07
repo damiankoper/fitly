@@ -1,19 +1,31 @@
 import { ActivityType } from '@fitly/shared/meta';
-import { Layout, Text } from '@ui-kitten/components';
-import React, { useState } from 'react';
+import { Layout, Text, Button } from '@ui-kitten/components';
+import { useStopwatch } from 'react-timer-hook';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { GuessSpinner } from '../components/spinners/guess-spinner';
 import { useActivityString } from '../hooks/useActivityString';
+import { Timer } from '../components/misc/timer';
 
 export enum STATUS {
   IDLE = 'idle',
   SEARCHING = 'searching',
-  FOUND = 'found'
+  FOUND = 'found',
 }
 
 export const GuessScreen = () => {
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
   const [activity, setActivity] = useState<ActivityType | null>(null);
+  const { seconds, minutes, isRunning, start, pause, reset } = useStopwatch({
+    autoStart: false,
+  });
+
+  useEffect(() => {
+    if (status === STATUS.SEARCHING) {
+      start();
+    }
+  }, [status]);
+
   let title;
 
   if (status === STATUS.SEARCHING) {
@@ -44,22 +56,83 @@ export const GuessScreen = () => {
     );
   }
 
+  const handleStop = () => {
+    isRunning ? pause() : start();
+  };
+
+  const handleReset = () => {
+    pause();
+    reset();
+    setStatus(STATUS.IDLE);
+  };
+
   return (
-    <Layout>
+    <Layout style={status !== STATUS.IDLE ? styles.container : {}}>
       {title}
-      <View style={styles.spinnerWrapper}>
-        <GuessSpinner status={status} setStatus={setStatus}/>
+
+      <View
+        style={
+          status !== STATUS.IDLE
+            ? styles.spinnerWrapper
+            : styles.idleSpinnerWrapper
+        }
+      >
+        <GuessSpinner status={status} setStatus={setStatus} />
       </View>
+
+      {status === STATUS.SEARCHING && (
+        <View style={styles.timerWrapper}>
+          <Timer minutes={minutes} seconds={seconds} />
+        </View>
+      )}
+
+      {(status === STATUS.FOUND || status == STATUS.SEARCHING) && (
+        <View style={styles.buttonWrapper}>
+          <Button
+            style={styles.button}
+            size="giant"
+            appearance="filled"
+            onPress={handleStop}
+          >
+            Stop
+          </Button>
+          <Button
+            style={styles.button}
+            size="giant"
+            appearance="outline"
+            onPress={handleReset}
+          >
+            Reset
+          </Button>
+        </View>
+      )}
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
   title: {
     textAlign: 'center',
   },
   spinnerWrapper: {
-    marginTop: 40,
     alignItems: 'center',
+  },
+  idleSpinnerWrapper: {
+    alignItems: 'center',
+    marginTop: 80,
+  },
+  timerWrapper: {
+    alignItems: 'center',
+  },
+  buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: {
+    width: 170,
   },
 });
