@@ -28,6 +28,11 @@ export class ActivityTracker {
     return this._onAnalyze.asEvent();
   }
 
+  private _onSuccess = new SimpleEventDispatcher<string>();
+  public get onSuccess() {
+    return this._onSuccess.asEvent();
+  }
+
   constructor(
     private serviceUrl: string,
     private analyzeUrl: string,
@@ -63,6 +68,9 @@ export class ActivityTracker {
 
     try {
       const result = await axios.post(url, this.instanceToPlain(data));
+      if(result.data != null){
+        this._onSuccess.dispatch("Sent");
+      }
       if (emitAnalyse)
         this._onAnalyze.dispatch(this.plainToInstance(result.data));
     } catch (e) {

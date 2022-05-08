@@ -36,9 +36,10 @@ public class BatteryModule extends ForcedDataModule {
 
 	@Override
 	public void setupDataRoutes(MetaWearBoard board) {
-		settings = board.getModule(Settings.class);
-
-		if(settings != null){
+		if (settings == null) {
+			settings = board.getModule(Settings.class);
+		}
+		if (settings != null) {
 			settings.battery().addRouteAsync(new RouteBuilder() {
 				@Override
 				public void configure(RouteComponent source) {
@@ -53,18 +54,18 @@ public class BatteryModule extends ForcedDataModule {
 			}).continueWith(new Continuation<Route, Void>() {
 				@Override
 				public Void then(Task<Route> task) throws Exception {
-					Log.i("BatteryModule","Successfully added subscriber to sensor!");
+					Log.i("BatteryModule", "Successfully added subscriber to sensor!");
 					return null;
 				}
 			});
-		}else{
+		} else {
 			Log.i("BatteryModule", "ERROR: Temperature Sensor is null, NRF_SOC is not present on device");
 		}
 	}
 
 	@Override
 	public void read() {
-		Log.i("BatteryModule","Started reading");
+		Log.i("BatteryModule", "Started reading");
 		settings.battery().read();
 	}
 
@@ -79,7 +80,7 @@ public class BatteryModule extends ForcedDataModule {
 		}
 
 		reactContext
-			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit(ON_BATTERY_DATA_CAPTURE_EVENT_NAME, map);
+				.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				.emit(ON_BATTERY_DATA_CAPTURE_EVENT_NAME, map);
 	}
 }
