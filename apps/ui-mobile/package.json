@@ -30,6 +30,7 @@
     "react-native-linear-gradient": "*",
     "lodash": "*",
     "axios": "*",
-    "strongly-typed-events": "*"
+    "strongly-typed-events": "*",
+    "react-timer-hook": "*"
   }
 }
