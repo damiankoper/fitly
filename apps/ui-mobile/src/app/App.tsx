@@ -22,8 +22,8 @@ const App = () => {
   const metawear = useRef(new MetaWear(MetaWearModule));
   const activityTracker = useRef(
     new ActivityTracker(
-      process.env.BRIDGE_BASE_URL + 'api/data',
-      process.env.BRIDGE_BASE_URL + 'api/analyze',
+      process.env.BRIDGE_BASE_URL + '/data',
+      process.env.BRIDGE_BASE_URL + '/analyze',
       10000
     )
   );
