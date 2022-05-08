@@ -18,17 +18,18 @@ import { ExerciseCounterScreen } from '../../screens/exercise-counter-screen';
 import { MetaWearProps } from '../../App';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 import { ExerciseResultsScreen } from '../../screens/exercise-results-screen';
+import * as RootNavigation from './root-navigation';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
 function wrapScreen(Component: any, outerProps: MetaWearProps) {
-  return (props: MetaWearProps) => {
-    return (
-      <Layout style={styles.wrapper}>
-        <Component {...props} {...outerProps} />
-      </Layout>
-    );
-  };
+	return (props: MetaWearProps) => {
+		return (
+			<Layout style={styles.wrapper}>
+				<Component {...props} {...outerProps} />
+			</Layout>
+		);
+	};
 }
 
 const TabNavigator = (props: MetaWearProps) => (
@@ -71,14 +72,14 @@ const TabNavigator = (props: MetaWearProps) => (
 );
 
 export const AppNav = (props: MetaWearProps) => (
-  <NavigationContainer>
-    <TabNavigator {...props} />
-  </NavigationContainer>
+	<NavigationContainer ref={RootNavigation.navigationRef}>
+		<TabNavigator {...props} />
+	</NavigationContainer>
 );
 
 const styles = StyleSheet.create({
-  wrapper: {
-    padding: 8,
-    flex: 1,
-  },
+	wrapper: {
+		padding: 8,
+		flex: 1,
+	},
 });

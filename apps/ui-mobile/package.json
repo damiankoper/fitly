@@ -31,6 +31,8 @@
     "lodash": "*",
     "axios": "*",
     "strongly-typed-events": "*",
-    "react-timer-hook": "*"
+    "react-timer-hook": "*",
+    "react-native-svg-charts": "*",
+    "d3-shape": "*"
   }
 }

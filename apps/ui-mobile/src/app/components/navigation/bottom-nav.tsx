@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  BottomNavigation,
-  BottomNavigationTab,
-  Icon,
+	BottomNavigation,
+	BottomNavigationTab,
+	Icon,
 } from '@ui-kitten/components';
 
 const HomeIcon = (props) => <Icon {...props} name="home-outline" />;

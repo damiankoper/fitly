@@ -1,9 +1,15 @@
 import { DeviceInfo } from '../../events/bluetooth-module.listener';
 
 export interface AppState {
-  connectedDevice: DeviceInfo;
+	status: {
+		isRestoringConnection: boolean;
+	};
+	connectedDevice: DeviceInfo | null;
 }
 
 export const initialAppState: AppState = {
-  connectedDevice: null,
+	connectedDevice: null,
+	status: {
+		isRestoringConnection: true,
+	},
 };

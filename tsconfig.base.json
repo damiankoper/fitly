@@ -1,25 +1,26 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2017", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@fitly/ml-bridge/dto": ["libs/ml-bridge/dto/src/index.ts"],
-      "@fitly/shared/meta": ["libs/shared/meta/src/index.ts"],
-      "@fitly/ui-metawear": ["libs/ui-metawear/src/index.ts"],
-      "@fitly/ui-utils": ["libs/ui-utils/src/index.ts"]
-    }
-  },
-  "exclude": ["node_modules", "tmp"]
+	"compileOnSave": false,
+	"compilerOptions": {
+		"rootDir": ".",
+		"sourceMap": true,
+		"noImplicitAny": false,
+		"declaration": false,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "es2015",
+		"module": "esnext",
+		"lib": ["es2017", "dom"],
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@fitly/ml-bridge/dto": ["libs/ml-bridge/dto/src/index.ts"],
+			"@fitly/shared/meta": ["libs/shared/meta/src/index.ts"],
+			"@fitly/ui-metawear": ["libs/ui-metawear/src/index.ts"],
+			"@fitly/ui-utils": ["libs/ui-utils/src/index.ts"]
+		}
+	},
+	"exclude": ["node_modules", "tmp"]
 }
