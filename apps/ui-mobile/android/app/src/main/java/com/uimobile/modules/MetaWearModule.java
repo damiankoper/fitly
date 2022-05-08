@@ -90,25 +90,26 @@ public class MetaWearModule extends ReactContextBaseJavaModule {
 			this.application.setBoard(board);
 			Log.i("MainActivity", board.toString());
 
-		board.connectAsync().continueWith(new Continuation<Void, Void>() {
-			@Override
-			public Void then(Task<Void> task) throws Exception {
-				if (task.isFaulted()) {
-					Log.i("MainActivity", "Failed to connect");
-					promise.reject(task.getError());
-				} else {
-					Log.i("MainActivity", "Connected");
-					promise.resolve(true);
-					board.readDeviceInformationAsync()
-						.continueWith(new Continuation<DeviceInformation, Void>() {
-							@Override
-							public Void then(Task<DeviceInformation> task) throws Exception {
-								Log.i("MainActivity", "Device Information: " + task.getResult());
-								return null;
-							}
-						});
+			board.connectAsync().continueWith(new Continuation<Void, Void>() {
+				@Override
+				public Void then(Task<Void> task) throws Exception {
+					if (task.isFaulted()) {
+						Log.i("MainActivity", "Failed to connect");
+						promise.reject(task.getError());
+					} else {
+						Log.i("MainActivity", "Connected");
+						promise.resolve(true);
+						board.readDeviceInformationAsync()
+								.continueWith(new Continuation<DeviceInformation, Void>() {
+									@Override
+									public Void then(Task<DeviceInformation> task) throws Exception {
+										Log.i("MainActivity", "Device Information: " + task.getResult());
+										return null;
+									}
+								});
+					}
+					return null;
 				}
-				return null;
 			});
 		} else {
 			Log.i("MainActivity", "Board is null");
