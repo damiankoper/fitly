@@ -4,9 +4,10 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { ActivityType } from '@fitly/shared/meta';
 import { VariousIcons } from '../../assets/common/various-icons';
 import { STATUS } from '../../screens/guess-screen';
+import { ActivityIcons } from '../../assets/common/activity-icons';
 
 interface Props {
-  activity?: ActivityType;
+  activity?: ActivityType | null;
   status: STATUS;
   setStatus: React.Dispatch<React.SetStateAction<STATUS>>
 }
@@ -14,11 +15,11 @@ interface Props {
 export const GuessSpinner: React.FC<Props> = ({ activity, status, setStatus }) => {
   const theme = useTheme();
 
-  let icon: number;
+  let icon;
   if (status === STATUS.IDLE){
     icon = VariousIcons['play']
   } else if (status === STATUS.FOUND && activity){
-    icon = VariousIcons['play']
+    icon = ActivityIcons[activity]
   } else {
     icon = VariousIcons['questionMark']
   }

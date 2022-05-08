@@ -77,10 +77,10 @@ export const GuessScreen = () => {
             : styles.idleSpinnerWrapper
         }
       >
-        <GuessSpinner status={status} setStatus={setStatus} />
+        <GuessSpinner status={status} activity={activity} setStatus={setStatus} />
       </View>
 
-      {status === STATUS.SEARCHING && (
+      {status !== STATUS.IDLE && (
         <View style={styles.timerWrapper}>
           <Timer minutes={minutes} seconds={seconds} />
         </View>
