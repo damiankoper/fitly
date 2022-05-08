@@ -93,6 +93,9 @@ export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
         ),
         tracker.onError.sub((error) => {
           showNotification(error.message);
+        }),
+        tracker.onSuccess.sub((message) => {
+          showNotification(message);
         })
       );
     });
