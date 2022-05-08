@@ -41,27 +41,27 @@ public class BarometerModule extends ReactContextBaseJavaModule {
 		return "BarometerModule";
 	}
 
-	public void configureBarometer(){
+	public void configureBarometer() {
 		barometer.configure()
-			.filterCoeff(BarometerBosch.FilterCoeff.AVG_16)
-			.pressureOversampling(BarometerBosch.OversamplingMode.ULTRA_HIGH)
-			.standbyTime(0.5f)
-			.commit();
+				.filterCoeff(BarometerBosch.FilterCoeff.AVG_16)
+				.pressureOversampling(BarometerBosch.OversamplingMode.ULTRA_HIGH)
+				.standbyTime(0.5f)
+				.commit();
 	}
 
-	public void startModule(){
-		if(barometer == null){
+	public void startModule() {
+		if (barometer == null) {
 			barometer = application.getBoard().getModule(BarometerBosch.class);
 		}
-		Log.i("MainActivity", "Barometer started");
-		if(barometer != null){
+		if (barometer != null) {
+			Log.i("MainActivity", "Barometer started");
 			configureBarometer();
 			barometer.pressure().addRouteAsync(new RouteBuilder() {
 				@Override
 				public void configure(RouteComponent source) {
 					source.stream(new Subscriber() {
 						@Override
-						public void apply(Data data, Object ... env) {
+						public void apply(Data data, Object... env) {
 							emitBarometerEvent(Boolean.TRUE, data.value(Float.class));
 						}
 					});
@@ -79,7 +79,7 @@ public class BarometerModule extends ReactContextBaseJavaModule {
 				public void configure(RouteComponent source) {
 					source.stream(new Subscriber() {
 						@Override
-						public void apply(Data data, Object ... env) {
+						public void apply(Data data, Object... env) {
 							emitBarometerEvent(Boolean.FALSE, data.value(Float.class));
 						}
 					});
@@ -91,25 +91,29 @@ public class BarometerModule extends ReactContextBaseJavaModule {
 					return null;
 				}
 			});
-		}else{
+		} else {
 			Log.i("MainActivity", "Barometer is null");
 		}
 	}
 
 	public void stopModule() {
-		barometer.stop();
-		barometer.pressure().stop();
-		Log.i("MainActivity", "Barometer stoped");
+		if (barometer != null) {
+			barometer.stop();
+			barometer.pressure().stop();
+			Log.i("MainActivity", "Barometer stoped");
 
-		application.getBoard().tearDown();
+			application.getBoard().tearDown();
+		} else {
+			Log.i("MainActivity", "Barometer is null");
+		}
 	}
 
 	public void emitBarometerEvent(Boolean isPressure, Float value) {
 		HashMap<String, String> hm = new HashMap<>();
-		if(isPressure){
+		if (isPressure) {
 			hm.put("tag", "Pressure");
 			hm.put("unit", "pascal");
-		}else{
+		} else {
 			hm.put("tag", "Altitude");
 			hm.put("unit", "meters");
 		}
@@ -122,7 +126,7 @@ public class BarometerModule extends ReactContextBaseJavaModule {
 		}
 
 		reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit(isPressure ? ON_PRESSURE_DATA_CAPTURE_EVENT_NAME : ON_ALTITUDE_DATA_CAPTURE_EVENT_NAME, map);
+				.emit(isPressure ? ON_PRESSURE_DATA_CAPTURE_EVENT_NAME : ON_ALTITUDE_DATA_CAPTURE_EVENT_NAME, map);
 
 	}
 }

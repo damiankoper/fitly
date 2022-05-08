@@ -23,13 +23,12 @@ import com.mbientlab.metawear.module.Accelerometer;
 
 import bolts.Continuation;
 
-
 public class AccelerometerModule extends ReactContextBaseJavaModule {
 
 	private MainApplication application;
 	private ReactApplicationContext reactContext;
 	private Accelerometer accelerometer;
-	
+
 	private static float ACC_ODR = 25f;
 
 	public AccelerometerModule(ReactApplicationContext context) {
@@ -63,34 +62,42 @@ public class AccelerometerModule extends ReactContextBaseJavaModule {
 
 		Log.i("MainActivity", "Accelometer emits");
 		reactContext
-			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit("onAccelerometerDataEmit", map);
+				.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				.emit("onAccelerometerDataEmit", map);
 	}
 
 	public void startModule() {
+		if (accelerometer == null) {
+			accelerometer = application.getBoard().getModule(Accelerometer.class);
+		}
+		if (accelerometer != null) {
+			accelerometer.configure()
+					.odr(ACC_ODR)
+					.commit();
+			Log.i("MainActivity", "Accelometer started");
 
-		accelerometer = application.getBoard().getModule(Accelerometer.class);
-		accelerometer.configure()
-			.odr(ACC_ODR)
-			.commit();
-		Log.i("MainActivity", "Accelometer started");
-
-		accelerometer.acceleration().addRouteAsync(routeComponent -> routeComponent
-			.stream(
-				(Subscriber) (data, objects) -> emitAccEvent(data.value(Acceleration.class))
-			))
-			.continueWith((Continuation<Route, Void>) task -> {
-				accelerometer.acceleration().start();
-				accelerometer.start();
-				return null;
-			});
+			accelerometer.acceleration().addRouteAsync(routeComponent -> routeComponent
+					.stream(
+							(Subscriber) (data, objects) -> emitAccEvent(data.value(Acceleration.class))))
+					.continueWith((Continuation<Route, Void>) task -> {
+						accelerometer.acceleration().start();
+						accelerometer.start();
+						return null;
+					});
+		} else {
+			Log.i("MainActivity", "Accelerometer is null");
+		}
 	}
 
 	public void stopModule() {
-		accelerometer.stop();
-		accelerometer.acceleration().stop();
-		Log.i("MainActivity", "Accelometer stoped");
+		if (accelerometer != null) {
+			accelerometer.stop();
+			accelerometer.acceleration().stop();
+			Log.i("MainActivity", "Accelometer stoped");
 
-		application.getBoard().tearDown();
+			application.getBoard().tearDown();
+		} else {
+			Log.i("MainActivity", "Accelerometer is null");
+		}
 	}
 }

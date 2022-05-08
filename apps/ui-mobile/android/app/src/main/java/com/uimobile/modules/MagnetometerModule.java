@@ -57,7 +57,7 @@ public class MagnetometerModule extends ReactContextBaseJavaModule {
 
 	public void emitMagEvent(MagneticField mag) {
 		HashMap<String, String> hm = new HashMap<>();
-        hm.put("tag", "Magnetometer");
+		hm.put("tag", "Magnetometer");
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			hm.put("timeStamp", LocalDateTime.now().toString());
@@ -73,34 +73,41 @@ public class MagnetometerModule extends ReactContextBaseJavaModule {
 
 		Log.i("MainActivity", "Magnetometer emits");
 		reactContext
-			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit("onMagnetometerDataEmit", map);
+				.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				.emit("onMagnetometerDataEmit", map);
 	}
 
 	public void startModule() {
+		if (magnetometer == null) {
+			magnetometer = application.getBoard().getModule(MagnetometerBmm150.class);
+		}
+		if (magnetometer != null) {
+			magnetometer.configure()
+					.outputDataRate(magnetometerDataRate)
+					.commit();
+			Log.i("MainActivity", "Magnetometer started");
 
-		magnetometer = application.getBoard().getModule(MagnetometerBmm150.class);
-		magnetometer.configure()
-			.outputDataRate(magnetometerDataRate)
-			.commit();
-		Log.i("MainActivity", "Magnetometer started");
-
-		magnetometer.magneticField().addRouteAsync(routeComponent -> routeComponent
-			.stream(
-				(Subscriber) (data, objects) -> emitMagEvent(data.value(MagneticField.class))
-			))
-			.continueWith((Continuation<Route, Void>) task -> {
-				magnetometer.magneticField().start();
-				magnetometer.start();
-				return null;
-			});
+			magnetometer.magneticField().addRouteAsync(routeComponent -> routeComponent
+					.stream((Subscriber) (data, objects) -> emitMagEvent(data.value(MagneticField.class))))
+					.continueWith((Continuation<Route, Void>) task -> {
+						magnetometer.magneticField().start();
+						magnetometer.start();
+						return null;
+					});
+		} else {
+			Log.i("MainActivity", "Magnetometer is null");
+		}
 	}
 
 	public void stopModule() {
-		magnetometer.stop();
-		magnetometer.magneticField().stop();
-		Log.i("MainActivity", "Magnetometer stoped");
+		if (magnetometer != null) {
+			magnetometer.stop();
+			magnetometer.magneticField().stop();
+			Log.i("MainActivity", "Magnetometer stoped");
 
-		application.getBoard().tearDown();
+			application.getBoard().tearDown();
+		} else {
+			Log.i("MainActivity", "Magnetometer is null");
+		}
 	}
 }

@@ -39,32 +39,33 @@ public class EnvironmentDataModule extends ReactContextBaseJavaModule {
 		return "EnvironmentDataModule";
 	}
 
-	public EnvironmentDataModule(ReactApplicationContext context, List<ForcedDataModule> dataModules){
+	public EnvironmentDataModule(ReactApplicationContext context, List<ForcedDataModule> dataModules) {
 		super(context);
 		reactContext = context;
 		application = (MainApplication) context.getApplicationContext();
 		forcedDataModuleList = dataModules;
 	}
 
-	public void setupReaders(){
+	public void setupReaders() {
 		MetaWearBoard board = application.getBoard();
-		if(board != null){
-			for(ForcedDataModule dataModule : forcedDataModuleList){
-				dataModule.setupDataRoutes(board);
+		if (board != null) {
+			for (ForcedDataModule dataModule : forcedDataModuleList) {
+				if (dataModule != null) {
+					dataModule.setupDataRoutes(board);
+				} else {
+					Log.i("MainActivity", "ForcedDataModule dataModule is null");
+				}
 			}
-		}else{
-			Log.i("MainActivity", "MetaWearBoard is null");
+		} else {
+			Log.i("MainActivity", "MetaWearBoard board is null");
 		}
 	}
 
 	@ReactMethod
-	public void getAllEnvironmentData(){
-		for(ForcedDataModule dataModule : forcedDataModuleList) {
+	public void getAllEnvironmentData() {
+		for (ForcedDataModule dataModule : forcedDataModuleList) {
 			dataModule.read();
 		}
 	}
-
-
-
 
 }

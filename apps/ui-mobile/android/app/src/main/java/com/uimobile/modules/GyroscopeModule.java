@@ -57,9 +57,9 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 
 	public void emitGyroEvent(AngularVelocity gyro) {
 		HashMap<String, String> hm = new HashMap<>();
-        hm.put("tag", "Gyroscope");
+		hm.put("tag", "Gyroscope");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			hm.put("timeStamp", LocalDateTime.now().toString());
 		}
 		hm.put("x", String.valueOf(gyro.x()));
@@ -73,33 +73,41 @@ public class GyroscopeModule extends ReactContextBaseJavaModule {
 
 		Log.i("MainActivity", "Gyroscope emits");
 		reactContext
-			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit("onGyroscopeDataEmit", map);
+				.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				.emit("onGyroscopeDataEmit", map);
 	}
 
-	public void startModule(){
+	public void startModule() {
+		if (gyroscope == null) {
+			gyroscope = application.getBoard().getModule(Gyro.class);
+		}
+		if (gyroscope != null) {
+			gyroscope.configure()
+					.odr(outputDataRate)
+					.commit();
+			Log.i("MainActivity", "Gyroscope started");
 
-		gyroscope = application.getBoard().getModule(Gyro.class);
-		gyroscope.configure()
-			.odr(outputDataRate)
-			.commit();
-		Log.i("MainActivity", "Gyroscope started");
-
-		gyroscope.angularVelocity().addRouteAsync(routeComponent -> routeComponent
-			.stream((Subscriber) (data, objects) -> emitGyroEvent(data.value(AngularVelocity.class))
-			))
-			.continueWith((Continuation<Route, Void>) task -> {
-				gyroscope.angularVelocity().start();
-				gyroscope.start();
-				return null;
-			});
+			gyroscope.angularVelocity().addRouteAsync(routeComponent -> routeComponent
+					.stream((Subscriber) (data, objects) -> emitGyroEvent(data.value(AngularVelocity.class))))
+					.continueWith((Continuation<Route, Void>) task -> {
+						gyroscope.angularVelocity().start();
+						gyroscope.start();
+						return null;
+					});
+		} else {
+			Log.i("MainActivity", "Gyroscope is null");
+		}
 	}
 
 	public void stopModule() {
-		gyroscope.stop();
-		gyroscope.angularVelocity().stop();
-		Log.i("MainActivity", "Gyroscope stoped");
+		if (gyroscope != null) {
+			gyroscope.stop();
+			gyroscope.angularVelocity().stop();
+			Log.i("MainActivity", "Gyroscope stoped");
 
-		application.getBoard().tearDown();
+			application.getBoard().tearDown();
+		} else {
+			Log.i("MainActivity", "Gyroscope is null");
+		}
 	}
 }

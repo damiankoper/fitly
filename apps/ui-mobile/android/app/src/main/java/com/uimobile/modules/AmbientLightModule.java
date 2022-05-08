@@ -38,28 +38,26 @@ public class AmbientLightModule extends ReactContextBaseJavaModule {
 		return "AmbientLightModule";
 	}
 
-
-	public AmbientLightModule(ReactApplicationContext context){
+	public AmbientLightModule(ReactApplicationContext context) {
 		super(context);
 		reactContext = context;
 		application = (MainApplication) context.getApplicationContext();
 	}
 
-	private void configureSensor(){
+	private void configureSensor() {
 		ambientLightSensor.configure()
-			.gain(AmbientLightLtr329.Gain.LTR329_8X)
-			.integrationTime(AmbientLightLtr329.IntegrationTime.LTR329_TIME_250MS)
-			.measurementRate(AmbientLightLtr329.MeasurementRate.LTR329_RATE_50MS)
-			.commit();
+				.gain(AmbientLightLtr329.Gain.LTR329_8X)
+				.integrationTime(AmbientLightLtr329.IntegrationTime.LTR329_TIME_250MS)
+				.measurementRate(AmbientLightLtr329.MeasurementRate.LTR329_RATE_50MS)
+				.commit();
 	}
 
-
 	public void startModule() {
-		if(ambientLightSensor == null){
+		if (ambientLightSensor == null) {
 			ambientLightSensor = application.getBoard().getModule(AmbientLightLtr329.class);
 		}
 
-		if(ambientLightSensor != null){
+		if (ambientLightSensor != null) {
 			configureSensor();
 			ambientLightSensor.illuminance().addRouteAsync(new RouteBuilder() {
 				@Override
@@ -67,7 +65,8 @@ public class AmbientLightModule extends ReactContextBaseJavaModule {
 					source.stream(new Subscriber() {
 						@Override
 						public void apply(Data data, Object... env) {
-							Log.i("MainActivity", String.format(Locale.US, "illuminance = %.3f lx",data.value(Float.class)));
+							Log.i("MainActivity",
+									String.format(Locale.US, "illuminance = %.3f lx", data.value(Float.class)));
 							emitBarometerEvent(data.value(Float.class));
 						}
 					});
@@ -75,21 +74,25 @@ public class AmbientLightModule extends ReactContextBaseJavaModule {
 			}).continueWith(new Continuation<Route, Void>() {
 				@Override
 				public Void then(Task<Route> task) throws Exception {
-					Log.i("MainActivity","Ambient Light started");
+					Log.i("MainActivity", "Ambient Light started");
 					ambientLightSensor.illuminance().start();
 					return null;
 				}
 			});
-		}else{
+		} else {
 			Log.i("MainActivity", "Ambient Light is null");
 		}
 	}
 
 	public void stopModule() {
-		ambientLightSensor.illuminance().stop();
-		Log.i("MainActivity", "Ambient Light stopped");
+		if (ambientLightSensor != null) {
+			ambientLightSensor.illuminance().stop();
+			Log.i("MainActivity", "Ambient Light stopped");
 
-		application.getBoard().tearDown();
+			application.getBoard().tearDown();
+		} else {
+			Log.i("MainActivity", "Ambient Light is null");
+		}
 	}
 
 	public void emitBarometerEvent(Float value) {
@@ -105,7 +108,7 @@ public class AmbientLightModule extends ReactContextBaseJavaModule {
 		}
 
 		reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit(ON_AMBIENT_LIGHT_DATA_CAPTURE_EVENT_NAME, map);
+				.emit(ON_AMBIENT_LIGHT_DATA_CAPTURE_EVENT_NAME, map);
 
 	}
 

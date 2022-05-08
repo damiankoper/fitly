@@ -2,7 +2,6 @@ package com.uimobile.modules.forceddata;
 
 import android.util.Log;
 
-
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -40,10 +39,14 @@ public class TemperatureModule extends ForcedDataModule {
 
 	@Override
 	public void setupDataRoutes(MetaWearBoard board) {
-		temperature = board.getModule(Temperature.class);
-		sensor = temperature.findSensors(Temperature.SensorType.NRF_SOC)[0];
+		if (temperature == null) {
+			temperature = board.getModule(Temperature.class);
+		}
+		if (sensor == null) {
+			sensor = temperature.findSensors(Temperature.SensorType.NRF_SOC)[0];
+		}
 
-		if(sensor != null){
+		if (sensor != null) {
 			sensor.addRouteAsync(new RouteBuilder() {
 				@Override
 				public void configure(RouteComponent source) {
@@ -58,18 +61,18 @@ public class TemperatureModule extends ForcedDataModule {
 			}).continueWith(new Continuation<Route, Void>() {
 				@Override
 				public Void then(Task<Route> task) throws Exception {
-					Log.i("TemperatureModule","Successfully added subscriber to sensor!");
+					Log.i("TemperatureModule", "Successfully added subscriber to sensor!");
 					return null;
 				}
 			});
-		}else{
+		} else {
 			Log.i("TemperatureModule", "ERROR: Temperature Sensor is null, NRF_SOC is not present on device");
 		}
 	}
 
 	@Override
 	public void read() {
-		Log.i("TemperatureModule","Started reading");
+		Log.i("TemperatureModule", "Started reading");
 		sensor.read();
 	}
 
@@ -85,7 +88,7 @@ public class TemperatureModule extends ForcedDataModule {
 		}
 
 		reactContext
-			.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit(ON_TEMPERATURE_DATA_CAPTURE_EVENT_NAME, map);
+				.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				.emit(ON_TEMPERATURE_DATA_CAPTURE_EVENT_NAME, map);
 	}
 }
