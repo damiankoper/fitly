@@ -1,4 +1,8 @@
+from typing import List
+
 from pydantic import BaseModel
+
+from apps.ml.types.types import ActivityType
 
 
 class Coordinates(BaseModel):
@@ -26,3 +30,9 @@ class ActivityTracking(BaseModel):
     accelerometer: List[Accelerometer]
     gyroscope: List[Gyroscope]
     magnetometer: List[Magnetometer]
+
+
+class ActivityTrackingMeta(BaseModel):
+    type: ActivityType
+    interval: str
+    repeats: int
