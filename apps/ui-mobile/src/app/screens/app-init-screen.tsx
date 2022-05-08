@@ -90,7 +90,7 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
 			<LoadingScreen
 				subText="Restoring connection with device. Please wait."
 				additionalButton
-				buttonText="Zakończ wyszukiwanie"
+				buttonText="Stop searching"
 				onButtonPress={handleCloseLoadingScreen}
 			/>
 		);

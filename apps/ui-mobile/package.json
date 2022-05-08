@@ -31,6 +31,7 @@
     "lodash": "*",
     "axios": "*",
     "strongly-typed-events": "*",
-    "react-native-svg-charts": "*"
+    "react-native-svg-charts": "*",
+    "d3-shape": "*"
   }
 }
