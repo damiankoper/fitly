@@ -70,16 +70,22 @@ public class BluetoothModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void startSearchingForBluetoothDevices(Promise promise) {
-	IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-	application.registerReceiver(receiver, filter);
-	promise.resolve(bluetoothAdapter.startDiscovery());
+    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+    application.registerReceiver(receiver, filter);
+    promise.resolve(bluetoothAdapter.startDiscovery());
   }
 
   @ReactMethod
   public void cancelSearchingForBluetoothDevices() {
-	receiver.clearAbortBroadcast();
-	bluetoothAdapter.cancelDiscovery();
-	application.unregisterReceiver(receiver);
+    receiver.clearAbortBroadcast();
+    bluetoothAdapter.cancelDiscovery();
+    application.unregisterReceiver(receiver);
+  }
+
+  @ReactMethod
+  public void checkConnectionWithMetaWearDevice(Promise promise){
+    MetaWearBoard board = this.application.getBoard();
+    promise.resolve(board.isConnected());
   }
 
 

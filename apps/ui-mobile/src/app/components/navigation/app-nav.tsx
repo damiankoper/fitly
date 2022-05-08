@@ -14,19 +14,22 @@ import { StyleSheet } from 'react-native';
 import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
 import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
 import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
-import { MetaWear } from '@fitly/ui-metawear';
+import { ExerciseCounterScreen } from '../../screens/exercise-counter-screen';
 import { MetaWearProps } from '../../App';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { ExerciseResultsScreen } from '../../screens/exercise-results-screen';
+import * as RootNavigation from './root-navigation';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
 function wrapScreen(Component: any, outerProps: MetaWearProps) {
-  return (props: MetaWearProps) => {
-    return (
-      <Layout style={styles.wrapper}>
-        <Component {...props} {...outerProps} />
-      </Layout>
-    );
-  };
+	return (props: MetaWearProps) => {
+		return (
+			<Layout style={styles.wrapper}>
+				<Component {...props} {...outerProps} />
+			</Layout>
+		);
+	};
 }
 
 const TabNavigator = (props: MetaWearProps) => (
@@ -57,18 +60,26 @@ const TabNavigator = (props: MetaWearProps) => (
       name="NoPreviousActivityScreen"
       component={wrapScreen(NoPreviousActivityScreen, props)}
     />
+    <Screen
+      name="ExerciseCounterScreen"
+      component={wrapScreen(ExerciseCounterScreen, props)}
+    />
+    <Screen
+      name="ExerciseResultsScreen"
+      component={wrapScreen(ExerciseResultsScreen, props)}
+    />
   </Navigator>
 );
 
 export const AppNav = (props: MetaWearProps) => (
-  <NavigationContainer>
-    <TabNavigator {...props} />
-  </NavigationContainer>
+	<NavigationContainer ref={RootNavigation.navigationRef}>
+		<TabNavigator {...props} />
+	</NavigationContainer>
 );
 
 const styles = StyleSheet.create({
-  wrapper: {
-    padding: 8,
-    flex: 1,
-  },
+	wrapper: {
+		padding: 8,
+		flex: 1,
+	},
 });

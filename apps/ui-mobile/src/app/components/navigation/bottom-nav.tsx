@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  BottomNavigation,
-  BottomNavigationTab,
-  Icon,
+	BottomNavigation,
+	BottomNavigationTab,
+	Icon,
 } from '@ui-kitten/components';
 
 const HomeIcon = (props) => <Icon {...props} name="home-outline" />;
@@ -19,14 +19,16 @@ export const BottomNav = ({ navigation, state }) => {
   const [customNavState, setCustomNavState] = useState<number>(state.index);
   useEffect(() => {
     if (state.index !== customNavState) {
-      if (state.index >= 4) {
+      if (state.index > 3 && state.index < 10) {
         setCustomNavState(4);
-      } else {
+      } else if (state.index == 10 || state.index == 11){
+        setCustomNavState(1);
+      }
+      else {
         setCustomNavState(state.index);
       }
     }
   }, [state.index]);
-  console.log(customNavState);
   return (
     <BottomNavigation
       selectedIndex={customNavState}
