@@ -1,5 +1,5 @@
 import { ActivityType } from '../enums';
-import { DateTime } from 'luxon';
+import { Interval } from 'luxon';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsNumber, IsObject } from 'class-validator';
 
@@ -9,7 +9,7 @@ export class ActivityTrackingMeta {
 
   @Transform(({ value }) => Interval.fromISO(value), { toClassOnly: true })
   @Transform(({ value }) => value.toISO(), { toPlainOnly: true })
-  interval: Interval;
+  interval!: Interval;
 
   @IsNumber()
   repeats = 0;

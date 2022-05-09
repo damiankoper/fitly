@@ -1,6 +1,6 @@
-import ActivityType from '../meta/src/lib/enums/activityType.enum'
+import { ActivityType } from '../enums/activityType.enum'
 
-function calculateCalories(activityType, weight, duration) {
+export function calculateCalories(activityType : ActivityType, weight : number, duration : number) : number {
 
     // Metabolic equivalent for task
     let met = 0;
