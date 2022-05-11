@@ -23,7 +23,7 @@
     "serve": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "pipenv run uvicorn main:app --app-dir=apps/ml/src --reload",
+        "command": "pipenv run uvicorn main:app --app-dir=./apps/ml/src --reload",
         "cwd": "./"
       }
     }

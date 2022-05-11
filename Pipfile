@@ -4,17 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-torch = "*"
-scikit-learn = "*"
-autopep8 = "*"
+fastapi = ">=0.68.0,<0.69.0"
+pydantic = ">=1.8.0,<2.0.0"
+uvicorn = ">=0.15.0,<0.16.0"
 
 [dev-packages]
 
 [requires]
 python_version = "3.8"
-
-[packages.fastapi]
-extras = [ "all",]
-
-[packages.uvicorn]
-extras = [ "standard",]

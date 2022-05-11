@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class ActivityType(Enum):
     UNKNOWN = 'unknown'
     SITUPS = 'situps'
