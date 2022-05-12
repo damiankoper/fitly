@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  core_api:
+    build:
+      dockerfile: ./apps/ml/Dockerfile
+      context: ../../
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/code/apps/ml
+    command: uvicorn main:app --app-dir=apps/ml/src --host 0.0.0.0 --reload
+    restart: unless-stopped

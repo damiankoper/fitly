@@ -5,6 +5,7 @@ import { ActivityTrackingMeta } from './activity-tracking-meta.model';
 import { AxesData } from './axes-data.model';
 import { SensorAsyncSample } from './sensor-async-sample.model';
 import { ActivityTracking } from './activity-tracking.model';
+
 describe('ActivityTracking parse/serialize', () => {
   it('should parse plain object', () => {
     //given
