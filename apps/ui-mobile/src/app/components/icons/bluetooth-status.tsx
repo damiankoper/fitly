@@ -1,9 +1,8 @@
 import { Icon, Text } from '@ui-kitten/components';
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../state/root.reducer';
-import LinearGradientCard from '../gradients/linear-gradient-card';
 import * as RootNavigation from '../navigation/root-navigation';
 
 interface Props {
@@ -11,7 +10,9 @@ interface Props {
 	touchable?: boolean;
 	renderOverlay?: boolean;
 	renderSubText?: boolean;
-	touchableStyles?: any;
+	touchableStyles?: Record<string, string | number>;
+	colorConnected?: string;
+	colorDisconnected?: string;
 }
 
 export const BluetoothStatus: React.FC<Props> = ({
@@ -20,6 +21,8 @@ export const BluetoothStatus: React.FC<Props> = ({
 	renderSubText,
 	iconSize,
 	renderOverlay,
+	colorConnected,
+	colorDisconnected,
 }) => {
 	const isConnectedWithDevice = useSelector((state: RootState) =>
 		Boolean(state.app.connectedDevice)
@@ -42,8 +45,7 @@ export const BluetoothStatus: React.FC<Props> = ({
 			/>
 			{renderSubText && (
 				<Text style={styles.smallText}>
-					{isConnectedWithDevice ? 'Connected' : 'Not connected'} with
-					device
+					{isConnectedWithDevice ? 'Connected' : 'Not connected'}
 				</Text>
 			)}
 		</>
@@ -51,9 +53,18 @@ export const BluetoothStatus: React.FC<Props> = ({
 
 	if (renderOverlay) {
 		Body = (
-			<LinearGradientCard style={styles.container}>
+			<View
+				style={[
+					styles.container,
+					{
+						backgroundColor: isConnectedWithDevice
+							? colorConnected
+							: colorDisconnected,
+					},
+				]}
+			>
 				{Body}
-			</LinearGradientCard>
+			</View>
 		);
 	}
 
@@ -74,10 +85,7 @@ export const BluetoothStatus: React.FC<Props> = ({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		borderRadius: 4,
-		borderColor: 'lightgray',
-		borderWidth: 1,
-		padding: 9,
+		borderRadius: 20,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

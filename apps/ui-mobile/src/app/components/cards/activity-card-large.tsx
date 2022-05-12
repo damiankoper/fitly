@@ -7,90 +7,88 @@ import { ActivityType } from '@fitly/shared/meta';
 import { ActivityNames } from '../../assets/common/activity-names';
 
 interface Props {
-  activity: ActivityType;
-  count: number;
-  time: string;
-  kcal: number;
-  date: string;
+	activity: ActivityType;
+	count: number;
+	time: string;
+	kcal: number;
+	date: string;
 }
 
 export const ActivityCardLarge: React.FC<Props> = ({
-  activity,
-  date,
-  count,
-  time,
-  kcal,
+	activity,
+	date,
+	count,
+	time,
+	kcal,
 }) => {
-  const theme = useTheme();
+	const theme = useTheme();
 
-  return (
-    <View style={[commonStyles.defaultBorder, styles.container]}>
-      <View style={styles.leftColumn}>
-        <ActivityIcon activity={activity} />
-        <Text category="h4">{ActivityNames[activity]}</Text>
-        <Text>Last activity</Text>
-      </View>
-      <View style={styles.rightColumn}>
-        <View style={styles.infoRow}>
-          <View style={styles.exerciseData}>
-            <Text category="h5">{count}</Text>
-            <Text>Count</Text>
-          </View>
-          <View style={styles.exerciseData}>
-            <Text category="h5">{time}</Text>
-            <Text>Time</Text>
-          </View>
-          <View style={styles.exerciseData}>
-            <Text category="h5">{kcal}</Text>
-            <Text>kcal</Text>
-          </View>
-        </View>
-      </View>
-      <Text
-        style={[
-          { backgroundColor: theme['color-primary-default'] },
-          styles.dateText,
-        ]}
-      >
-        {date}
-      </Text>
-    </View>
-  );
+	return (
+		<View style={[commonStyles.defaultCard, styles.container]}>
+			<View style={styles.leftColumn}>
+				<ActivityIcon activity={activity} variant={true} />
+				<Text category="h4">{ActivityNames[activity]}</Text>
+				<Text>Last activity</Text>
+			</View>
+			<View style={styles.rightColumn}>
+				<View style={styles.infoRow}>
+					<View style={styles.exerciseData}>
+						<Text category="h5">{count}</Text>
+						<Text>Count</Text>
+					</View>
+					<View style={styles.exerciseData}>
+						<Text category="h5">{time}</Text>
+						<Text>Time</Text>
+					</View>
+					<View style={styles.exerciseData}>
+						<Text category="h5">{kcal}</Text>
+						<Text>kcal</Text>
+					</View>
+				</View>
+			</View>
+			<Text
+				style={[
+					{ backgroundColor: theme['color-basic-default'] },
+					styles.dateText,
+				]}
+			>
+				{date}
+			</Text>
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    padding: 16,
-  },
-  leftColumn: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 30,
-  },
-  rightColumn: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dateText: {
-    color: 'white',
-    padding: 4,
-    borderRadius: 4,
-    fontSize: 10,
+	container: {
+		flexDirection: 'row',
+		padding: 20,
+	},
+	leftColumn: {
+		flex: 2,
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+	},
+	rightColumn: {
+		flex: 3,
+		justifyContent: 'flex-end',
+		alignItems: 'flex-end',
+	},
+	dateText: {
+		padding: 8,
+		borderRadius: 8,
+		fontSize: 10,
 
-    position: 'absolute',
-    right: 8,
-    top: 8,
-  },
-  infoRow: {
-    alignSelf: 'stretch',
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-  },
-  exerciseData: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+		position: 'absolute',
+		right: 20,
+		top: 20,
+	},
+	infoRow: {
+		alignSelf: 'stretch',
+		flexDirection: 'row-reverse',
+		justifyContent: 'space-between',
+	},
+	exerciseData: {
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 });

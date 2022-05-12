@@ -75,41 +75,45 @@ export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
 	useEffect(() => {
 		const events: (() => void)[] = [];
 		const navigationEvents: (() => void)[] = [];
-		navigation.addListener('focus', () => {
-			events.push(
-				metawear.accelerometerData.sub((data) =>
-					processData(
-						data,
-						tracker.addAccelerometerSample.bind(tracker),
-						setLastAccData
-					)
-				),
-				metawear.gyroscopeData.sub((data) =>
-					processData(
-						data,
-						tracker.addGyroscopeSample.bind(tracker),
-						setLastGyroData
-					)
-				),
-				metawear.magnetometerData.sub((data) =>
-					processData(
-						data,
-						tracker.addMagnetometerSample.bind(tracker),
-						setLastMagData
-					)
-				),
-				tracker.onError.sub((error) => {
-					showNotification(error.message);
-				}),
-        tracker.onSuccess.sub((message) => {
-          showNotification(message);
-        })
-			);
-		});
-		navigation.addListener('blur', () => {
-			resetData();
-			events.forEach((t) => t());
-		});
+		navigationEvents.push(
+			navigation.addListener('focus', () => {
+				events.push(
+					metawear.accelerometerData.sub((data) =>
+						processData(
+							data,
+							tracker.addAccelerometerSample.bind(tracker),
+							setLastAccData
+						)
+					),
+					metawear.gyroscopeData.sub((data) =>
+						processData(
+							data,
+							tracker.addGyroscopeSample.bind(tracker),
+							setLastGyroData
+						)
+					),
+					metawear.magnetometerData.sub((data) =>
+						processData(
+							data,
+							tracker.addMagnetometerSample.bind(tracker),
+							setLastMagData
+						)
+					),
+					tracker.onError.sub((error) => {
+						showNotification(error.message);
+					}),
+					tracker.onSuccess.sub((message) => {
+						showNotification(message);
+					})
+				);
+			})
+		);
+		navigationEvents.push(
+			navigation.addListener('blur', () => {
+				resetData();
+				events.forEach((t) => t());
+			})
+		);
 
 		return () => {
 			navigationEvents.forEach((t) => t());

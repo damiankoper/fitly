@@ -48,7 +48,7 @@ export const TimeIcon = () => {
 };
 
 export const HomeScreen: React.FC<{}> = () => {
-
+	const theme = useTheme();
 	return (
 		<Layout>
 			<ScrollView>
@@ -60,12 +60,13 @@ export const HomeScreen: React.FC<{}> = () => {
 							Icon={StepsIcon}
 							name="Steps"
 							quantity={2137}
+							color={theme['color-primary-200']}
 						/>
 						<DataCardLarge
 							Icon={CaloriesIcon}
 							name="Calories"
 							quantity={1690}
-							theme="red"
+							color={theme['color-danger-200']}
 						/>
 					</View>
 					<View style={[styles.cardColumn, styles.rightColumn]}>
@@ -76,6 +77,8 @@ export const HomeScreen: React.FC<{}> = () => {
 								renderOverlay
 								renderSubText
 								iconSize="large"
+								colorConnected={theme['color-success-200']}
+								colorDisconnected={theme['color-danger-200']}
 							/>
 							<View style={styles.separator} />
 							<DataCardSmall data="45" activity="running" />
@@ -84,6 +87,7 @@ export const HomeScreen: React.FC<{}> = () => {
 							Icon={TimeIcon}
 							name="Time spent"
 							quantity={3723}
+							color={theme['color-basic-300']}
 						/>
 					</View>
 				</View>

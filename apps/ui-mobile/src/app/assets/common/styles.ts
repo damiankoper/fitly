@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 export const commonStyles = StyleSheet.create({
-  defaultBorder: {
-    borderRadius: 4,
-    borderColor: '#aaaaaa',
-    borderWidth: 1,
-    // elevation: 5,
-    // shadowColor: '#888888',
-  },
+	defaultCard: {
+		borderRadius: 20,
+		padding: 20,
+		borderWidth: 0,
+		backgroundColor: '#D9E4FF',
+	},
 });

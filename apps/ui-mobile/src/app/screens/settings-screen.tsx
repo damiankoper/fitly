@@ -27,7 +27,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
 	return (
 		<Layout style={styles.container}>
-			<View style={[commonStyles.defaultBorder, styles.controlContainer]}>
+			<View style={[commonStyles.defaultCard, styles.controlContainer]}>
 				<Text style={styles.modeText}>Dark mode</Text>
 				<Toggle status="primary" {...controlToggleState} />
 			</View>

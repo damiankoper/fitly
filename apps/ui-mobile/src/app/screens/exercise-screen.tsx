@@ -9,34 +9,37 @@ import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Exercise'>;
 
 export const ExerciseScreen: React.FC<NavProps> = ({ navigation }) => {
-  const exercises = Object.values(ActivityType);
+	const exercises = Object.values(ActivityType).filter(
+		(v) => v !== ActivityType.UNKNOWN
+	);
 
-  return (
-    <Layout>
-      <Text category="h4" style={styles.title}>
-        Choose activity
-      </Text>
-      {exercises.map((ex, i) => (
-        <View style={styles.cardWrapper} key={i}>
-          <ActivityCardSmall
-            activity={ex}
-            key={ex}
-            onPress={() =>
-              navigation.navigate('ExerciseCounterScreen', { activity: ex })
-            }
-          />
-        </View>
-      ))}
-    </Layout>
-  );
+	return (
+		<Layout>
+			<Text category="h1" style={styles.title}>
+				Choose activity
+			</Text>
+			{exercises.map((ex, i) => (
+				<View style={styles.cardWrapper} key={i}>
+					<ActivityCardSmall
+						activity={ex}
+						key={ex}
+						onPress={() =>
+							navigation.navigate('ExerciseCounterScreen', {
+								activity: ex,
+							})
+						}
+					/>
+				</View>
+			))}
+		</Layout>
+	);
 };
 
 const styles = StyleSheet.create({
-  title: {
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  cardWrapper: {
-    marginBottom: 8,
-  },
+	title: {
+		marginBottom: 16,
+	},
+	cardWrapper: {
+		marginBottom: 8,
+	},
 });

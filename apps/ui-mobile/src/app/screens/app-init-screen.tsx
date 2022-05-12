@@ -11,7 +11,6 @@ import {
 	clearConnectedDevice,
 } from '../state/app/app.slice';
 import { RootState } from '../state/root.reducer';
-import store from '../state/store';
 
 const CONNECTION_CHECKING_INTERVAL_SECONDS = 2000;
 
