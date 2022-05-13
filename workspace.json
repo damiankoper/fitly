@@ -5,6 +5,7 @@
     "ml-bridge": "apps/ml-bridge",
     "ml-bridge-dto": "libs/ml-bridge/dto",
     "shared-meta": "libs/shared/meta",
+    "ui-control": "libs/ui-control",
     "ui-metawear": "libs/ui-metawear",
     "ui-mobile": "apps/ui-mobile",
     "ui-mobile-e2e": "apps/ui-mobile-e2e",

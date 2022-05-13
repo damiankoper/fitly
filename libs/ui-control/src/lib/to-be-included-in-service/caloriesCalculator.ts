@@ -1,4 +1,4 @@
-import { ActivityType } from '../enums/activityType.enum';
+import { ActivityType } from '@fitly/shared/meta';
 
 export function calculateCalories(
   activityType: ActivityType,
