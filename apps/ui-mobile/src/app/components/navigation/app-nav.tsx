@@ -10,7 +10,7 @@ import { ProfileScreen } from '../../screens/profile-screen';
 import { ServiceModeScreen } from '../../screens/service-mode-screen';
 import { BottomNav } from './bottom-nav';
 import { Layout } from '@ui-kitten/components';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
 import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
 import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
@@ -23,12 +23,15 @@ import { ActivityType } from '@fitly/shared/meta';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
-function wrapScreen(Component: any, outerProps: MetaWearProps) {
+function wrapScroll(Component: any, outerProps: MetaWearProps) {
 	return (props: MetaWearProps) => {
 		return (
-			<Layout style={styles.wrapper}>
+			<ScrollView
+				style={[styles.wrapper]}
+				contentContainerStyle={{ paddingBottom: 24 }}
+			>
 				<Component {...props} {...outerProps} />
-			</Layout>
+			</ScrollView>
 		);
 	};
 }
@@ -42,41 +45,41 @@ const TabNavigator = (props: MetaWearProps) => (
 			headerShown: false,
 		}}
 	>
-		<Screen name="Home" component={wrapScreen(HomeScreen, props)} />
-		<Screen name="Exercise" component={wrapScreen(ExerciseScreen, props)} />
+		<Screen name="Home" component={wrapScroll(HomeScreen, props)} />
+		<Screen name="Exercise" component={wrapScroll(ExerciseScreen, props)} />
 		<Screen
 			name="Guess"
-			component={wrapScreen(ExerciseCounterScreen, props)}
+			component={wrapScroll(ExerciseCounterScreen, props)}
 			initialParams={{
 				activity: ActivityType.UNKNOWN,
 			}}
 		/>
-		<Screen name="History" component={wrapScreen(HistoryScreen, props)} />
-		<Screen name="Settings" component={wrapScreen(SettingScreen, props)} />
-		<Screen name="Profile" component={wrapScreen(ProfileScreen, props)} />
+		<Screen name="History" component={wrapScroll(HistoryScreen, props)} />
+		<Screen name="Settings" component={wrapScroll(SettingScreen, props)} />
+		<Screen name="Profile" component={wrapScroll(ProfileScreen, props)} />
 		<Screen
 			name="Service"
-			component={wrapScreen(ServiceModeScreen, props)}
+			component={wrapScroll(ServiceModeScreen, props)}
 		/>
 		<Screen
 			name="BluetoothConnection"
-			component={wrapScreen(BluetoothConnectionScreen, props)}
+			component={wrapScroll(BluetoothConnectionScreen, props)}
 		/>
 		<Screen
 			name="NotConnectedScreen"
-			component={wrapScreen(NotConnectedScreen, props)}
+			component={wrapScroll(NotConnectedScreen, props)}
 		/>
 		<Screen
 			name="NoPreviousActivityScreen"
-			component={wrapScreen(NoPreviousActivityScreen, props)}
+			component={wrapScroll(NoPreviousActivityScreen, props)}
 		/>
 		<Screen
 			name="ExerciseCounterScreen"
-			component={wrapScreen(ExerciseCounterScreen, props)}
+			component={wrapScroll(ExerciseCounterScreen, props)}
 		/>
 		<Screen
 			name="ExerciseResultsScreen"
-			component={wrapScreen(ExerciseResultsScreen, props)}
+			component={wrapScroll(ExerciseResultsScreen, props)}
 		/>
 	</Navigator>
 );
@@ -91,5 +94,6 @@ const styles = StyleSheet.create({
 	wrapper: {
 		padding: 16,
 		flex: 1,
+		backgroundColor: 'white',
 	},
 });

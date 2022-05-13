@@ -7,7 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { ActivityCardSmall } from '../components/cards/activity-card-small';
 import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
-import { ActivityType, SensorAsyncSample } from '@fitly/shared/meta';
+import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
 
 type NavProps = BottomTabScreenProps<
@@ -22,6 +22,12 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
 	tracker,
 }) => {
 	const [activity, setActivity] = useState(route.params.activity);
+
+	useEffect(() => {
+		setActivity(route.params.activity);
+		onStop(false);
+	}, [route]);
+
 	const [isPaused, setIsPaused] = useState(false);
 	const [isStarted, setIsStarted] = useState(false);
 	const [lastRepeats, setLastRepeats] = useState(0);
@@ -43,14 +49,15 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
 		metawear.stop();
 	}
 
-	function onStop() {
+	function onStop(redirect = true) {
 		setIsStarted(false);
 		setIsPaused(false);
 		stopCapture();
 		setLastDuration(0);
 		setLastRepeats(0);
 		stopwatch.reset(undefined, false);
-		navigation.navigate('ExerciseResultsScreen', { activity: activity });
+		if (redirect)
+			navigation.navigate('ExerciseResultsScreen', { activity });
 	}
 
 	function onStart() {
@@ -105,11 +112,9 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
 		);
 		navigationEvents.push(
 			navigation.addListener('blur', () => {
-				console.log('lour');
-				setActivity(ActivityType.UNKNOWN);
-				navigation.setParams({ activity: ActivityType.UNKNOWN });
-				events.forEach((t) => t());
+				console.log('blur');
 				if (isStarted) onStop();
+				events.forEach((t) => t());
 			})
 		);
 

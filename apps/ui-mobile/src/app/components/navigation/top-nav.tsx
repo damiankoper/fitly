@@ -39,6 +39,5 @@ const styles = StyleSheet.create({
 	topnav: {
 		borderBottomColor: 'lightgray',
 		borderBottomWidth: 1,
-		marginBottom: 4,
 	},
 });
