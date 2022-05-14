@@ -24,7 +24,7 @@ const App = () => {
 		new ActivityTracker(
 			process.env.BRIDGE_BASE_URL + '/data',
 			process.env.BRIDGE_BASE_URL + '/analyze',
-			3000
+			10000
 		)
 	);
 
