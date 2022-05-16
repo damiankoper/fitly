@@ -28,7 +28,7 @@ export class ActivityTracker {
     return this._onAnalyze.asEvent();
   }
 
-  private _onSuccess = new SimpleEventDispatcher<string>();
+  private _onSuccess = new SimpleEventDispatcher<ActivityTracking>();
   public get onSuccess() {
     return this._onSuccess.asEvent();
   }
@@ -49,12 +49,13 @@ export class ActivityTracker {
   }
 
   private start(url: string, emitAnalyse: boolean) {
-    this.reset();
-    if (!this.intervalId)
+    if (!this.intervalId) {
+      this.reset();
       this.intervalId = setInterval(
         () => this.loop(url, emitAnalyse),
         this.duration
       );
+    }
   }
 
   public async loop(url: string, emitAnalyse: boolean) {
@@ -70,7 +71,7 @@ export class ActivityTracker {
     try {
       const result = await axios.post(url, this.instanceToPlain(data));
       if (result.data != null) {
-        this._onSuccess.dispatch('Sent');
+        this._onSuccess.dispatch(data);
       }
       if (emitAnalyse)
         this._onAnalyze.dispatch(this.plainToInstance(result.data));
