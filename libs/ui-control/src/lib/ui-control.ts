@@ -1,4 +1,5 @@
-import { ActivitySession, ActivitySummary, ActivityTimeStats, ActivityType, ChartData, User } from '@fitly/shared/meta';
+import { ActivitySession, ActivitySummary, ActivityTimeStats, ActivityType, ChartData, ChartDataType, User } from '@fitly/shared/meta';
+import { DateTime } from 'luxon';
 import { IDataStore } from './interfaces/IDataStore';
 
 export class UiControl {
@@ -19,8 +20,8 @@ export class UiControl {
     // jeśli user nie został ustawiony
     if(this.dataStore.getUser() == null) return 0;
 
+    const weight = this.dataStore.getUser().weight;
     let calories = 0;
-    let weight = this.dataStore.getUser().weight;
 
     this.dataStore.getActivitySessions().forEach(session => {
       session.activities.forEach(activity => {
@@ -43,21 +44,60 @@ export class UiControl {
     return repeats;
   }
 
-  public getCaloriesDailyChart(): ChartData {
-    return null; // todo o co cho
+  public getCaloriesDailyChart(): ChartData | null {
+    // jeśli user nie został ustawiony
+    if(this.dataStore.getUser() == null) return null;
+
+    const now = DateTime.now();
+    const data: ChartDataType[] = [];
+    const weight = this.dataStore.getUser().weight;
+    const sessions = this.dataStore.getActivitySessions().filter(s => this.areDateTimesTheSameDay(s.interval.start, now));
+
+    sessions.forEach(session => {
+      session.activities.forEach(activity => {
+        data.push(new ChartDataType(
+          this.calculateCalories(activity.type, weight, activity.interval.length('minutes')),
+          activity.interval.start
+        ));
+      })
+    })
+
+    return new ChartData(data);
   }
 
   public getTimeDailyChart(): ChartData {
-    return null;  // todo o co cho
+    const now = DateTime.now();
+    const data: ChartDataType[] = [];
+    const sessions = this.dataStore.getActivitySessions().filter(s => this.areDateTimesTheSameDay(s.interval.start, now));
+
+    sessions.forEach(session => {
+      session.activities.forEach(activity => {
+        data.push(new ChartDataType(
+          activity.interval.length('minutes'),
+          activity.interval.start
+        ));
+      })
+    })
+
+    return new ChartData(data);
   }
 
   public getTimeStats(): ActivityTimeStats {
-    return null;  // todo o co cho
+    const stats: Record<ActivityType, number> = this.initiateRecord<number>(ActivityType, 0);
+    const sessions = this.dataStore.getActivitySessions();
+
+    sessions.forEach(session => {
+      session.activities.forEach(activity => {
+        stats[activity.type] += activity.interval.length("minutes");
+      })
+    })
+
+    return new ActivityTimeStats(stats);
   }
 
   //   --- Activity Session Data ---
   public getSession(id: number): ActivitySession | null {
-    let session = this.dataStore.getActivitySessions().find(activity => activity.id == id);
+    const session = this.dataStore.getActivitySessions().find(activity => activity.id == id);
     if(session == undefined) {
       return null;
     } else {
@@ -66,12 +106,12 @@ export class UiControl {
   }
 
   public getSessions(): ActivitySession[] {
-    let sessions = this.dataStore.getActivitySessions();
+    const sessions = this.dataStore.getActivitySessions();
     return sessions;
   }
 
   public getLastSession(): ActivitySession | null {
-    let sessions = this.dataStore.getActivitySessions();
+    const sessions = this.dataStore.getActivitySessions();
     if(sessions == undefined) {
       return null;
     } else {
@@ -85,7 +125,7 @@ export class UiControl {
 
   //  --- User Data ---
   public getUser(): User | null {
-    let user = this.dataStore.getUser();
+    const user = this.dataStore.getUser();
     if(user == undefined) {
       return null;
     } else {
@@ -94,7 +134,7 @@ export class UiControl {
   }
 
   public setUser(user: User): void {
-    this.dataStore.setUser(user); // todo spytac sie czy w tym case nie resetowac wszystkiego
+    this.dataStore.setUser(user);
   }
 
   public resetUser(): void {
@@ -107,8 +147,8 @@ export class UiControl {
     // jeśli user nie został ustawiony
     if(this.dataStore.getUser() == null) return null;
 
-    let summary = new ActivitySummary(0, new Date(), ActivityType.UNKNOWN, 0, 0);
-    let weight = this.dataStore.getUser().weight;
+    const summary = new ActivitySummary(0, new Date(), 0, 0);
+    const weight = this.dataStore.getUser().weight;
 
     session.activities.forEach(activity => {
       summary.repeats += activity.repeats;
@@ -119,7 +159,16 @@ export class UiControl {
   }
 
   public getSessionPaceChart(session: ActivitySession): ChartData {
-    return null; // todo o co cho
+    const data: ChartDataType[] = [];
+
+    session.activities.forEach(activity => {
+      data.push(new ChartDataType(
+        activity.repeats,
+        activity.interval.start
+      ));
+    })
+
+    return new ChartData(data);
   }
 
 
@@ -151,5 +200,23 @@ export class UiControl {
     const calories = (duration * (met * 3.5 * weight)) / 200;
     return calories;
   }
-  
+
+  private areDateTimesTheSameDay(date1: DateTime, date2: DateTime): boolean {
+    if(
+      date1.year === date2.year &&
+      date1.month === date2.month &&
+      date1.day === date2.day
+    )
+      return true;
+    else
+      return false;
+  }
+
+  private initiateRecord<Y>(enumX: {[index: string]: ActivityType}, defaultValue: Y): Record<ActivityType,Y>{
+    const toReturn:Record<string,Y> = {} ;
+    Object.keys(enumX).forEach(key => {
+        toReturn[key] = defaultValue;
+    });
+    return toReturn;
+  }
 }

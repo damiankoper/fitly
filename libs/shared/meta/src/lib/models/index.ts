@@ -7,4 +7,5 @@ export * from './activity-session.model';
 export * from './user.model';
 export * from './activity-time-stats.model';
 export * from './chart-data.model';
+export * from './chart-data-type.model';
 export * from './activity-summary.model';

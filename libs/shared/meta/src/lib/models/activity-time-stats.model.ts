@@ -1,13 +1,11 @@
+//import { Type } from 'class-transformer';
 import { ActivityType } from '../enums';
-import { IsEnum } from 'class-validator';
 
 export class ActivityTimeStats {
+  //@Type(() => { [key in ActivityType]: number })
+	type: Record<ActivityType, number>;
 
-	@IsEnum(ActivityType)
-	type: ActivityType = ActivityType.UNKNOWN;
-
-
-	constructor(type: ActivityType) {
+	constructor(type: Record<ActivityType, number>) {
 		this.type = type;
 	}
 }

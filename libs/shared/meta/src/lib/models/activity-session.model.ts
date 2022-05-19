@@ -1,10 +1,10 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { ActivityTrackingMeta } from './activity-tracking-meta.model';
 import { Interval } from 'luxon';
+import { IsNumber } from 'class-validator';
 
 export class ActivitySession {
-
 	@IsNumber()
   id = 0;
   
@@ -16,7 +16,6 @@ export class ActivitySession {
   @ValidateNested({ each: true })
   @Type(() => ActivityTrackingMeta)
   activities: ActivityTrackingMeta[];
-
 
   constructor(
     interval: Interval,
