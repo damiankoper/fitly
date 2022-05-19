@@ -1,7 +1,7 @@
 import { Sex } from '../enums/sex.enum';
+import { IsString, IsNumber, IsEnum } from 'class-validator';
 
 export class User {
-
 	@IsString()
   name;
 
@@ -19,7 +19,6 @@ export class User {
   
 	@IsEnum(Sex)
   sex: Sex = Sex.MALE;
-  
 
   constructor(
     name: string,
