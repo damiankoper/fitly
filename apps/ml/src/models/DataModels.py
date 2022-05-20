@@ -7,16 +7,10 @@ class Coordinates(BaseModel):
     y: float
     z: float
 
-    # def __getitem__(self, item):
-    #     return getattr(self, item)
-
 
 class DataPoint(BaseModel):
     timestamp: str
     data: Coordinates
-
-    # def __getitem__(self, item):
-    #     return getattr(self, item)
 
 
 class ActivityTrackingMeta(BaseModel):
