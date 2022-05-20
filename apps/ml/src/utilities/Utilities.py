@@ -7,7 +7,7 @@ from models.ConfigModels import SignalConfig, SignalsConfigs
 from enums.ActivityTypeEnum import ActivityType
 
 
-CONFIG_BASE_PATH = "/code/apps/ml/src/config"
+CONFIG_BASE_PATH = "./apps/ml/src/config"
 
 
 class Utilities:
