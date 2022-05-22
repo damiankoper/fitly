@@ -3,7 +3,7 @@ import { Layout } from '@ui-kitten/components';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 import { CounterSpinner } from '../../components/spinners/counter-spinner';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { ActivityCardSmall } from '../../components/cards/activity-card-small';
 import { MetaWearProps } from '../../App';
 import { showNotification } from '@fitly/ui-utils';
@@ -121,10 +121,8 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
 	return (
 		<Layout style={styles.container}>
 			<View>
-				<ActivityCardSmall
-					activity={activity}
-					subtitle="Current actvity"
-				/>
+				<Text style={styles.titleText}>Current Activity</Text>
+				<ActivityCardSmall activity={activity} />
 				<View style={styles.spinnerWrapper}>
 					<CounterSpinner
 						repeats={lastRepeats}
@@ -150,6 +148,13 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'space-between',
+	},
+	titleText: {
+		fontSize: 32,
+		textAlign: 'center',
+		fontFamily: 'RobotoSlab-Bold',
+		color: 'black',
+		marginBottom: 16,
 	},
 	spinnerWrapper: {
 		alignItems: 'center',

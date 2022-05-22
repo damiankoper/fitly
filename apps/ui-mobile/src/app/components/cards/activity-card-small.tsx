@@ -38,12 +38,8 @@ export const ActivityCardSmall: React.FC<Props> = ({
 						variant
 						gradient={['#F3F6FF', '#F3F6FF']}
 					/>
-					<View>
-						<Text style={styles.text}>{formattedActivity}</Text>
-						{subtitle && (
-							<Text style={styles.text}>{subtitle}</Text>
-						)}
-					</View>
+					<Text style={styles.text}>{formattedActivity}</Text>
+					{subtitle && <Text style={styles.text}>{subtitle}</Text>}
 				</TouchableOpacity>
 			</LinearGradient>
 		</DropShadowWrapper>
@@ -51,17 +47,15 @@ export const ActivityCardSmall: React.FC<Props> = ({
 };
 const styles = StyleSheet.create({
 	container: {
-		flexDirection: 'row',
 		alignItems: 'center',
 		borderRadius: 20,
-		borderWidth: 0,
 		padding: 12,
 	},
 	text: {
 		fontFamily: 'RobotoSlab-Bold',
-		paddingLeft: 12,
 		fontSize: 26,
 		color: 'white',
+		textAlign: 'center',
 		letterSpacing: 1,
 	},
 });

@@ -50,7 +50,7 @@ const TabNavigator = (props: MetaWearProps) => (
 				activity: ActivityType.UNKNOWN,
 			}}
 		/>
-		<Screen name="History" component={wrapScreen(HistoryScreen, props)} />
+		<Screen name="History" component={HistoryScreen} />
 		<Screen name="Settings" component={wrapScreen(SettingScreen, props)} />
 		<Screen name="Profile" component={wrapScreen(ProfileScreen, props)} />
 		<Screen
