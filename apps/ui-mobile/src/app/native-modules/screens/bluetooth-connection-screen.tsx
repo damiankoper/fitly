@@ -4,17 +4,19 @@ import { Button, Card, List, ListItem, Text } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { ListRenderItemInfo, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { MetaWearProps } from '../App';
-import {
-	addEventListenerToBluetoothModule,
-	DeviceInfo,
-} from '../events/bluetooth-module.listener';
-import { BottomTabParamList } from '../interfaces/BottomTabParamList';
-import BluetoothModule from '../native-modules/BluetoothModule';
-import { setConnectedDevice } from '../state/app/app.slice';
-import { RootState } from '../state/root.reducer';
+import { MetaWearProps } from '../../App';
+
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import BluetoothModule from '../BluetoothModule';
+import { setConnectedDevice } from '../../state/app/app.slice';
+import { RootState } from '../../state/root.reducer';
 
 const SEARCHING_TIME = 10 * 1000;
+
+interface DeviceInfo {
+	deviceAddress: string;
+	deviceName: string;
+}
 
 const renderItem =
 	(
@@ -81,16 +83,16 @@ const BluetoothConnectionScreen: React.FC<NavProps & MetaWearProps> = ({
 		Boolean(connectedDeviceFromStore)
 	);
 
-	useEffect(() => {
-		addEventListenerToBluetoothModule(
-			'onBluetoothFoundNewDevice',
-			(newDevice) => {
-				setFoundDevicesList((ps) =>
-					ps ? [...ps, newDevice] : [newDevice]
-				);
-			}
-		);
-	}, []);
+	// useEffect(() => {
+	// 	addEventListenerToBluetoothModule(
+	// 		'onBluetoothFoundNewDevice',
+	// 		(newDevice) => {
+	// 			setFoundDevicesList((ps) =>
+	// 				ps ? [...ps, newDevice] : [newDevice]
+	// 			);
+	// 		}
+	// 	);
+	// }, []);
 
 	const handleStartSearchForBluetoothDevices = async () => {
 		setFoundDevicesList([]);

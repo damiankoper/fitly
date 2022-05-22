@@ -3,8 +3,8 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { Layout, Text } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActivityCardSmall } from '../components/cards/activity-card-small';
-import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import { ActivityCardSmall } from '../../components/cards/activity-card-small';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Exercise'>;
 
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 	},
 	cardWrapper: {
-		marginBottom: 8,
+		marginBottom: 16,
 	},
 });

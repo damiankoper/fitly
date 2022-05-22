@@ -1,12 +1,12 @@
 import React from 'react';
 import { Layout, Toggle, Text, Divider, Button } from '@ui-kitten/components';
 import { StyleSheet, View } from 'react-native';
-import { BluetoothButton } from '../components/buttons/bluetooth-button';
-import { commonStyles } from '../assets/common/styles';
+import { BluetoothButton } from '../../components/buttons/bluetooth-button';
+import { commonStyles } from '../../assets/common/styles';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 import { useSelector } from 'react-redux';
-import { RootState } from '../state/root.reducer';
+import { RootState } from '../../state/root.reducer';
 
 const useToggleState = (initialState = false) => {
 	const [checked, setChecked] = React.useState(initialState);
@@ -27,7 +27,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
 	return (
 		<Layout style={styles.container}>
-			<View style={[commonStyles.defaultCard, styles.controlContainer]}>
+			<View style={[commonStyles.defaultBorder, styles.controlContainer]}>
 				<Text style={styles.modeText}>Dark mode</Text>
 				<Toggle status="primary" {...controlToggleState} />
 			</View>

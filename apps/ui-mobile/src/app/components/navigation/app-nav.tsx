@@ -1,25 +1,24 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { SettingScreen } from '../../screens/settings-screen';
-import { ExerciseScreen } from '../../screens/exercise-screen';
-import { GuessScreen } from '../../screens/guess-screen';
-import { HomeScreen } from '../../screens/home-screen';
-import { HistoryScreen } from '../../screens/history-screen';
+import { SettingScreen } from '../../native-modules/screens/settings-screen';
+import { ExerciseScreen } from '../../native-modules/screens/exercise-screen';
+import { HomeScreen } from '../../native-modules/screens/home-screen';
+import { HistoryScreen } from '../../native-modules/screens/history-screen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ProfileScreen } from '../../screens/profile-screen';
-import { ServiceModeScreen } from '../../screens/service-mode-screen';
+import { ServiceModeScreen } from '../../native-modules/screens/service-mode-screen';
 import { BottomNav } from './bottom-nav';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
-import BluetoothConnectionScreen from '../../screens/bluetooth-connection-screen';
-import { NotConnectedScreen } from '../../screens/home-not-connected-screen';
-import { NoPreviousActivityScreen } from '../../screens/home-no-previous-activity-screen';
-import { ExerciseCounterScreen } from '../../screens/exercise-counter-screen';
+import BluetoothConnectionScreen from '../../native-modules/screens/bluetooth-connection-screen';
+import { NotConnectedScreen } from '../../native-modules/screens/home-not-connected-screen';
+import { NoPreviousActivityScreen } from '../../native-modules/screens/home-no-previous-activity-screen';
+import { ExerciseCounterScreen } from '../../native-modules/screens/exercise-counter-screen';
 import { MetaWearProps } from '../../App';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
-import { ExerciseResultsScreen } from '../../screens/exercise-results-screen';
+import { ExerciseResultsScreen } from '../../native-modules/screens/exercise-results-screen';
 import * as RootNavigation from './root-navigation';
 import { ActivityType } from '@fitly/shared/meta';
+import { ProfileScreen } from '../../native-modules/screens/profile-screen';
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomTabParamList>();
 
@@ -42,7 +41,7 @@ const TabNavigator = (props: MetaWearProps) => (
 			headerShown: false,
 		}}
 	>
-		<Screen name="Home" component={wrapScreen(HomeScreen, props)} />
+		<Screen name="Home" component={HomeScreen} />
 		<Screen name="Exercise" component={wrapScreen(ExerciseScreen, props)} />
 		<Screen
 			name="Guess"

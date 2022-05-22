@@ -2,7 +2,11 @@ import { Icon, Text } from '@ui-kitten/components';
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { commonStyles } from '../../assets/common/styles';
 import { RootState } from '../../state/root.reducer';
+import DropShadowWrapper from '../gradients/drop-shadow';
+import LinearGradientCard from '../gradients/linear-gradient-card';
+import { Themes } from '../gradients/themes';
 import * as RootNavigation from '../navigation/root-navigation';
 
 interface Props {
@@ -10,9 +14,7 @@ interface Props {
 	touchable?: boolean;
 	renderOverlay?: boolean;
 	renderSubText?: boolean;
-	touchableStyles?: Record<string, string | number>;
-	colorConnected?: string;
-	colorDisconnected?: string;
+	touchableStyles?: any;
 }
 
 export const BluetoothStatus: React.FC<Props> = ({
@@ -21,20 +23,15 @@ export const BluetoothStatus: React.FC<Props> = ({
 	renderSubText,
 	iconSize,
 	renderOverlay,
-	colorConnected,
-	colorDisconnected,
 }) => {
 	const isConnectedWithDevice = useSelector((state: RootState) =>
 		Boolean(state.app.connectedDevice)
 	);
-	const connectedDevice = useSelector(
-		(state: RootState) => state.app.connectedDevice
-	);
+
+	const theme: Themes = isConnectedWithDevice ? 'success' : 'danger';
 
 	const handleBluetoothStatusPress = () =>
 		RootNavigation.navigate('BluetoothConnection');
-
-	console.log('ConnectedDevice:', connectedDevice);
 
 	let Body = (
 		<>
@@ -45,7 +42,9 @@ export const BluetoothStatus: React.FC<Props> = ({
 			/>
 			{renderSubText && (
 				<Text style={styles.smallText}>
-					{isConnectedWithDevice ? 'Connected' : 'Not connected'}
+					{isConnectedWithDevice
+						? 'Connected with device'
+						: 'No device connected'}
 				</Text>
 			)}
 		</>
@@ -53,18 +52,25 @@ export const BluetoothStatus: React.FC<Props> = ({
 
 	if (renderOverlay) {
 		Body = (
-			<View
-				style={[
-					styles.container,
-					{
-						backgroundColor: isConnectedWithDevice
-							? colorConnected
-							: colorDisconnected,
-					},
-				]}
+			<DropShadowWrapper
+				style={{ height: 80, padding: 0 }}
+				shadowColorTheme={theme}
 			>
-				{Body}
-			</View>
+				<LinearGradientCard
+					style={[
+						styles.container,
+						commonStyles.defaultBorder,
+						{ padding: 0 },
+					]}
+					theme={theme}
+				>
+					<View
+						style={[styles.container, commonStyles.defaultBorder]}
+					>
+						{Body}
+					</View>
+				</LinearGradientCard>
+			</DropShadowWrapper>
 		);
 	}
 
@@ -85,7 +91,7 @@ export const BluetoothStatus: React.FC<Props> = ({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		borderRadius: 20,
+		padding: 9,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

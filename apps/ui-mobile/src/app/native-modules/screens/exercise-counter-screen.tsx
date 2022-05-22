@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Layout } from '@ui-kitten/components';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../interfaces/BottomTabParamList';
-import { CounterSpinner } from '../components/spinners/counter-spinner';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { CounterSpinner } from '../../components/spinners/counter-spinner';
 import { StyleSheet, View } from 'react-native';
-import { ActivityCardSmall } from '../components/cards/activity-card-small';
-import { MetaWearProps } from '../App';
+import { ActivityCardSmall } from '../../components/cards/activity-card-small';
+import { MetaWearProps } from '../../App';
 import { showNotification } from '@fitly/ui-utils';
 import { ActivityType, SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
