@@ -17,16 +17,19 @@ const LinearGradientCard: React.FC<LinearGradientCardProps> = ({
 	children,
 	theme,
 }) => {
+	let locations = [0, 1];
 	let colors;
 	switch (theme) {
 		case 'danger':
 			colors = ['#FFFDFD', '#FFE7E8'];
 			break;
 		case 'success':
-			colors = ['#FFFFFF', '#C6FFDD'];
+			locations = [0, 0.6, 1];
+			colors = ['#FFFFFF', '#EAFFF2', '#E0FFEC'];
 			break;
 		case 'basic':
-			colors = ['#FFFFFF', '#E8E8E8'];
+			locations = [0, 1];
+			colors = ['#FFFFFF', '#EDEDED'];
 			break;
 		case 'primary':
 		default:
@@ -36,7 +39,7 @@ const LinearGradientCard: React.FC<LinearGradientCardProps> = ({
 
 	return (
 		<LinearGradient
-			locations={[0, 1]}
+			locations={locations}
 			colors={colors}
 			start={{ x: x || 0.45, y: y || 0.5 }}
 			style={[style, { overflow: 'visible' }]}

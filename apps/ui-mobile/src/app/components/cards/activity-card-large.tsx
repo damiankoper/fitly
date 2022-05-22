@@ -1,14 +1,13 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { ActivityIcon } from '../icons/activity-icon';
-import { Text, useTheme } from '@ui-kitten/components';
 import { commonStyles } from '../../assets/common/styles';
 import { ActivityType } from '@fitly/shared/meta';
 import { ActivityNames } from '../../assets/common/activity-names';
 import DropShadowWrapper from '../gradients/drop-shadow';
 import LinearGradientCard from '../gradients/linear-gradient-card';
 import { Themes } from '../gradients/themes';
-
+import { Text as TextUi } from '@ui-kitten/components';
 interface Props {
 	activity: ActivityType;
 	count: number;
@@ -35,22 +34,28 @@ export const ActivityCardLarge: React.FC<Props> = ({
 				<View style={[commonStyles.defaultBorder, styles.container]}>
 					<View style={styles.leftColumn}>
 						<ActivityIcon activity={activity} variant={true} />
-						<Text category="h4">{ActivityNames[activity]}</Text>
-						<Text>Last activity</Text>
+						<Text style={styles.activityTypeText}>
+							{ActivityNames[activity]}
+						</Text>
+						<Text style={styles.lastActivityText}>
+							Last activity
+						</Text>
 					</View>
 					<View style={styles.rightColumn}>
 						<View style={styles.infoRow}>
 							<View style={styles.exerciseData}>
-								<Text category="h5">{count}</Text>
-								<Text>Count</Text>
+								<TextUi category="h4" style={styles.valueText}>
+									{count}
+								</TextUi>
+								<Text style={styles.labelText}>Count</Text>
 							</View>
 							<View style={styles.exerciseData}>
-								<Text category="h5">{time}</Text>
-								<Text>Time</Text>
+								<Text style={styles.valueText}>{time}</Text>
+								<Text style={styles.labelText}>Time</Text>
 							</View>
 							<View style={styles.exerciseData}>
-								<Text category="h5">{kcal}</Text>
-								<Text>kcal</Text>
+								<Text style={styles.valueText}>{kcal}</Text>
+								<Text style={styles.labelText}>kcal</Text>
 							</View>
 						</View>
 					</View>
@@ -80,8 +85,8 @@ const styles = StyleSheet.create({
 	},
 	rightColumn: {
 		flex: 3,
-		justifyContent: 'flex-end',
-		alignItems: 'flex-end',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	dateText: {
 		paddingTop: 4,
@@ -95,10 +100,38 @@ const styles = StyleSheet.create({
 		right: 16,
 		top: 12,
 	},
+	activityTypeText: {
+		fontFamily: 'RobotoSlab-Bold',
+		textAlign: 'center',
+		fontSize: 28,
+		letterSpacing: 1,
+		color: 'black',
+	},
+	lastActivityText: {
+		fontFamily: 'Roboto-Light',
+		textAlign: 'center',
+		letterSpacing: 1,
+		fontSize: 14,
+		color: '#a1a1a1',
+	},
 	infoRow: {
 		alignSelf: 'stretch',
 		flexDirection: 'row-reverse',
 		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	valueText: {
+		fontFamily: 'RobotoSlab-Bold',
+		color: 'black',
+		letterSpacing: 1,
+		fontSize: 24,
+	},
+	labelText: {
+		fontFamily: 'Roboto-Light',
+		textAlign: 'center',
+		fontSize: 14,
+		letterSpacing: 1,
+		color: '#a1a1a1',
 	},
 	exerciseData: {
 		justifyContent: 'center',

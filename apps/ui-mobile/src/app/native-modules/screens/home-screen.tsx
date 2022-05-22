@@ -87,7 +87,7 @@ export const HomeScreen: React.FC<{}> = () => {
 							<View style={styles.separator} />
 							<DataCardSmall
 								data="45"
-								activity="running"
+								activity="Running"
 								style={styles.activitiesWrapper}
 							/>
 						</View>

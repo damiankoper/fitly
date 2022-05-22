@@ -56,10 +56,13 @@ const styles = StyleSheet.create({
 	},
 	quantityText: {
 		fontSize: 20,
+		textAlign: 'center',
 		fontWeight: '700',
 	},
 	text: {
-		fontSize: 12,
+		fontSize: 14,
+		color: '#A1A1A1',
+		fontFamily: 'Roboto-Light',
 		textAlign: 'center',
 	},
 });

@@ -22,7 +22,7 @@ const DropShadowWrapper: React.FC<DropShadowWrapperProps> = ({
 			shadowColor = '#55555e';
 			break;
 		case 'success':
-			shadowColor = '#C6FFDD';
+			shadowColor = '#11644C';
 			break;
 		case 'primary':
 		default:

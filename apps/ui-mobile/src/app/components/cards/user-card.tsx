@@ -1,5 +1,5 @@
-import { Text, Icon, useTheme } from '@ui-kitten/components';
 import React from 'react';
+import { Text, Icon } from '@ui-kitten/components';
 import { StyleSheet, Image, View } from 'react-native';
 import { commonStyles } from '../../assets/common/styles';
 import ManIcon from '../../assets/images/man.png';
@@ -24,7 +24,7 @@ export const UserCard: React.FC<Props> = ({ name, title, theme }) => {
 				<View style={[commonStyles.defaultBorder, styles.container]}>
 					<Image source={ManIcon} style={[styles.iconUser]} />
 					<View>
-						<Text style={styles.name}>{name}</Text>
+						<Text style={styles.userFullname}>{name}</Text>
 						<View style={styles.titleContainer}>
 							<Icon
 								name="award-outline"
@@ -47,19 +47,23 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		height: 80,
 	},
-	name: {
+	userFullname: {
 		textAlign: 'right',
 		fontSize: 26,
-		fontWeight: '800',
+		fontFamily: 'RobotoSlab-Bold',
 		letterSpacing: 1,
 	},
 	titleContainer: {
 		textAlign: 'right',
+		justifyContent: 'flex-end',
 		flexDirection: 'row',
+		height: 25,
 	},
 	titleText: {
 		color: '#C1C1C1',
-		fontFamily: 'notoserif',
+		top: 3,
+		marginLeft: 8,
+		fontFamily: 'Roboto',
 		letterSpacing: 1,
 	},
 	iconUser: {
@@ -68,9 +72,11 @@ const styles = StyleSheet.create({
 		marginRight: 8,
 	},
 	iconBadge: {
-		width: 24,
-		height: 24,
-		color: 'blue',
+		width: 25,
+		height: 25,
+		shadowColor: 'transparent',
+		elevation: 2,
+		color: '#3366FF',
 		aspectRatio: 1,
 	},
 });

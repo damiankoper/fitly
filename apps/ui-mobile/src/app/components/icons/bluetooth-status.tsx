@@ -44,7 +44,7 @@ export const BluetoothStatus: React.FC<Props> = ({
 				<Text style={styles.smallText}>
 					{isConnectedWithDevice
 						? 'Connected with device'
-						: 'No device connected'}
+						: 'Not connected'}
 				</Text>
 			)}
 		</>
@@ -62,6 +62,8 @@ export const BluetoothStatus: React.FC<Props> = ({
 						commonStyles.defaultBorder,
 						{ padding: 0 },
 					]}
+					x={0.2}
+					y={0.5}
 					theme={theme}
 				>
 					<View
@@ -77,7 +79,7 @@ export const BluetoothStatus: React.FC<Props> = ({
 	if (touchable) {
 		Body = (
 			<TouchableOpacity
-				style={touchableStyles}
+				style={[touchableStyles, styles.touchableBaseStyle]}
 				onPress={handleBluetoothStatusPress}
 			>
 				{Body}
@@ -98,6 +100,9 @@ const styles = StyleSheet.create({
 	smallText: {
 		fontSize: 12,
 		textAlign: 'center',
+	},
+	touchableBaseStyle: {
+		overflow: 'visible',
 	},
 });
 

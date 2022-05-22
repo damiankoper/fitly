@@ -2,17 +2,37 @@ import { ActivityType } from '@fitly/shared/meta';
 import { useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { ActivityIcons } from '../../assets/common/activity-icons';
 
 interface Props {
 	activity: ActivityType;
 	large?: boolean;
 	variant?: boolean;
+	gradient?: [string, string];
 }
 
-export const ActivityIcon: React.FC<Props> = ({ activity, large, variant }) => {
+export const ActivityIcon: React.FC<Props> = ({
+	activity,
+	large,
+	variant,
+	gradient,
+}) => {
 	const theme = useTheme();
 
+	if (gradient) {
+		return (
+			<LinearGradient
+				style={[large ? styles.largeContainer : styles.container]}
+				colors={gradient}
+			>
+				<Image
+					style={large ? styles.largeImage : styles.image}
+					source={ActivityIcons[activity]}
+				/>
+			</LinearGradient>
+		);
+	}
 	return (
 		<View
 			style={[

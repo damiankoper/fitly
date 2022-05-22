@@ -18,6 +18,7 @@ export const HistoryScreen = () => {
 						time="7:34"
 						kcal={128}
 						date="Yesterday"
+						theme="primary"
 					/>
 				</View>
 				<View style={styles.cardWrapper}>
@@ -27,6 +28,7 @@ export const HistoryScreen = () => {
 						time="7:34"
 						kcal={128}
 						date="Yesterday"
+						theme="primary"
 					/>
 				</View>
 				<Text category="h6" style={styles.dateText}>
@@ -39,6 +41,7 @@ export const HistoryScreen = () => {
 						time="7:34"
 						kcal={128}
 						date="Yesterday"
+						theme="primary"
 					/>
 				</View>
 				<View style={styles.cardWrapper}>
@@ -48,6 +51,7 @@ export const HistoryScreen = () => {
 						time="7:34"
 						kcal={128}
 						date="Yesterday"
+						theme="primary"
 					/>
 				</View>
 				<View style={styles.cardWrapper}>
@@ -57,6 +61,7 @@ export const HistoryScreen = () => {
 						time="7:34"
 						kcal={128}
 						date="Yesterday"
+						theme="primary"
 					/>
 				</View>
 			</ScrollView>

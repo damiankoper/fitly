@@ -32,7 +32,7 @@ export const DataCardSmall: React.FC<Props> = ({
 					</Text>
 					<Text style={styles.smallText}>
 						of activities is{' '}
-						<Text style={styles.smallText} status="primary">
+						<Text style={styles.primaryText} status="primary">
 							{activity}
 						</Text>
 					</Text>
@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
 	smallText: {
 		fontSize: 12,
 		textAlign: 'center',
+	},
+	primaryText: {
+		fontSize: 12,
+		textAlign: 'center',
+		fontFamily: 'RobotoSlab-Bold',
 	},
 	procent: {
 		fontSize: 20,

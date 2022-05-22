@@ -1,12 +1,10 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { ActivityIcon } from '../icons/activity-icon';
-import { Text, useTheme } from '@ui-kitten/components';
 import { commonStyles } from '../../assets/common/styles';
 import { ActivityType } from '@fitly/shared/meta';
 import { formatActivityString } from '../../common/utils';
 import DropShadowWrapper from '../gradients/drop-shadow';
-import LinearGradientCard from '../gradients/linear-gradient-card';
 import { Themes } from '../gradients/themes';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -28,7 +26,6 @@ export const ActivityCardSmall: React.FC<Props> = ({
 		<DropShadowWrapper shadowColorTheme={theme}>
 			<LinearGradient
 				locations={[0, 1]}
-				start={{ x: 0.25, y: 0.25 }}
 				colors={['#9EB6FF', '#6B90FF']}
 				style={[commonStyles.defaultBorder]}
 			>
@@ -36,11 +33,13 @@ export const ActivityCardSmall: React.FC<Props> = ({
 					style={[commonStyles.defaultBorder, styles.container]}
 					onPress={onPress}
 				>
-					<ActivityIcon activity={activity} variant />
+					<ActivityIcon
+						activity={activity}
+						variant
+						gradient={['#F3F6FF', '#F3F6FF']}
+					/>
 					<View>
-						<Text category="h4" style={styles.text}>
-							{formattedActivity}
-						</Text>
+						<Text style={styles.text}>{formattedActivity}</Text>
 						{subtitle && (
 							<Text style={styles.text}>{subtitle}</Text>
 						)}
@@ -56,9 +55,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 20,
 		borderWidth: 0,
-		padding: 6,
+		padding: 12,
 	},
 	text: {
+		fontFamily: 'RobotoSlab-Bold',
 		paddingLeft: 12,
+		fontSize: 26,
+		color: 'white',
+		letterSpacing: 1,
 	},
 });
