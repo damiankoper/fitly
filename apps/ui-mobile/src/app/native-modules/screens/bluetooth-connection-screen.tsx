@@ -2,7 +2,7 @@ import { showNotification } from '@fitly/ui-utils';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { Button, Card, List, ListItem, Text } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { ListRenderItemInfo, StyleSheet } from 'react-native';
+import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { MetaWearProps } from '../../App';
 
@@ -29,15 +29,17 @@ const renderItem =
 			connectingWith?.deviceAddress === item.deviceAddress;
 
 		return (
-			<ListItem
-				title={`${item.deviceName || 'Unknown'}`}
-				description={
-					isConnecting && !isConnected
-						? 'Connecting...'
-						: `${item.deviceAddress}`
-				}
-				onPress={onPress(item)}
-			/>
+			<View>
+				<ListItem
+					title={`${item.deviceName || 'Unknown'}`}
+					description={
+						isConnecting && !isConnected
+							? 'Connecting...'
+							: `${item.deviceAddress}`
+					}
+					onPress={onPress(item)}
+				/>
+			</View>
 		);
 	};
 

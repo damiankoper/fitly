@@ -1,5 +1,5 @@
+import { ActivityType } from '@fitly/shared/meta';
 import { calculateCalories } from './caloriesCalculator';
-import { ActivityType } from '../enums/activityType.enum';
 
 describe('Calculate calories for 70kg and 30min', () => {
   it('SITUPS should equals 294', () => {

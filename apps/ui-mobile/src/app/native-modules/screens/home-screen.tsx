@@ -97,6 +97,8 @@ export const HomeScreen: React.FC<{}> = () => {
 							quantity={3723}
 							theme="basic"
 						/>
+						<View style={styles.separator} />
+						<DataCardSmall data="45" activity="running" />
 					</View>
 				</View>
 
@@ -110,8 +112,18 @@ export const HomeScreen: React.FC<{}> = () => {
 						count={31}
 					/>
 				</View>
-			</ScrollView>
-		</Layout>
+			</View>
+
+			<View style={styles.bottomCard}>
+				<ActivityCardLarge
+					activity={ActivityType.SQUATS}
+					date="Yesterday, 8 Mar"
+					kcal={231}
+					time="2:32"
+					count={31}
+				/>
+			</View>
+		</>
 	);
 };
 
