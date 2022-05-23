@@ -83,7 +83,7 @@ export class UiControl {
   }
 
   public getTimeStats(): ActivityTimeStats {
-    const stats: Record<ActivityType, number> = this.initiateRecord<number>(ActivityType, 0);
+    let stats: Record<ActivityType, number> = this.initiateRecord<number>(ActivityType, 0);
     const sessions = this.dataStore.getActivitySessions();
 
     sessions.forEach(session => {
@@ -213,7 +213,7 @@ export class UiControl {
   }
 
   private initiateRecord<Y>(enumX: {[index: string]: ActivityType}, defaultValue: Y): Record<ActivityType,Y>{
-    const toReturn:Record<string,Y> = {} ;
+    let toReturn:Record<string,Y> = {} ;
     Object.keys(enumX).forEach(key => {
         toReturn[key] = defaultValue;
     });
