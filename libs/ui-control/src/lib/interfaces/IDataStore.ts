@@ -1,5 +1,4 @@
-import { ActivitySession, User } from "@fitly/shared/meta";
-
+import { ActivitySession, User } from '@fitly/shared/meta';
 
 export interface IDataStore {
   // TODO: implement rest
@@ -8,13 +7,11 @@ export interface IDataStore {
   // getNumbers shows idea of mocking return value in test
   getNumbers(): number[];
 
-
   getUser(): User;
 
   setUser(user: User);
 
   resetUser(): void;
-
 
   getActivitySessions(): ActivitySession[];
 

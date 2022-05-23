@@ -1,5 +1,5 @@
 import { Icon, Layout, useTheme } from '@ui-kitten/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UserCard } from '../../components/cards/user-card';
 import { StyleSheet, View, ScrollView, Text } from 'react-native';
 import { DataCardLarge } from '../../components/cards/data-card-large';
@@ -11,6 +11,9 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
 import DropShadowWrapper from '../../components/gradients/drop-shadow';
+import { RootState } from '../../state/root.reducer';
+import { useSelector } from 'react-redux';
+import uiControl, { DataStore } from 'apps/ui-mobile/data';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -49,6 +52,14 @@ export const TimeIcon = () => {
 };
 
 export const HomeScreen: React.FC<{}> = () => {
+  useEffect(() => {
+    const dataStore = new DataStore();
+
+    dataStore.saveHelloWorld('');
+    const fromStore = dataStore.readHelloWorld();
+    console.log(fromStore);
+  }, []);
+
   return (
     <Layout>
       <ScrollView contentContainerStyle={styles.defaultPadding}>

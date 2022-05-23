@@ -1,4 +1,12 @@
-import { ActivitySession, ActivitySummary, ActivityTimeStats, ActivityType, ChartData, ChartDataType, User } from '@fitly/shared/meta';
+import {
+  ActivitySession,
+  ActivitySummary,
+  ActivityTimeStats,
+  ActivityType,
+  ChartData,
+  ChartDataType,
+  User,
+} from '@fitly/shared/meta';
 import { DateTime } from 'luxon';
 import { IDataStore } from './interfaces/IDataStore';
 
@@ -13,21 +21,23 @@ export class UiControl {
     return this.dataStore.getNumbers().reduce((a, b) => a + b, 0);
   }
 
-
   //   --- Global Stats ---
   public getTotalCalories(): number {
-
     // jeśli user nie został ustawiony
-    if(this.dataStore.getUser() == null) return 0;
+    if (this.dataStore.getUser() == null) return 0;
 
     const weight = this.dataStore.getUser().weight;
     let calories = 0;
 
-    this.dataStore.getActivitySessions().forEach(session => {
-      session.activities.forEach(activity => {
-        calories += this.calculateCalories(activity.type, weight, activity.interval.length('minutes'));
-      })
-    })
+    this.dataStore.getActivitySessions().forEach((session) => {
+      session.activities.forEach((activity) => {
+        calories += this.calculateCalories(
+          activity.type,
+          weight,
+          activity.interval.length('minutes')
+        );
+      });
+    });
 
     return calories;
   }
@@ -35,32 +45,40 @@ export class UiControl {
   public getTotalRepeats(): number {
     let repeats = 0;
 
-    this.dataStore.getActivitySessions().forEach(session => {
-      session.activities.forEach(activity => {
+    this.dataStore.getActivitySessions().forEach((session) => {
+      session.activities.forEach((activity) => {
         repeats += activity.repeats;
-      })
-    })
+      });
+    });
 
     return repeats;
   }
 
   public getCaloriesDailyChart(): ChartData | null {
     // jeśli user nie został ustawiony
-    if(this.dataStore.getUser() == null) return null;
+    if (this.dataStore.getUser() == null) return null;
 
     const now = DateTime.now();
     const data: ChartDataType[] = [];
     const weight = this.dataStore.getUser().weight;
-    const sessions = this.dataStore.getActivitySessions().filter(s => this.areDateTimesTheSameDay(s.interval.start, now));
+    const sessions = this.dataStore
+      .getActivitySessions()
+      .filter((s) => this.areDateTimesTheSameDay(s.interval.start, now));
 
-    sessions.forEach(session => {
-      session.activities.forEach(activity => {
-        data.push(new ChartDataType(
-          this.calculateCalories(activity.type, weight, activity.interval.length('minutes')),
-          activity.interval.start
-        ));
-      })
-    })
+    sessions.forEach((session) => {
+      session.activities.forEach((activity) => {
+        data.push(
+          new ChartDataType(
+            this.calculateCalories(
+              activity.type,
+              weight,
+              activity.interval.length('minutes')
+            ),
+            activity.interval.start
+          )
+        );
+      });
+    });
 
     return new ChartData(data);
   }
@@ -68,37 +86,46 @@ export class UiControl {
   public getTimeDailyChart(): ChartData {
     const now = DateTime.now();
     const data: ChartDataType[] = [];
-    const sessions = this.dataStore.getActivitySessions().filter(s => this.areDateTimesTheSameDay(s.interval.start, now));
+    const sessions = this.dataStore
+      .getActivitySessions()
+      .filter((s) => this.areDateTimesTheSameDay(s.interval.start, now));
 
-    sessions.forEach(session => {
-      session.activities.forEach(activity => {
-        data.push(new ChartDataType(
-          activity.interval.length('minutes'),
-          activity.interval.start
-        ));
-      })
-    })
+    sessions.forEach((session) => {
+      session.activities.forEach((activity) => {
+        data.push(
+          new ChartDataType(
+            activity.interval.length('minutes'),
+            activity.interval.start
+          )
+        );
+      });
+    });
 
     return new ChartData(data);
   }
 
   public getTimeStats(): ActivityTimeStats {
-    const stats: Record<ActivityType, number> = this.initiateRecord<number>(ActivityType, 0);
+    const stats: Record<ActivityType, number> = this.initiateRecord<number>(
+      ActivityType,
+      0
+    );
     const sessions = this.dataStore.getActivitySessions();
 
-    sessions.forEach(session => {
-      session.activities.forEach(activity => {
-        stats[activity.type] += activity.interval.length("minutes");
-      })
-    })
+    sessions.forEach((session) => {
+      session.activities.forEach((activity) => {
+        stats[activity.type] += activity.interval.length('minutes');
+      });
+    });
 
     return new ActivityTimeStats(stats);
   }
 
   //   --- Activity Session Data ---
   public getSession(id: number): ActivitySession | null {
-    const session = this.dataStore.getActivitySessions().find(activity => activity.id == id);
-    if(session == undefined) {
+    const session = this.dataStore
+      .getActivitySessions()
+      .find((activity) => activity.id == id);
+    if (session == undefined) {
       return null;
     } else {
       return session;
@@ -112,7 +139,7 @@ export class UiControl {
 
   public getLastSession(): ActivitySession | null {
     const sessions = this.dataStore.getActivitySessions();
-    if(sessions == undefined) {
+    if (sessions == undefined) {
       return null;
     } else {
       return sessions[sessions.length - 1];
@@ -126,7 +153,7 @@ export class UiControl {
   //  --- User Data ---
   public getUser(): User | null {
     const user = this.dataStore.getUser();
-    if(user == undefined) {
+    if (user == undefined) {
       return null;
     } else {
       return user;
@@ -141,19 +168,22 @@ export class UiControl {
     this.dataStore.resetUser();
   }
 
-
   //   --- Activity Session Stats ---
   public getSessionSummary(session: ActivitySession): ActivitySummary | null {
     // jeśli user nie został ustawiony
-    if(this.dataStore.getUser() == null) return null;
+    if (this.dataStore.getUser() == null) return null;
 
     const summary = new ActivitySummary(0, new Date(), 0, 0);
     const weight = this.dataStore.getUser().weight;
 
-    session.activities.forEach(activity => {
+    session.activities.forEach((activity) => {
       summary.repeats += activity.repeats;
-      summary.calories += this.calculateCalories(activity.type, weight, activity.interval.length('minutes'));
-    })
+      summary.calories += this.calculateCalories(
+        activity.type,
+        weight,
+        activity.interval.length('minutes')
+      );
+    });
 
     return summary;
   }
@@ -161,16 +191,12 @@ export class UiControl {
   public getSessionPaceChart(session: ActivitySession): ChartData {
     const data: ChartDataType[] = [];
 
-    session.activities.forEach(activity => {
-      data.push(new ChartDataType(
-        activity.repeats,
-        activity.interval.start
-      ));
-    })
+    session.activities.forEach((activity) => {
+      data.push(new ChartDataType(activity.repeats, activity.interval.start));
+    });
 
     return new ChartData(data);
   }
-
 
   private calculateCalories(
     activityType: ActivityType,
@@ -179,7 +205,7 @@ export class UiControl {
   ): number {
     // Metabolic equivalent for task
     let met = 0;
-  
+
     switch (activityType) {
       case ActivityType.SITUPS:
         met = 8;
@@ -196,26 +222,28 @@ export class UiControl {
       default:
         throw new Error('Invalid activityType');
     }
-  
+
     const calories = (duration * (met * 3.5 * weight)) / 200;
     return calories;
   }
 
   private areDateTimesTheSameDay(date1: DateTime, date2: DateTime): boolean {
-    if(
+    if (
       date1.year === date2.year &&
       date1.month === date2.month &&
       date1.day === date2.day
     )
       return true;
-    else
-      return false;
+    else return false;
   }
 
-  private initiateRecord<Y>(enumX: {[index: string]: ActivityType}, defaultValue: Y): Record<ActivityType,Y>{
-    const toReturn:Record<string,Y> = {} ;
-    Object.keys(enumX).forEach(key => {
-        toReturn[key] = defaultValue;
+  private initiateRecord<Y>(
+    enumX: { [index: string]: ActivityType },
+    defaultValue: Y
+  ): Record<ActivityType, Y> {
+    const toReturn: Record<string, Y> = {};
+    Object.keys(enumX).forEach((key) => {
+      toReturn[key] = defaultValue;
     });
     return toReturn;
   }
