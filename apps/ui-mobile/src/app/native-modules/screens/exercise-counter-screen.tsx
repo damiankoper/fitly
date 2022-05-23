@@ -11,159 +11,154 @@ import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
 
 type NavProps = BottomTabScreenProps<
-	BottomTabParamList,
-	'ExerciseCounterScreen'
+  BottomTabParamList,
+  'ExerciseCounterScreen'
 >;
 
 export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
-	route,
-	navigation,
-	metawear,
-	tracker,
+  route,
+  navigation,
+  metawear,
+  tracker,
 }) => {
-	const [activity, setActivity] = useState(route.params.activity);
+  const [activity, setActivity] = useState(route.params.activity);
 
-	useEffect(() => {
-		setActivity(route.params.activity);
-		onStop(false);
-	}, [route]);
+  useEffect(() => {
+    setActivity(route.params.activity);
+    onStop(false);
+  }, [route]);
 
-	const [isPaused, setIsPaused] = useState(false);
-	const [isStarted, setIsStarted] = useState(false);
-	const [lastRepeats, setLastRepeats] = useState(0);
-	const [lastDuration, setLastDuration] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
+  const [lastRepeats, setLastRepeats] = useState(0);
+  const [lastDuration, setLastDuration] = useState(1);
 
-	const stopwatch = useStopwatch({
-		autoStart: false,
-	});
+  const stopwatch = useStopwatch({
+    autoStart: false,
+  });
 
-	function startCapture() {
-		console.log('StartCapture');
-		metawear.start();
-		tracker.startAnalyze();
-	}
+  function startCapture() {
+    console.log('StartCapture');
+    metawear.start();
+    tracker.startAnalyze();
+  }
 
-	function stopCapture() {
-		console.log('StopCapture');
-		tracker.stop();
-		metawear.stop();
-	}
+  function stopCapture() {
+    console.log('StopCapture');
+    tracker.stop();
+    metawear.stop();
+  }
 
-	function onStop(redirect = true) {
-		setIsStarted(false);
-		setIsPaused(false);
-		stopCapture();
-		setLastDuration(0);
-		setLastRepeats(0);
-		stopwatch.reset(undefined, false);
-		if (redirect)
-			navigation.navigate('ExerciseResultsScreen', { activity });
-	}
+  function onStop(redirect = true) {
+    setIsStarted(false);
+    setIsPaused(false);
+    stopCapture();
+    setLastDuration(0);
+    setLastRepeats(0);
+    stopwatch.reset(undefined, false);
+    if (redirect) navigation.navigate('ExerciseResultsScreen', { activity });
+  }
 
-	function onStart() {
-		setIsStarted(true);
-		setIsPaused(false);
-		stopwatch.reset(undefined, true);
-		startCapture();
-	}
+  function onStart() {
+    setIsStarted(true);
+    setIsPaused(false);
+    stopwatch.reset(undefined, true);
+    startCapture();
+  }
 
-	function onPause() {
-		setIsPaused(!isPaused);
-		if (!isPaused) {
-			stopCapture();
-			stopwatch.pause();
-		} else {
-			startCapture();
-			stopwatch.start();
-		}
-	}
+  function onPause() {
+    setIsPaused(!isPaused);
+    if (!isPaused) {
+      stopCapture();
+      stopwatch.pause();
+    } else {
+      startCapture();
+      stopwatch.start();
+    }
+  }
 
-	useEffect(() => {
-		const events: (() => void)[] = [];
-		const navigationEvents: (() => void)[] = [];
-		navigationEvents.push(
-			navigation.addListener('focus', () => {
-				events.push(
-					metawear.accelerometerData.sub((data) =>
-						tracker.addAccelerometerSample(
-							new SensorAsyncSample(data)
-						)
-					),
-					metawear.gyroscopeData.sub((data) =>
-						tracker.addGyroscopeSample(new SensorAsyncSample(data))
-					),
-					metawear.magnetometerData.sub((data) =>
-						tracker.addMagnetometerSample(
-							new SensorAsyncSample(data)
-						)
-					),
-					tracker.onError.sub((error) => {
-						showNotification(error.message);
-					}),
-					tracker.onAnalyze.sub((data) => {
-						setActivity(data.type);
-						setLastRepeats(data.repeats);
-						setLastDuration(
-							data.interval.toDuration().as('seconds')
-						);
-					})
-				);
-			})
-		);
-		navigationEvents.push(
-			navigation.addListener('blur', () => {
-				console.log('blur');
-				if (isStarted) onStop();
-				events.forEach((t) => t());
-			})
-		);
+  useEffect(() => {
+    const events: (() => void)[] = [];
+    const navigationEvents: (() => void)[] = [];
+    navigationEvents.push(
+      navigation.addListener('focus', () => {
+        events.push(
+          metawear.accelerometerData.sub((data) =>
+            tracker.addAccelerometerSample(new SensorAsyncSample(data))
+          ),
+          metawear.gyroscopeData.sub((data) =>
+            tracker.addGyroscopeSample(new SensorAsyncSample(data))
+          ),
+          metawear.magnetometerData.sub((data) =>
+            tracker.addMagnetometerSample(new SensorAsyncSample(data))
+          ),
+          tracker.onError.sub((error) => {
+            showNotification(error.message);
+          }),
+          tracker.onAnalyze.sub((data) => {
+            setActivity(data.type);
+            setLastRepeats(lastRepeats + data.repeats);
+            setLastDuration(
+              lastDuration + data.interval.toDuration().as('seconds')
+            );
+          })
+        );
+      })
+    );
+    navigationEvents.push(
+      navigation.addListener('blur', () => {
+        console.log('blur');
+        if (isStarted) onStop();
+        events.forEach((t) => t());
+      })
+    );
 
-		return () => {
-			navigationEvents.forEach((t) => t());
-		};
-	}, []);
+    return () => {
+      navigationEvents.forEach((t) => t());
+    };
+  }, []);
 
-	return (
-		<Layout style={styles.container}>
-			<View>
-				<Text style={styles.titleText}>Current Activity</Text>
-				<ActivityCardSmall activity={activity} />
-				<View style={styles.spinnerWrapper}>
-					<CounterSpinner
-						repeats={lastRepeats}
-						rate={(lastRepeats / lastDuration) * 60}
-						isPaused={isPaused}
-						isStarted={isStarted}
-						timer={`${stopwatch.minutes
-							.toString()
-							.padStart(2, '0')}:${stopwatch.seconds
-							.toString()
-							.padStart(2, '0')}`}
-						onStop={onStop}
-						onStart={onStart}
-						onPause={onPause}
-					/>
-				</View>
-			</View>
-		</Layout>
-	);
+  return (
+    <Layout style={styles.container}>
+      <View>
+        <Text style={styles.titleText}>Current Activity</Text>
+        <ActivityCardSmall activity={activity} />
+        <View style={styles.spinnerWrapper}>
+          <CounterSpinner
+            repeats={lastRepeats}
+            rate={(lastRepeats / lastDuration) * 60}
+            isPaused={isPaused}
+            isStarted={isStarted}
+            timer={`${stopwatch.minutes
+              .toString()
+              .padStart(2, '0')}:${stopwatch.seconds
+              .toString()
+              .padStart(2, '0')}`}
+            onStop={onStop}
+            onStart={onStart}
+            onPause={onPause}
+          />
+        </View>
+      </View>
+    </Layout>
+  );
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'space-between',
-	},
-	titleText: {
-		fontSize: 32,
-		textAlign: 'center',
-		fontFamily: 'RobotoSlab-Bold',
-		color: 'black',
-		marginBottom: 16,
-	},
-	spinnerWrapper: {
-		alignItems: 'center',
-		marginTop: 8,
-		marginBottom: 8,
-	},
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  titleText: {
+    fontSize: 32,
+    textAlign: 'center',
+    fontFamily: 'RobotoSlab-Bold',
+    color: 'black',
+    marginBottom: 16,
+  },
+  spinnerWrapper: {
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 8,
+  },
 });

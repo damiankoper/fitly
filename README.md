@@ -1,90 +1,59 @@
 # Fitly
 
-This project was generated using [Nx](https://nx.dev).
+## Dataflow setup
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+Every command is intenden to be executed from workspace root.
 
-🔎 **Smart, Fast and Extensible Build System**
+### General
+Make sure to have `nx` and dependencies installed
+```bash
+$ npm install -g nx
+$ npm install
+```
 
-## Adding capabilities to your workspace
+If you want to non-docker ML setup install `pipenv`, python 3.9 and dependencies
+```bash
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+$ sudo apt install pipenv python3.9 # Ubuntu
+$ nx run ml:install-all # or "pipenv install --skip-lock"
+```
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+Copy `.env.example` to `.env` and fill it:
+1. Replace `localhost` in `BRIDGE_BASE_URL` with your server IP address.
+2. Fill FTP data
 
-Below are our core plugins:
+#### ML
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework fitlys)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+To run ML server in docker execute:
+```bash
+$ docker-compose --project-directory apps/ml up
+```
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+To run ML in venv execute:
+```bash
+$ nx run ml:serve
+```
 
-## Generate an application
+#### ML-Bridge
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+To run bridge execute:
+```bash
+$ nx run ml-bridge:serve
+```
 
-> You can use any of the plugins above to generate applications as well.
+#### Ui-mobile
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+First you have to bootstrap nx integration with react-native (once)
+```bash 
+$ nx run ui-mobile:ensure-symlink
+$ nx run ui-mobile:sync-deps
+```
 
-## Generate a library
+Then run the app with your phone plugged in and USB debugging enabled
+```bash 
+$ nx run ui-mobile:run-android
+```
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@fitly/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `nx e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both fitly and ml-bridge developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+To connect to MetaWear band:
+1. **DO NOT** pair the band with your phone in Bluetooth settings;
+2. give the app premission to location in Android settings;

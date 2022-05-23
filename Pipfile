@@ -7,8 +7,9 @@ name = "pypi"
 fastapi = ">=0.68.0,<0.69.0"
 pydantic = ">=1.8.0,<2.0.0"
 uvicorn = ">=0.15.0,<0.16.0"
+python-dateutil = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
