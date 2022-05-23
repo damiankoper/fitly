@@ -35,6 +35,16 @@ function wrapScroll(Component: any, outerProps: MetaWearProps) {
   };
 }
 
+function wrapScreen(Component: any, outerProps: MetaWearProps) {
+  return (props: MetaWearProps) => {
+    return (
+      <Layout style={styles.wrapper}>
+        <Component {...props} {...outerProps} />
+      </Layout>
+    );
+  };
+}
+
 const TabNavigator = (props: MetaWearProps) => (
   <Navigator
     tabBar={(props) => <BottomNav {...props} />}

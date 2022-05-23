@@ -98,7 +98,6 @@ export const HomeScreen: React.FC<{}> = () => {
               theme="basic"
             />
             <View style={styles.separator} />
-            <DataCardSmall data="45" activity="running" />
           </View>
         </View>
 
@@ -157,6 +156,7 @@ const styles = StyleSheet.create({
   },
   smallCardRow: {
     flexDirection: 'row',
+    marginBottom: 10,
   },
   separator: {
     width: 8,
