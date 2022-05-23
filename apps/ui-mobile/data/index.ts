@@ -16,6 +16,8 @@ export class DataStore implements IDataStore {
     // jesli potrzeba nowych pól w storagu
     // to trzeba wejsc do ./storage.ts i dodać nową propertkę
     // z jej określoną nazwą i typem do interfejsu Storage
+    // typ musi być string | number | boolean
+    // wiec dla złożonych trzeba robić JSONy
     this.storage.setItem('id', 123);
   }
 
