@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout,
   Toggle,
@@ -15,6 +15,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../state/root.reducer';
+import uiControl from 'apps/ui-mobile/data';
 
 const useToggleState = (initialState = false) => {
   const [checked, setChecked] = React.useState(initialState);
@@ -40,6 +41,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
   const handleDeleteClick = () => {
     setModalVisible(false);
+    uiControl.resetUser();
   };
 
   return (

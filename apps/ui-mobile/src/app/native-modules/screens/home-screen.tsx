@@ -8,7 +8,7 @@ import { DataCardSmall } from '../../components/cards/data-card-small';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import { ActivityType, User } from '@fitly/shared/meta';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
-import { DataStore } from 'apps/ui-mobile/data';
+import uiControl from 'apps/ui-mobile/data';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -47,20 +47,24 @@ export const TimeIcon = () => {
 };
 
 export const HomeScreen: React.FC<{}> = () => {
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    const dataStore = new DataStore();
-
-    const user = dataStore.getUser();
-    if (!user) dataStore.resetUser();
-    setUser(user)
+    let user = uiControl.getUser();
+    if (!user) {
+      uiControl.resetUser();
+      user = uiControl.getUser();
+    }
+    setUser(user!);
   }, []);
 
   return (
     <Layout>
       <ScrollView contentContainerStyle={styles.defaultPadding}>
-        <UserCard name={`${user?.name} ${user?.surname}`} title="Master of squats" />
+        <UserCard
+          name={`${user?.name} ${user?.surname}`}
+          title="Master of squats"
+        />
         <ActivityLineChart />
         <View style={[styles.cardRow, styles.overflowVisible]}>
           <View
