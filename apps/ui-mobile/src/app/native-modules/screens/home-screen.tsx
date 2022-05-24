@@ -1,19 +1,15 @@
 import { Icon, Layout, useTheme } from '@ui-kitten/components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserCard } from '../../components/cards/user-card';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { DataCardLarge } from '../../components/cards/data-card-large';
 import { BluetoothStatus } from '../../components/icons/bluetooth-status';
 import { DataCardSmall } from '../../components/cards/data-card-small';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
-import { ActivityType } from '@fitly/shared/meta';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { ActivityType, User } from '@fitly/shared/meta';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
-import DropShadowWrapper from '../../components/gradients/drop-shadow';
-import { RootState } from '../../state/root.reducer';
-import { useSelector } from 'react-redux';
-import uiControl, { DataStore } from 'apps/ui-mobile/data';
+import { DataStore } from 'apps/ui-mobile/data';
+import { DEFAULT_USER } from '../../common/utils';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -52,18 +48,20 @@ export const TimeIcon = () => {
 };
 
 export const HomeScreen: React.FC<{}> = () => {
+  const [user, setUser] = useState<User>()
+
   useEffect(() => {
     const dataStore = new DataStore();
 
-    dataStore.saveHelloWorld('');
-    const fromStore = dataStore.readHelloWorld();
-    console.log(fromStore);
+    const user = dataStore.getUser();
+    if (!user) dataStore.resetUser();
+    setUser(user)
   }, []);
 
   return (
     <Layout>
       <ScrollView contentContainerStyle={styles.defaultPadding}>
-        <UserCard name="Jan Nikodem" title="Master of squats" />
+        <UserCard name={`${user?.name} ${user?.surname}`} title="Master of squats" />
         <ActivityLineChart />
         <View style={[styles.cardRow, styles.overflowVisible]}>
           <View
