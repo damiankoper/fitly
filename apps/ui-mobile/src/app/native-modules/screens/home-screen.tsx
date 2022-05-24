@@ -9,7 +9,6 @@ import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import { ActivityType, User } from '@fitly/shared/meta';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
 import { DataStore } from 'apps/ui-mobile/data';
-import { DEFAULT_USER } from '../../common/utils';
 
 export const StepsIcon = () => {
   const theme = useTheme();
