@@ -7,6 +7,7 @@ import { BluetoothStatus } from '../../components/icons/bluetooth-status';
 import { DataCardSmall } from '../../components/cards/data-card-small';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import { ActivityType, User } from '@fitly/shared/meta';
+import { useIsFocused } from '@react-navigation/native';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
 import uiControl from 'apps/ui-mobile/data';
 
@@ -48,11 +49,14 @@ export const TimeIcon = () => {
 
 export const HomeScreen: React.FC<{}> = () => {
   const [user, setUser] = useState<User>();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    let user = uiControl.getUser();
-    setUser(user!);
-  }, []);
+    if (isFocused) {
+      let user = uiControl.getUser();
+      setUser(user!);
+    }
+  }, [isFocused]);
 
   return (
     <Layout>
