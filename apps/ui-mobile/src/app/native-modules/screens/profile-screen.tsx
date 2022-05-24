@@ -53,58 +53,57 @@ export const ProfileScreen = () => {
   return (
     <Layout style={styles.container}>
       <View style={styles.formColumn}>
-        <View>
-          <Text category="h1" style={styles.name}>
-            {`${user?.name} ${user?.surname}`}
-          </Text>
-          <Input
-            placeholder="first name"
-            value={firstName}
-            onChangeText={(nextValue) => setFirstName(nextValue)}
-            style={styles.input}
-            size="large"
-          />
-          <Input
-            placeholder="last name"
-            value={lastName}
-            onChangeText={(nextValue) => setLasttName(nextValue)}
-            style={styles.input}
-            size="large"
-          />
-          <Input
-            placeholder="age"
-            keyboardType={'numeric'}
-            value={age}
-            onChangeText={(nextValue) => setAge(nextValue)}
-            style={styles.input}
-            size="large"
-          />
-          <Input
-            placeholder="weight"
-            keyboardType={'numeric'}
-            value={weight}
-            onChangeText={(nextValue) => setWeight(nextValue)}
-            style={styles.input}
-            size="large"
-          />
-          <Input
-            placeholder="height"
-            keyboardType={'numeric'}
-            value={height}
-            onChangeText={(nextValue) => setHeight(nextValue)}
-            style={styles.input}
-            size="large"
-          />
-          <RadioGroup
-            style={styles.radioGroup}
-            selectedIndex={selectedIndex}
-            onChange={(index) => setSelectedIndex(index)}
-          >
-            <Radio>Male</Radio>
-            <Radio>Female</Radio>
-          </RadioGroup>
-        </View>
+        <Text category="h1" style={styles.name}>
+          {`${user?.name} ${user?.surname}`}
+        </Text>
+        <Input
+          placeholder="first name"
+          value={firstName}
+          onChangeText={(nextValue) => setFirstName(nextValue)}
+          style={styles.input}
+          size="large"
+        />
+        <Input
+          placeholder="last name"
+          value={lastName}
+          onChangeText={(nextValue) => setLasttName(nextValue)}
+          style={styles.input}
+          size="large"
+        />
+        <Input
+          placeholder="age"
+          keyboardType={'numeric'}
+          value={age}
+          onChangeText={(nextValue) => setAge(nextValue)}
+          style={styles.input}
+          size="large"
+        />
+        <Input
+          placeholder="weight"
+          keyboardType={'numeric'}
+          value={weight}
+          onChangeText={(nextValue) => setWeight(nextValue)}
+          style={styles.input}
+          size="large"
+        />
+        <Input
+          placeholder="height"
+          keyboardType={'numeric'}
+          value={height}
+          onChangeText={(nextValue) => setHeight(nextValue)}
+          style={styles.input}
+          size="large"
+        />
+        <RadioGroup
+          style={styles.radioGroup}
+          selectedIndex={selectedIndex}
+          onChange={(index) => setSelectedIndex(index)}
+        >
+          <Radio>Male</Radio>
+          <Radio>Female</Radio>
+        </RadioGroup>
       </View>
+
       <Button appearance="outline" status="primary" onPress={onSubmit}>
         Save
       </Button>
@@ -115,11 +114,9 @@ export const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between'
   },
   formColumn: {
     flex: 1,
-    justifyContent: 'space-between',
   },
   name: {
     textAlign: 'center',

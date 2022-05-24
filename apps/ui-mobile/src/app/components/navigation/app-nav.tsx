@@ -26,8 +26,8 @@ function wrapScroll(Component: any, outerProps: MetaWearProps) {
   return (props: MetaWearProps) => {
     return (
       <ScrollView
-        style={[styles.wrapper]}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        style={styles.wrapper}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         <Component {...props} {...outerProps} />
       </ScrollView>
