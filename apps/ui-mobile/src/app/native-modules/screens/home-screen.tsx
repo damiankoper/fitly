@@ -51,10 +51,6 @@ export const HomeScreen: React.FC<{}> = () => {
 
   useEffect(() => {
     let user = uiControl.getUser();
-    if (!user) {
-      uiControl.resetUser();
-      user = uiControl.getUser();
-    }
     setUser(user!);
   }, []);
 

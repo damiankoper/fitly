@@ -74,4 +74,6 @@ export class DataStore implements IDataStore {
 }
 
 const uiControl = new UiControl(new DataStore());
+// first time user init
+uiControl.resetUser();
 export default uiControl;

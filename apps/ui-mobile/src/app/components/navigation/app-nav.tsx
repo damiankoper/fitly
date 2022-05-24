@@ -65,7 +65,7 @@ const TabNavigator = (props: MetaWearProps) => (
     />
     <Screen name="History" component={HistoryScreen} />
     <Screen name="Settings" component={wrapScreen(SettingScreen, props)} />
-    <Screen name="Profile" component={wrapScreen(ProfileScreen, props)} />
+    <Screen name="Profile" component={wrapScroll(ProfileScreen, props)} />
     <Screen name="Service" component={wrapScroll(ServiceModeScreen, props)} />
     <Screen
       name="BluetoothConnection"
