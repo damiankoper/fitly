@@ -1,8 +1,8 @@
 import { ActivitySession, User } from '@fitly/shared/meta';
 import { UiControl } from '@fitly/ui-control';
 import { IDataStore } from 'libs/ui-control/src/lib/interfaces/IDataStore';
-import { MMKV } from 'react-native-mmkv';
 import MMKVStorage from './storage';
+import { DEFAULT_USER } from '../src/app/common/utils';
 
 export class DataStore implements IDataStore {
   private storage: MMKVStorage;
@@ -27,13 +27,31 @@ export class DataStore implements IDataStore {
   }
 
   getUser(): User {
-    throw new Error('Method not implemented.');
+    const str = this.storage.getItem('user.data');
+
+    if (str) {
+      const userJson = JSON.parse(str);
+      const user: User = {
+        name: userJson.name,
+        surname: userJson.surname,
+        age: userJson.age,
+        weight: userJson.weight,
+        height: userJson.height,
+        sex: userJson.sex,
+      };
+      return user;
+    }
+
+    return DEFAULT_USER;
   }
+
   setUser(user: User) {
-    throw new Error('Method not implemented.');
+    const str = JSON.stringify(user);
+    this.storage.setItem('user.data', str);
   }
   resetUser(): void {
-    throw new Error('Method not implemented.');
+    const str = JSON.stringify(DEFAULT_USER);
+    this.storage.setItem('user.data', str);
   }
 
   resetAll(): void {
@@ -56,4 +74,6 @@ export class DataStore implements IDataStore {
 }
 
 const uiControl = new UiControl(new DataStore());
+// first time user init
+uiControl.resetUser();
 export default uiControl;
