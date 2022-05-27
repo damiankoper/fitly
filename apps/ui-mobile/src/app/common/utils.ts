@@ -26,16 +26,16 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
     id: 2,
     interval: Interval.fromDateTimes(
       DateTime.fromSQL('2022-05-22 08:15:00'),
-      DateTime.fromSQL('2022-05-22 09:25:05')
+      DateTime.fromSQL('2022-05-22 08:18:00')
     ),
     activities: [
       new ActivityTrackingMeta(
         Interval.fromDateTimes(
           DateTime.fromSQL('2022-05-22 08:15:00'),
-          DateTime.fromSQL('2022-05-22 08:16:00')
+          DateTime.fromSQL('2022-05-22 08:17:00')
         ),
         ActivityType.PUSHUPS,
-        10
+        1
       ),
     ],
   },
@@ -52,7 +52,7 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
           DateTime.fromSQL('2022-05-26 08:15:15')
         ),
         ActivityType.PUSHUPS,
-        3
+        2
       ),
       new ActivityTrackingMeta(
         Interval.fromDateTimes(
@@ -60,7 +60,7 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
           DateTime.fromSQL('2022-05-26 08:15:15')
         ),
         ActivityType.SQUATS,
-        6
+        3
       ),
     ],
   },

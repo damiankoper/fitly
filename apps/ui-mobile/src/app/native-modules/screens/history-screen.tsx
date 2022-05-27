@@ -16,11 +16,9 @@ const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
 export function getReadableDateStringFromInterval(interval: Interval): string {
   const startDate = interval.start;
   const duration = startDate.diffNow();
-  const durationInSeconds = duration.shiftTo('seconds').seconds;
-  const durationInDays = duration.shiftTo('days').days;
+  const durationInSeconds = Math.abs(duration.shiftTo('seconds').seconds);
+  const durationInDays = Math.abs(duration.shiftTo('days').days);
   const durationInDaysRounded = Math.floor(durationInDays);
-
-  console.log('duration', durationInSeconds, durationInDays);
 
   if (durationInDaysRounded === 1) return 'Yesterday';
 
@@ -42,6 +40,8 @@ export function getReadableDateStringFromInterval(interval: Interval): string {
 
 export function getTimeDurationFromInterval(interval: Interval): string {
   const duration = interval.toDuration('minutes');
+  console.log(interval.start, interval.end);
+
   const roundedHours = Math.floor(duration.shiftTo('hours').hours);
   if (roundedHours >= 1) return duration.toFormat('hh:mm:ss');
 
@@ -70,13 +70,13 @@ export const HistoryScreen = () => {
   const [userWeight, setUserWeight] = useState<number>(0);
 
   useEffect(() => {
-    const newActivities = uiControl.getSessions().reverse();
+    const newActivities = uiControl.getSessions();
     const newUserWeight = uiControl.getUser()?.weight;
     setActivities(newActivities);
     setUserWeight(newUserWeight || 0);
   }, []);
 
-  const isFirstItem = (i: number) => i === 0;
+  const isFirstItem = (position: number): boolean => position === 0;
 
   if (activities == null)
     return (
@@ -104,7 +104,7 @@ export const HistoryScreen = () => {
                 <View
                   style={[
                     styles.textAndDividerContainer,
-                    isFirstItem(index) ? styles.marginTop : undefined,
+                    isFirstItem(index) ? undefined : styles.marginTop,
                   ]}
                 >
                   <Text style={styles.dateText}>

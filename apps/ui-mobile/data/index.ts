@@ -71,6 +71,7 @@ export class DataStore implements IDataStore {
   clearActivitySessions(): void {
     this.storage.setObject('user.activity-sessions', DEFAULT_ACTIVITY_SESSIONS);
   }
+
   pushActivitySession(activitySession: ActivitySession): void {
     const activities = this.storage.getObject<ActivitySession[]>(
       'user.activity-sessions'

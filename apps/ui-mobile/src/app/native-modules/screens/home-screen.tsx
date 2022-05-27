@@ -57,7 +57,7 @@ export const HomeScreen: React.FC<{}> = () => {
   const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
   const isFocused = useIsFocused();
 
-  const onFocused = () => {
+  const onHomeScrenFocused = () => {
     let user = uiControl.getUser();
     setUser(user!);
 
@@ -69,7 +69,7 @@ export const HomeScreen: React.FC<{}> = () => {
 
   useEffect(() => {
     if (isFocused) {
-      onFocused();
+      onHomeScrenFocused();
     }
   }, [isFocused]);
 
