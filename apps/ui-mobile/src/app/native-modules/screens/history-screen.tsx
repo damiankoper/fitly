@@ -1,4 +1,8 @@
-import { ActivitySession, ActivityType } from '@fitly/shared/meta';
+import {
+  ActivitySession,
+  ActivityTrackingMeta,
+  ActivityType,
+} from '@fitly/shared/meta';
 import { Divider, Layout, Text as TextUI } from '@ui-kitten/components';
 import uiControl from 'apps/ui-mobile/data';
 import React, { useEffect, useState } from 'react';
@@ -6,42 +10,38 @@ import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import LoadingScreen from '../../components/loading-screen/LoadingScreen';
 import humanizeDuration from 'humanize-duration';
-import { DateTime, Duration } from 'luxon';
+import { Interval } from 'luxon';
 const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
 
-function getDateOrDateDurationString(
-  duration: Duration,
-  date?: DateTime
-): string {
-  const absDuration = Duration.fromMillis(
-    Math.abs(duration.milliseconds)
-  ).shiftTo('days');
-  const differenceInDays = Math.floor(absDuration.days);
+export function getReadableDateStringFromInterval(interval: Interval): string {
+  const startDate = interval.start;
+  const duration = startDate.diffNow();
+  const durationInSeconds = duration.shiftTo('seconds').seconds;
+  const durationInDays = duration.shiftTo('days').days;
+  const durationInDaysRounded = Math.floor(durationInDays);
 
-  console.log(differenceInDays);
+  console.log('duration', durationInSeconds, durationInDays);
 
-  if (differenceInDays === 1) return 'Yesterday';
+  if (durationInDaysRounded === 1) return 'Yesterday';
 
-  if (
-    differenceInDays >= SHOW_DATE_AFTER_DAYS_DIFFERENCE &&
-    date !== undefined
-  ) {
-    return date.setLocale('en-gb').toLocaleString({
+  if (durationInDaysRounded >= SHOW_DATE_AFTER_DAYS_DIFFERENCE) {
+    return startDate.setLocale('en-gb').toLocaleString({
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
   }
   return (
-    humanizeDuration(absDuration, {
+    humanizeDuration(durationInSeconds, {
       largest: 1,
-      units: ['mo', 'w', 'd', 'h'],
+      units: ['mo', 'w', 'd', 'h', 'm', 's'],
       round: true,
     }) + ' ago'
   );
 }
 
-function getTimeDuration(duration: Duration): string {
+export function getTimeDurationFromInterval(interval: Interval): string {
+  const duration = interval.toDuration('minutes');
   const roundedHours = Math.floor(duration.shiftTo('hours').hours);
   if (roundedHours >= 1) return duration.toFormat('hh:mm:ss');
 
@@ -51,16 +51,32 @@ function getTimeDuration(duration: Duration): string {
   return duration.toFormat('ss') + 's';
 }
 
+export function getCaloriesFromActivityMetaAndUserWeight(
+  { type, interval }: ActivityTrackingMeta,
+  userWeight: number
+) {
+  const minutesOfActivity = interval.toDuration().shiftTo('minutes').minutes;
+  const caloriesRaw = uiControl.calculateCalories(
+    type,
+    userWeight,
+    minutesOfActivity
+  );
+
+  return Math.round(caloriesRaw);
+}
+
 export const HistoryScreen = () => {
   const [activities, setActivities] = useState<ActivitySession[] | null>(null);
   const [userWeight, setUserWeight] = useState<number>(0);
 
   useEffect(() => {
-    const newActivities = uiControl.getSessions();
+    const newActivities = uiControl.getSessions().reverse();
     const newUserWeight = uiControl.getUser()?.weight;
     setActivities(newActivities);
     setUserWeight(newUserWeight || 0);
   }, []);
+
+  const isFirstItem = (i: number) => i === 0;
 
   if (activities == null)
     return (
@@ -68,7 +84,7 @@ export const HistoryScreen = () => {
     );
 
   return (
-    <Layout style={styles.container}>
+    <Layout style={[styles.container, styles.height100]}>
       {activities.length === 0 ? (
         <View style={styles.loadingContainer}>
           <Text style={styles.headerText}>No exercises has been found!</Text>
@@ -88,41 +104,31 @@ export const HistoryScreen = () => {
                 <View
                   style={[
                     styles.textAndDividerContainer,
-                    index !== 0 ? styles.marginTop : undefined,
+                    isFirstItem(index) ? styles.marginTop : undefined,
                   ]}
                 >
                   <Text style={styles.dateText}>
-                    {getDateOrDateDurationString(
-                      interval.start.diffNow(),
-                      interval.start
-                    )}
+                    {getReadableDateStringFromInterval(interval)}
                   </Text>
                   <Divider style={styles.divider} />
                 </View>
-                {activities.map(({ interval, repeats, type }, index) => {
-                  const calories = Math.round(
-                    uiControl.calculateCalories(
-                      type,
-                      userWeight,
-                      interval.toDuration().shiftTo('minutes').minutes
-                    )
-                  );
-                  return (
-                    <View key={index} style={styles.cardWrapper}>
-                      <ActivityCardLarge
-                        activity={type}
-                        count={repeats}
-                        time={getTimeDuration(interval.toDuration('seconds'))}
-                        kcal={calories}
-                        date={getDateOrDateDurationString(
-                          interval.start.diffNow(),
-                          interval.start
-                        )}
-                        theme="primary"
-                      />
-                    </View>
-                  );
-                })}
+                {activities.map((activity, index) => (
+                  <View key={index} style={styles.cardWrapper}>
+                    <ActivityCardLarge
+                      activity={activity.type}
+                      count={activity.repeats}
+                      time={getTimeDurationFromInterval(interval)}
+                      kcal={getCaloriesFromActivityMetaAndUserWeight(
+                        activity,
+                        userWeight
+                      )}
+                      date={getReadableDateStringFromInterval(
+                        activity.interval
+                      )}
+                      theme="primary"
+                    />
+                  </View>
+                ))}
               </React.Fragment>
             );
           })}
@@ -138,6 +144,9 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     paddingLeft: 12,
     overflow: 'visible',
+  },
+  height100: {
+    height: '100%',
   },
   loadingContainer: {
     height: '100%',

@@ -76,7 +76,7 @@ export class DataStore implements IDataStore {
       'user.activity-sessions'
     );
     if (activities) {
-      activities.unshift(activitySession);
+      activities.push(activitySession);
       this.storage.setObject('user.activity-sessions', activities);
     }
   }

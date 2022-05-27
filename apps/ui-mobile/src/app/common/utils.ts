@@ -23,6 +23,23 @@ export const DEFAULT_USER: User = {
 
 export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
   {
+    id: 2,
+    interval: Interval.fromDateTimes(
+      DateTime.fromSQL('2022-05-22 08:15:00'),
+      DateTime.fromSQL('2022-05-22 09:25:05')
+    ),
+    activities: [
+      new ActivityTrackingMeta(
+        Interval.fromDateTimes(
+          DateTime.fromSQL('2022-05-22 08:15:00'),
+          DateTime.fromSQL('2022-05-22 08:16:00')
+        ),
+        ActivityType.PUSHUPS,
+        10
+      ),
+    ],
+  },
+  {
     id: 1,
     interval: Interval.fromDateTimes(
       DateTime.fromSQL('2022-05-26 08:15:00'),
@@ -39,44 +56,11 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
       ),
       new ActivityTrackingMeta(
         Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-26 08:15:16'),
-          DateTime.fromSQL('2022-05-26 08:20:00')
+          DateTime.fromSQL('2022-05-26 08:15:00'),
+          DateTime.fromSQL('2022-05-26 08:15:15')
         ),
         ActivityType.SQUATS,
-        40
-      ),
-      new ActivityTrackingMeta(
-        Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-26 08:20:00'),
-          DateTime.fromSQL('2022-05-26 09:25:05')
-        ),
-        ActivityType.SITUPS,
-        155
-      ),
-    ],
-  },
-  {
-    id: 2,
-    interval: Interval.fromDateTimes(
-      DateTime.fromSQL('2022-05-22 08:15:00'),
-      DateTime.fromSQL('2022-05-22 09:25:05')
-    ),
-    activities: [
-      new ActivityTrackingMeta(
-        Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-22 08:15:00'),
-          DateTime.fromSQL('2022-05-22 08:16:00')
-        ),
-        ActivityType.PUSHUPS,
-        10
-      ),
-      new ActivityTrackingMeta(
-        Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-22 08:16:00'),
-          DateTime.fromSQL('2022-05-22 09:30:05')
-        ),
-        ActivityType.SITUPS,
-        50
+        6
       ),
     ],
   },
