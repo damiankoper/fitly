@@ -2,7 +2,10 @@ import { ActivitySession, User } from '@fitly/shared/meta';
 import { UiControl } from '@fitly/ui-control';
 import { IDataStore } from 'libs/ui-control/src/lib/interfaces/IDataStore';
 import MMKVStorage from './storage';
-import { DEFAULT_USER } from '../src/app/common/utils';
+import {
+  DEFAULT_ACTIVITY_SESSIONS,
+  DEFAULT_USER,
+} from '../src/app/common/utils';
 
 export class DataStore implements IDataStore {
   private storage: MMKVStorage;
@@ -57,19 +60,25 @@ export class DataStore implements IDataStore {
   resetAll(): void {
     throw new Error('Method not implemented.');
   }
+
   getActivitySessions(): ActivitySession[] {
-    throw new Error('Method not implemented.');
+    const sessions = this.storage.getObject<ActivitySession[]>(
+      'user.activity-sessions'
+    );
+    return sessions || DEFAULT_ACTIVITY_SESSIONS;
   }
 
   clearActivitySessions(): void {
-    throw new Error('Method not implemented.');
+    this.storage.setObject('user.activity-sessions', DEFAULT_ACTIVITY_SESSIONS);
   }
   pushActivitySession(activitySession: ActivitySession): void {
-    throw new Error('Method not implemented.');
-  }
-
-  getNumbers(): number[] {
-    throw new Error('You should not invoke this function!');
+    const activities = this.storage.getObject<ActivitySession[]>(
+      'user.activity-sessions'
+    );
+    if (activities) {
+      activities.unshift(activitySession);
+      this.storage.setObject('user.activity-sessions', activities);
+    }
   }
 }
 

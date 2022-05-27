@@ -198,7 +198,7 @@ export class UiControl {
     return new ChartData(data);
   }
 
-  private calculateCalories(
+  public calculateCalories(
     activityType: ActivityType,
     weight: number,
     duration: number
