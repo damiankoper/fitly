@@ -33,6 +33,8 @@
     "strongly-typed-events": "*",
     "react-timer-hook": "*",
     "react-native-svg-charts": "*",
-    "d3-shape": "*"
+    "d3-shape": "*",
+    "uuid": "*",
+    "react-native-get-random-values": "*"
   }
 }

@@ -8,6 +8,7 @@ import { DateTime, Interval } from 'luxon';
 import { FtpService } from 'nestjs-ftp';
 import { Readable } from 'stream';
 import { DataService } from './data.service';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('DataService', () => {
   let service: DataService;
@@ -34,7 +35,7 @@ describe('DataService', () => {
     const stop = start.plus({ hour: 1 });
     const interval = Interval.fromDateTimes(start, stop);
     const type = ActivityType.STAR_JUMPS;
-    const meta = new ActivityTrackingMeta(interval, type, 10);
+    const meta = new ActivityTrackingMeta(uuidv4(), interval, type, 10);
     const tracking = new ActivityTracking(meta);
 
     // when
