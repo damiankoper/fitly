@@ -20,6 +20,7 @@ import {
   getReadableDateStringFromInterval,
   getTimeDurationFromInterval,
 } from './history-screen';
+import { formatActivityString } from '../../common/utils';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -65,16 +66,20 @@ export const HomeScreen: React.FC<{}> = () => {
   const [userWeight, setUserWeight] = useState<number>(0);
   const [allKcal, setAllKcal] = useState<number>(0);
   const [sumTime, setSumTime] = useState<number>(0);
+  const [mostPopularActivity, setMostPopularActivity] = useState(
+    ActivityType.UNKNOWN
+  );
+  const [topRepeats, setTopRepeats] = useState<number>(0);
+  const [percentile, setPercentile] = useState<number>(0);
 
   const getStats = (sessions: ActivitySession[] | null) => {
     let summaryTime = 0;
     let summaryKcal = 0;
     setAllKcal(summaryKcal);
     setSumTime(summaryTime);
-    const mostPopularActivity = ActivityType.UNKNOWN;
 
     if (!sessions) {
-      return { summaryTime, summaryKcal, mostPopularActivity };
+      return { summaryTime, summaryKcal };
     }
 
     for (let i = 0; i < sessions.length; i++) {
@@ -90,11 +95,58 @@ export const HomeScreen: React.FC<{}> = () => {
         summaryTime += millis;
       }
     }
+
     // to hours
-    summaryTime = (summaryTime / (1000 * 60 * 60));
+    summaryTime = summaryTime / (1000 * 60 * 60);
 
     setAllKcal(summaryKcal);
     setSumTime(summaryTime);
+
+    const { topActivity, repeats, percentile } =
+      getMostPopularActivity(sessions);
+
+    setMostPopularActivity(topActivity);
+    setTopRepeats(repeats);
+    setPercentile(percentile);
+  };
+
+  const getMostPopularActivity = (sessions: ActivitySession[] | null) => {
+    let topActivity = ActivityType.UNKNOWN;
+    let repeats = 0;
+    let percentile = 0;
+    if (!sessions) {
+      return { topActivity, repeats, percentile };
+    }
+
+    const counter = [
+      { name: ActivityType.UNKNOWN, repeats: 0 },
+      { name: ActivityType.SITUPS, repeats: 0 },
+      { name: ActivityType.SQUATS, repeats: 0 },
+      { name: ActivityType.PUSHUPS, repeats: 0 },
+      { name: ActivityType.STAR_JUMPS, repeats: 0 },
+    ];
+
+    for (let i = 0; i < sessions.length; i++) {
+      const sessionActivities = sessions[i].activities;
+      for (let j = 0; j < sessionActivities.length; j++) {
+        for (let k = 0; k < counter.length; k++) {
+          if (sessionActivities[j].type === counter[k].name) {
+            counter[k].repeats += sessionActivities[j].repeats;
+          }
+        }
+      }
+    }
+
+    for (let i = 0; i < counter.length; i++) {
+      percentile += counter[i].repeats;
+      if (counter[i].repeats > repeats) {
+        repeats = counter[i].repeats;
+        topActivity = counter[i].name;
+      }
+    }
+
+    percentile = repeats / percentile * 100;
+    return { topActivity, repeats, percentile };
   };
 
   const onHomeScrenFocused = () => {
@@ -123,7 +175,7 @@ export const HomeScreen: React.FC<{}> = () => {
       <ScrollView contentContainerStyle={styles.defaultPadding}>
         <UserCard
           name={`${user?.name} ${user?.surname}`}
-          title="Master of squats"
+          title={`Master of ${mostPopularActivity}`}
         />
         <ActivityLineChart />
         <View style={[styles.cardRow, styles.overflowVisible]}>
@@ -136,8 +188,8 @@ export const HomeScreen: React.FC<{}> = () => {
           >
             <DataCardLarge
               Icon={StepsIcon}
-              name="Steps"
-              quantity={2137}
+              name={formatActivityString(mostPopularActivity)}
+              quantity={topRepeats}
               theme="primary"
             />
             <DataCardLarge
@@ -158,8 +210,8 @@ export const HomeScreen: React.FC<{}> = () => {
               />
               <View style={styles.separator} />
               <DataCardSmall
-                data="45"
-                activity="Running"
+                data={percentile}
+                activity={mostPopularActivity}
                 style={styles.activitiesWrapper}
               />
             </View>

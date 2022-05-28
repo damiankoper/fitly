@@ -7,7 +7,7 @@ import LinearGradientCard from '../gradients/linear-gradient-card';
 import { Themes } from '../gradients/themes';
 
 interface Props {
-	data: string;
+	data: string | number;
 	activity: string;
 	theme?: Themes;
 	style?: StyleProp<ViewStyle>;
