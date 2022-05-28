@@ -6,7 +6,12 @@ import { DataCardLarge } from '../../components/cards/data-card-large';
 import { BluetoothStatus } from '../../components/icons/bluetooth-status';
 import { DataCardSmall } from '../../components/cards/data-card-small';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
-import { ActivityTrackingMeta, ActivityType, User } from '@fitly/shared/meta';
+import {
+  ActivitySession,
+  ActivityTrackingMeta,
+  ActivityType,
+  User,
+} from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
 import uiControl from 'apps/ui-mobile/data';
@@ -54,12 +59,52 @@ export const TimeIcon = () => {
 
 export const HomeScreen: React.FC<{}> = () => {
   const [user, setUser] = useState<User>();
-  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
   const isFocused = useIsFocused();
+  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
+  const [activities, setActivities] = useState<ActivitySession[] | null>(null);
+  const [userWeight, setUserWeight] = useState<number>(0);
+  const [allKcal, setAllKcal] = useState<number>(0);
+  const [sumTime, setSumTime] = useState<number>(0);
+
+  const getStats = (sessions: ActivitySession[] | null) => {
+    let summaryTime = 0;
+    let summaryKcal = 0;
+    setAllKcal(summaryKcal);
+    setSumTime(summaryTime);
+    const mostPopularActivity = ActivityType.UNKNOWN;
+
+    if (!sessions) {
+      return { summaryTime, summaryKcal, mostPopularActivity };
+    }
+
+    for (let i = 0; i < sessions.length; i++) {
+      const sessionActivities = sessions[i].activities;
+      for (let j = 0; j < sessionActivities.length; j++) {
+        summaryKcal += getCaloriesFromActivityMetaAndUserWeight(
+          sessions[i].activities[j],
+          userWeight
+        );
+        const millis = sessions[i].activities[j].interval
+          .toDuration()
+          .toMillis();
+        summaryTime += millis;
+      }
+    }
+    // to hours
+    summaryTime = (summaryTime / (1000 * 60 * 60));
+
+    setAllKcal(summaryKcal);
+    setSumTime(summaryTime);
+  };
 
   const onHomeScrenFocused = () => {
     let user = uiControl.getUser();
     setUser(user!);
+    const newActivities = uiControl.getSessions();
+    const newUserWeight = uiControl.getUser()?.weight;
+    setActivities(newActivities);
+    setUserWeight(newUserWeight || 0);
+    getStats(activities);
 
     const lastSession = uiControl.getLastSession();
     if (lastSession) {
@@ -98,7 +143,7 @@ export const HomeScreen: React.FC<{}> = () => {
             <DataCardLarge
               Icon={CaloriesIcon}
               name="Calories"
-              quantity={1690}
+              quantity={allKcal}
               theme="danger"
             />
           </View>
@@ -120,8 +165,8 @@ export const HomeScreen: React.FC<{}> = () => {
             </View>
             <DataCardLarge
               Icon={TimeIcon}
-              name="Time spent"
-              quantity={3723}
+              name="Hours spent"
+              quantity={sumTime.toFixed(2)}
               theme="basic"
             />
             <View style={styles.separator} />
