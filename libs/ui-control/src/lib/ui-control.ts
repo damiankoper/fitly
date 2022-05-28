@@ -17,10 +17,6 @@ export class UiControl {
     this.dataStore.resetAll();
   }
 
-  public addNumbers(): number {
-    return this.dataStore.getNumbers().reduce((a, b) => a + b, 0);
-  }
-
   //   --- Global Stats ---
   public getTotalCalories(): number {
     // jeśli user nie został ustawiony
@@ -198,7 +194,7 @@ export class UiControl {
     return new ChartData(data);
   }
 
-  private calculateCalories(
+  public calculateCalories(
     activityType: ActivityType,
     weight: number,
     duration: number

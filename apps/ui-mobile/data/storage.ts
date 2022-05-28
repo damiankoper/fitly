@@ -6,6 +6,8 @@ interface Storage {
   'user.activities': string;
 
   'user.data': string;
+
+  'user.activity-sessions': string;
 }
 
 class MMKVStorage {
@@ -18,7 +20,7 @@ class MMKVStorage {
     this.storage.set(key, value);
   }
 
-  getItem<K extends keyof Storage>(key: K): string | undefined {
+  getItem(key: keyof Storage): string | undefined {
     const response = this.storage.getString(key);
     if (!response) {
       console.log('reading boolean');
@@ -31,26 +33,37 @@ class MMKVStorage {
     return response;
   }
 
-  getStringItem<K extends keyof PickByType<Storage, string>>(
-    key: K
-  ): string | undefined {
+  getObject<T>(key: StorageStringObjectKey): T | undefined {
+    const objectJSON = this.getStringItem(key);
+    if (objectJSON) {
+      return JSON.parse(objectJSON) as T;
+    }
+    return undefined;
+  }
+
+  setObject<T>(key: StorageStringObjectKey, value: T) {
+    const objectJSON = JSON.stringify(value);
+    this.setItem(key, objectJSON);
+  }
+
+  getStringItem(key: StorageStringObjectKey): string | undefined {
     return this.storage.getString(key);
   }
 
-  getNumberItem<K extends keyof PickByType<Storage, number>>(
-    key: K
-  ): number | undefined {
+  getNumberItem(key: StorageNumberObjectKey): number | undefined {
     return this.storage.getNumber(key);
   }
 
-  getBooleanItem<K extends keyof PickByType<Storage, boolean>>(
-    key: K
-  ): boolean | undefined {
+  getBooleanItem(key: StorageBooleanObjectKey): boolean | undefined {
     return this.storage.getBoolean(key);
   }
 }
 
 export default MMKVStorage;
+
+export type StorageStringObjectKey = keyof PickByType<Storage, string>;
+export type StorageNumberObjectKey = keyof PickByType<Storage, number>;
+export type StorageBooleanObjectKey = keyof PickByType<Storage, boolean>;
 
 type PickByType<T, Value> = {
   [P in keyof T as T[P] extends Value ? P : never]: T[P];

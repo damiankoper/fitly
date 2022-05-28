@@ -6,10 +6,15 @@ import { DataCardLarge } from '../../components/cards/data-card-large';
 import { BluetoothStatus } from '../../components/icons/bluetooth-status';
 import { DataCardSmall } from '../../components/cards/data-card-small';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
-import { ActivityType, User } from '@fitly/shared/meta';
+import { ActivityTrackingMeta, ActivityType, User } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
 import ActivityLineChart from '../../components/charts/ActivityLineChart';
 import uiControl from 'apps/ui-mobile/data';
+import {
+  getCaloriesFromActivityMetaAndUserWeight,
+  getReadableDateStringFromInterval,
+  getTimeDurationFromInterval,
+} from './history-screen';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -49,12 +54,22 @@ export const TimeIcon = () => {
 
 export const HomeScreen: React.FC<{}> = () => {
   const [user, setUser] = useState<User>();
+  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
   const isFocused = useIsFocused();
+
+  const onHomeScrenFocused = () => {
+    let user = uiControl.getUser();
+    setUser(user!);
+
+    const lastSession = uiControl.getLastSession();
+    if (lastSession) {
+      setLastActivity(lastSession.activities[0]);
+    }
+  };
 
   useEffect(() => {
     if (isFocused) {
-      let user = uiControl.getUser();
-      setUser(user!);
+      onHomeScrenFocused();
     }
   }, [isFocused]);
 
@@ -112,17 +127,23 @@ export const HomeScreen: React.FC<{}> = () => {
             <View style={styles.separator} />
           </View>
         </View>
-
-        <View style={styles.bottomCard}>
-          <ActivityCardLarge
-            theme={'primary'}
-            activity={ActivityType.SQUATS}
-            date="Yesterday, 8 Mar"
-            kcal={231}
-            time="2:32"
-            count={31}
-          />
-        </View>
+        {lastActivity ? (
+          <View style={styles.bottomCard}>
+            <ActivityCardLarge
+              activity={lastActivity.type}
+              count={lastActivity.repeats}
+              time={getTimeDurationFromInterval(lastActivity.interval)}
+              kcal={getCaloriesFromActivityMetaAndUserWeight(
+                lastActivity,
+                user?.weight || 0
+              )}
+              date={getReadableDateStringFromInterval(lastActivity.interval)}
+              theme="primary"
+            />
+          </View>
+        ) : (
+          <></>
+        )}
       </ScrollView>
     </Layout>
   );
