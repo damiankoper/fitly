@@ -31,7 +31,7 @@ export const DataCardSmall: React.FC<Props> = ({
 						<Text style={styles.procent}>%</Text>
 					</Text>
 					<Text style={styles.smallText}>
-						of activities is{' '}
+						of activities are{' '}
 						<Text style={styles.primaryText} status="primary">
 							{activity}
 						</Text>
