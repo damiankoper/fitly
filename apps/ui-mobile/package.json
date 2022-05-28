@@ -35,6 +35,7 @@
     "react-native-svg-charts": "*",
     "d3-shape": "*",
     "react-native-drop-shadow": "*",
-    "react-native-mmkv": "*"
+    "react-native-mmkv": "*",
+    "humanize-duration": "*"
   }
 }
