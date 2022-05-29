@@ -1,10 +1,10 @@
 from dateutil import parser
 from datetime import datetime
 import json
-
-from models.DataModels import DataPoint
+from models.DataModels import DataPoint, ActivityTracking
 from models.ConfigModels import SignalConfig, SignalsConfigs
 from enums.ActivityTypeEnum import ActivityType
+from enums.DeviceEnum import Device
 
 
 CONFIG_BASE_PATH = "./apps/ml/src/config"
@@ -67,6 +67,22 @@ class Utilities:
             map(lambda x: max if x > max else (min if x < min else x), samples)
         )
         return limited
+
+    def _clean_signal(self, samples: list[DataPoint]) -> list[DataPoint]:
+        # filter out double samples
+        unique_device_samples = {v["timestamp"]: v for v in samples}.values()
+        # sort by timestamp
+        unique_device_samples_sorted = sorted(
+            unique_device_samples, key=lambda d: d["timestamp"]
+        )
+        return unique_device_samples_sorted
+
+    def clean_signals(self, activity: ActivityTracking) -> ActivityTracking:
+        activity_copy = activity.copy(deep=True)
+        for device in Device.list():
+            samples = activity_copy.dict()[device]
+            activity_copy.dict()[device] = self._clean_signal(samples)
+        return activity_copy
 
 
 utilities = Utilities()

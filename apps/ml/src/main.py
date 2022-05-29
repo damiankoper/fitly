@@ -19,12 +19,16 @@ async def classify_data(activity: ActivityTracking):
     if activity.meta.type == ActivityType.UNKNOWN:
         activity.meta.type = ActivityType.SQUATS
 
+    # clean signal
+    cleaned_signals = utilities.clean_signals(activity)
+
     # Counting repetitions
 
     # Extract signal & config data
     exercise_info = utilities.get_signal_config(activity.meta.type)
+
     signal_for_counting: list[DataPoint] = parse_obj_as(
-        list[DataPoint], activity.dict()[exercise_info.device.value]
+        list[DataPoint], cleaned_signals.dict()[exercise_info.device.value]
     )
 
     # Count repeats
