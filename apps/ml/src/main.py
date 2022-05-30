@@ -29,7 +29,7 @@ async def classify_data(activity: ActivityTracking):
 
     # Count repeats
     activity.meta.repeats = repetition_counter.count_repetitions(
-        exercise_info, signal_for_counting
+        exercise_info, signal_for_counting, activity.meta.uuid
     )
 
     return activity.meta

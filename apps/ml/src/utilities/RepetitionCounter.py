@@ -5,8 +5,13 @@ from utilities.Utilities import utilities
 
 
 class RepetitionCounter:
+    sessions = {}
+
     def count_repetitions(
-        self, exercise_info: SignalConfig, source_signal: list[DataPoint]
+        self,
+        exercise_info: SignalConfig,
+        source_signal: list[DataPoint],
+        session_uuid: str,
     ):
         # Resampling
         resampled_signal = utilities.resample(
@@ -19,22 +24,28 @@ class RepetitionCounter:
         )
 
         # Normalize signal
-        signal = utilities.normalize(utilities.limit_signal(signal, exercise_info))
+        signal = utilities.normalize(
+            utilities.limit_signal(signal, exercise_info))
 
         return self.__count_repetitions(
             signal,
             exercise_info,
+            session_uuid,
         )
 
     def __count_repetitions(
         self,
         data: list[float],
         exercise_info: SignalConfig,
+        session_uuid: str,
     ):
         state = 0
         rep_count = 0
         window_position = exercise_info.window_len
         window_samples = Constants.SAMPLING_FREQUENCY * exercise_info.window_len / 1000
+
+        if session_uuid in self.sessions and self.sessions[session_uuid]["type"] == exercise_info.type:
+            state = self.sessions[session_uuid]["state"]
 
         for x in data:
             if x > exercise_info.upper_bound and window_position > window_samples:
@@ -46,5 +57,10 @@ class RepetitionCounter:
                 state = -1
                 window_position = 0
             window_position += 1
+
+        self.sessions[session_uuid] = {
+            "state": state,
+            "type": exercise_info.type
+        }
 
         return rep_count
