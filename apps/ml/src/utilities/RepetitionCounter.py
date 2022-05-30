@@ -40,25 +40,36 @@ class RepetitionCounter:
         session_uuid: str,
     ):
         state = 0
+        start_state = 0
         rep_count = 0
         window_position = exercise_info.window_len
         window_samples = Constants.SAMPLING_FREQUENCY * exercise_info.window_len / 1000
 
         if session_uuid in self.sessions and self.sessions[session_uuid]["type"] == exercise_info.type:
             state = self.sessions[session_uuid]["state"]
+            start_state = self.sessions[session_uuid]["start_state"]
 
         for x in data:
-            if x > exercise_info.upper_bound and window_position > window_samples:
-                if state == -1:
-                    rep_count += 1
-                state = 1
-                window_position = 0
-            elif x < exercise_info.lower_bound and window_position > window_samples:
-                state = -1
-                window_position = 0
+            if window_position > window_samples:
+                if x > exercise_info.upper_bound:
+                    if start_state == 0:
+                        start_state = 1
+                    if start_state == -1 and state == -1:
+                        rep_count += 1
+                    state = 1
+                    window_position = 0
+                elif x < exercise_info.lower_bound:
+                    if start_state == 0:
+                        start_state = -1
+                    if start_state == 1 and state == 1:
+                        rep_count += 1
+                    state = -1
+                    window_position = 0
+
             window_position += 1
 
         self.sessions[session_uuid] = {
+            "start_state": start_state,
             "state": state,
             "type": exercise_info.type
         }
