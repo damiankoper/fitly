@@ -46,11 +46,12 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
   return (
     <Layout style={styles.container}>
-      <View style={[commonStyles.defaultBorder, styles.controlContainer]}>
+      {/* TODO Too much custom styles */}
+      {/* <View style={[commonStyles.defaultBorder, styles.controlContainer]}>
         <Text style={styles.modeText}>Dark mode</Text>
         <Toggle status="primary" {...controlToggleState} />
       </View>
-      <Divider />
+      <Divider /> */}
 
       <View style={styles.buttonColumn}>
         <View>

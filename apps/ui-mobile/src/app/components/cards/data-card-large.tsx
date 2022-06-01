@@ -9,7 +9,7 @@ import DropShadowWrapper from '../gradients/drop-shadow';
 import { Themes } from '../gradients/themes';
 
 interface Props {
-	quantity: number;
+	quantity: number | string;
 	name: string;
 	Icon: React.FC;
 	theme?: Themes;

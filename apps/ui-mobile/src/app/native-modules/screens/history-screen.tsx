@@ -21,7 +21,9 @@ export function getReadableDateStringFromInterval(interval: Interval): string {
   const durationInDaysRounded = Math.floor(durationInDays);
 
   if (durationInDaysRounded === 1) return 'Yesterday';
-
+  if (durationInDaysRounded >= 2 && durationInDaysRounded < SHOW_DATE_AFTER_DAYS_DIFFERENCE){
+    return `${durationInDaysRounded} days ago`
+  }
   if (durationInDaysRounded >= SHOW_DATE_AFTER_DAYS_DIFFERENCE) {
     return startDate.setLocale('en-gb').toLocaleString({
       day: 'numeric',
@@ -40,7 +42,6 @@ export function getReadableDateStringFromInterval(interval: Interval): string {
 
 export function getTimeDurationFromInterval(interval: Interval): string {
   const duration = interval.toDuration('minutes');
-  console.log(interval.start, interval.end);
 
   const roundedHours = Math.floor(duration.shiftTo('hours').hours);
   if (roundedHours >= 1) return duration.toFormat('hh:mm:ss');
