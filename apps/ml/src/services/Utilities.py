@@ -5,17 +5,15 @@ import json
 from models.DataModels import DataPoint
 from models.ConfigModels import SignalConfig, SignalsConfigs
 from enums.ActivityTypeEnum import ActivityType
-
-
-CONFIG_BASE_PATH = "./apps/ml/src/config"
+from config.Config import Config
 
 
 class Utilities:
     def __init__(self) -> None:
-        with open(f"{CONFIG_BASE_PATH}/signals_limits.json") as signals_limits_f:
+        with open(f"{Config.CONFIG_BASE_PATH}/signals_limits.json") as signals_limits_f:
             self.signals_limits: dict = json.load(signals_limits_f)
             self.signals_configs: SignalsConfigs = SignalsConfigs.parse_file(
-                f"{CONFIG_BASE_PATH}/signals_configs.json"
+                f"{Config.CONFIG_BASE_PATH}/signals_configs.json"
             )
 
     def get_signal_config(self, activity_type: ActivityType) -> SignalConfig:
