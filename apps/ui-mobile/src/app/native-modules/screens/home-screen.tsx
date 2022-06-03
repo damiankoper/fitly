@@ -149,18 +149,16 @@ export const HomeScreen: React.FC<{}> = () => {
     return { topActivity, repeats, percentile };
   };
 
-  const onHomeScrenFocused = () => {
-    let user = uiControl.getUser();
-    setUser(user!);
-    const newActivities = uiControl.getSessions();
-    const newUserWeight = uiControl.getUser()?.weight;
-    setActivities(newActivities);
-    setUserWeight(newUserWeight || 0);
+  const onHomeScrenFocused = async () => {
+    setUser(uiControl.getUser()!);
+    setActivities(await uiControl.getSessions());
+    setUserWeight(uiControl.getUser()?.weight || 0);
     getStats(activities);
 
     const lastSession = uiControl.getLastSession();
     if (lastSession) {
       setLastActivity(lastSession.activities[0]);
+      console.log(lastActivity)
     }
   };
 
