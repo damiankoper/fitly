@@ -41,6 +41,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
   const handleDeleteClick = () => {
     setModalVisible(false);
+    // TODO make resetAll TS stuff work
     uiControl.resetUser();
   };
 
