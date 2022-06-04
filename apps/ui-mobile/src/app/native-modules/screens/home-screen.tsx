@@ -21,6 +21,7 @@ import {
   getTimeDurationFromInterval,
 } from './history-screen';
 import { formatActivityString } from '../../common/utils';
+import { DEFAULT_HOME_PLOT_DATA } from '../../common/utils';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -145,7 +146,7 @@ export const HomeScreen: React.FC<{}> = () => {
       }
     }
 
-    percentile = repeats / percentile * 100;
+    percentile = (repeats / percentile) * 100;
     return { topActivity, repeats, percentile };
   };
 
@@ -158,7 +159,6 @@ export const HomeScreen: React.FC<{}> = () => {
     const lastSession = uiControl.getLastSession();
     if (lastSession) {
       setLastActivity(lastSession.activities[0]);
-      console.log(lastActivity)
     }
   };
 
@@ -175,7 +175,20 @@ export const HomeScreen: React.FC<{}> = () => {
           name={`${user?.name} ${user?.surname}`}
           title={`Master of ${mostPopularActivity}`}
         />
-        <ActivityLineChart />
+
+        {uiControl.getCaloriesDailyChart()?.data.length !== 0 ? (
+          <ActivityLineChart
+            data={
+              // @ts-ignore
+              uiControl.getCaloriesDailyChart().data
+            }
+          />
+        ) : (
+          <ActivityLineChart
+            data={DEFAULT_HOME_PLOT_DATA}
+          />
+        )}
+
         <View style={[styles.cardRow, styles.overflowVisible]}>
           <View
             style={[
