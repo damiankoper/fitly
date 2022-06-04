@@ -12,7 +12,7 @@ import * as RootNavigation from '../navigation/root-navigation';
 
 type IconProp = RenderProp<Partial<ImageProps>>;
 const PersonIcon: IconProp = (props) => (
-  <TouchableOpacity onPress={() => RootNavigation.navigate('Settings')}>
+  <TouchableOpacity onPress={() => RootNavigation.navigate('Profile')}>
     <Icon {...props} name="person-outline" />
   </TouchableOpacity>
 );

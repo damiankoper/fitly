@@ -55,10 +55,10 @@ const TabNavigator = (props: MetaWearProps) => (
     }}
   >
     <Screen name="Home" component={HomeScreen} />
-    <Screen name="Exercise" component={wrapScreen(ExerciseScreen, props)} />
+    <Screen name="Exercise" component={wrapScroll(ExerciseScreen, props)} />
     <Screen
       name="Guess"
-      component={wrapScroll(ExerciseCounterScreen, props)}
+      component={wrapScreen(ExerciseCounterScreen, props)}
       initialParams={{
         activity: ActivityType.UNKNOWN,
       }}
@@ -69,7 +69,7 @@ const TabNavigator = (props: MetaWearProps) => (
     <Screen name="Service" component={wrapScroll(ServiceModeScreen, props)} />
     <Screen
       name="BluetoothConnection"
-      component={wrapScroll(BluetoothConnectionScreen, props)}
+      component={wrapScreen(BluetoothConnectionScreen, props)}
     />
     <Screen
       name="NotConnectedScreen"
@@ -81,7 +81,7 @@ const TabNavigator = (props: MetaWearProps) => (
     />
     <Screen
       name="ExerciseCounterScreen"
-      component={wrapScroll(ExerciseCounterScreen, props)}
+      component={wrapScreen(ExerciseCounterScreen, props)}
     />
     <Screen
       name="ExerciseResultsScreen"

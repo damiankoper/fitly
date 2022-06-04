@@ -9,6 +9,7 @@ import { MetaWearProps } from '../../App';
 import { showNotification } from '@fitly/ui-utils';
 import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
+import { ActivityIcon } from '../../components/icons/activity-icon';
 
 type NavProps = BottomTabScreenProps<
   BottomTabParamList,
@@ -121,8 +122,9 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
   return (
     <Layout style={styles.container}>
       <View>
-        <Text style={styles.titleText}>Current Activity</Text>
-        <ActivityCardSmall activity={activity} />
+        <View>
+          <ActivityCardSmall activity={activity} subtitle="Current activity" />
+        </View>
         <View style={styles.spinnerWrapper}>
           <CounterSpinner
             repeats={lastRepeats}
@@ -148,6 +150,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    overflow: 'visible',
   },
   titleText: {
     fontSize: 32,
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
   },
   spinnerWrapper: {
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 8,
   },
 });
