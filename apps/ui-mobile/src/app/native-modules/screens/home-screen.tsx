@@ -73,6 +73,7 @@ export const HomeScreen: React.FC<{}> = () => {
   const [topRepeats, setTopRepeats] = useState<number>(0);
   const [percentile, setPercentile] = useState<number>(0);
 
+  // TODO move to uiControl?
   const getStats = (sessions: ActivitySession[] | null) => {
     let summaryTime = 0;
     let summaryKcal = 0;
@@ -111,6 +112,7 @@ export const HomeScreen: React.FC<{}> = () => {
     setPercentile(percentile);
   };
 
+  // TODO move to uiControl?
   const getMostPopularActivity = (sessions: ActivitySession[] | null) => {
     let topActivity = ActivityType.UNKNOWN;
     let repeats = 0;
