@@ -1,8 +1,8 @@
 import React from 'react';
 import { Layout, Text } from '@ui-kitten/components';
-import { ActivityCardResults } from '../components/cards/activity-card-results';
+import { ActivityCardResults } from '../../components/cards/activity-card-results';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 import { StyleSheet, View } from 'react-native';
 
 type NavProps = BottomTabScreenProps<

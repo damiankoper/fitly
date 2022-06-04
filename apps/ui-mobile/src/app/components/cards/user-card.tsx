@@ -1,31 +1,41 @@
-import { Text, Icon, useTheme } from '@ui-kitten/components';
 import React from 'react';
+import { Text, Icon } from '@ui-kitten/components';
 import { StyleSheet, Image, View } from 'react-native';
 import { commonStyles } from '../../assets/common/styles';
 import ManIcon from '../../assets/images/man.png';
+import DropShadowWrapper from '../gradients/drop-shadow';
+import LinearGradientCard from '../gradients/linear-gradient-card';
+import { Themes } from '../gradients/themes';
 interface Props {
 	name: string;
 	title: string;
+	theme?: Themes;
 }
 
-export const UserCard: React.FC<Props> = ({ name, title }) => {
-	const theme = useTheme();
-
+export const UserCard: React.FC<Props> = ({ name, title, theme }) => {
 	return (
-		<View style={[commonStyles.defaultCard, styles.container]}>
-			<Image source={ManIcon} style={[styles.iconUser]} />
-			<View>
-				<Text style={styles.name}>{name}</Text>
-				<View style={styles.titleContainer}>
-					<Icon
-						name="award-outline"
-						style={styles.iconBadge}
-						fill={theme['color-primary-default']}
-					/>
-					<Text>{title}</Text>
+		<DropShadowWrapper shadowColorTheme={theme}>
+			<LinearGradientCard
+				style={[commonStyles.defaultBorder]}
+				x={0.48}
+				y={0.5}
+				theme={theme}
+			>
+				<View style={[commonStyles.defaultBorder, styles.container]}>
+					<Image source={ManIcon} style={[styles.iconUser]} />
+					<View>
+						<Text style={styles.userFullname}>{name}</Text>
+						<View style={styles.titleContainer}>
+							<Icon
+								name="award-outline"
+								style={styles.iconBadge}
+							/>
+							<Text style={styles.titleText}>{title}</Text>
+						</View>
+					</View>
 				</View>
-			</View>
-		</View>
+			</LinearGradientCard>
+		</DropShadowWrapper>
 	);
 };
 
@@ -33,15 +43,28 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center',
+		justifyContent: 'space-between',
 		paddingHorizontal: 16,
 		height: 80,
 	},
-	name: {
-		fontSize: 20,
-		fontWeight: '700',
+	userFullname: {
+		textAlign: 'right',
+		fontSize: 26,
+		fontFamily: 'RobotoSlab-Bold',
+		letterSpacing: 1,
 	},
 	titleContainer: {
+		textAlign: 'right',
+		justifyContent: 'flex-end',
 		flexDirection: 'row',
+		height: 25,
+	},
+	titleText: {
+		color: '#C1C1C1',
+		top: 3,
+		marginLeft: 8,
+		fontFamily: 'Roboto',
+		letterSpacing: 1,
 	},
 	iconUser: {
 		width: 48,
@@ -49,7 +72,11 @@ const styles = StyleSheet.create({
 		marginRight: 8,
 	},
 	iconBadge: {
-		width: 24,
+		width: 25,
+		height: 25,
+		shadowColor: 'transparent',
+		elevation: 2,
+		color: '#3366FF',
 		aspectRatio: 1,
 	},
 });

@@ -5,34 +5,40 @@ import { commonStyles } from '../../assets/common/styles';
 import LinearGradientCard, {
 	LinearGradientCardProps,
 } from '../gradients/linear-gradient-card';
+import DropShadowWrapper from '../gradients/drop-shadow';
+import { Themes } from '../gradients/themes';
 
 interface Props {
-	quantity: number;
+	quantity: number | string;
 	name: string;
 	Icon: React.FC;
-	color?: string;
+	theme?: Themes;
 }
 
 export const DataCardLarge: React.FC<Props> = ({
 	Icon,
 	name,
 	quantity,
-	color,
+	theme,
 }) => {
 	return (
-		<View
-			style={[
-				commonStyles.defaultCard,
-				styles.container,
-				{ backgroundColor: color },
-			]}
+		<DropShadowWrapper
+			shadowColorTheme={theme}
+			style={[commonStyles.defaultBorder, { padding: 0, height: 80 }]}
 		>
-			<Icon />
-			<View style={styles.column}>
-				<Text style={styles.quantityText}>{quantity}</Text>
-				<Text style={styles.text}>{name}</Text>
-			</View>
-		</View>
+			<LinearGradientCard
+				theme={theme}
+				style={[commonStyles.defaultBorder, { padding: 0, height: 80 }]}
+			>
+				<View style={[commonStyles.defaultBorder, styles.container]}>
+					<Icon />
+					<View style={styles.column}>
+						<Text style={styles.quantityText}>{quantity}</Text>
+						<Text style={styles.text}>{name}</Text>
+					</View>
+				</View>
+			</LinearGradientCard>
+		</DropShadowWrapper>
 	);
 };
 
@@ -50,10 +56,13 @@ const styles = StyleSheet.create({
 	},
 	quantityText: {
 		fontSize: 20,
+		textAlign: 'center',
 		fontWeight: '700',
 	},
 	text: {
-		fontSize: 12,
+		fontSize: 14,
+		color: '#A1A1A1',
+		fontFamily: 'Roboto-Light',
 		textAlign: 'center',
 	},
 });

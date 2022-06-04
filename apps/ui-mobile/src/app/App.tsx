@@ -11,7 +11,7 @@ import store from './state/store';
 import MetaWearModule from './native-modules/MetaWearModule';
 import { ActivityTracker, MetaWear } from '@fitly/ui-metawear';
 
-import AppInitScreen from './screens/app-init-screen';
+import AppInitScreen from './native-modules/screens/app-init-screen';
 
 export interface MetaWearProps {
 	metawear: MetaWear;
