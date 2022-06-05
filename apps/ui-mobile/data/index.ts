@@ -49,16 +49,15 @@ export class DataStore implements IDataStore {
   }
 
   setUser(user: User) {
-    const str = JSON.stringify(user);
-    this.storage.setItem('user.data', str);
+    this.storage.setObject('user.data', user);
   }
   resetUser(): void {
-    const str = JSON.stringify(DEFAULT_USER);
-    this.storage.setItem('user.data', str);
+    this.storage.setObject('user.data', DEFAULT_USER);
   }
 
   resetAll(): void {
-    throw new Error('Method not implemented.');
+    this.storage.setObject('user.data', DEFAULT_USER);
+    this.storage.setObject('user.activity-sessions', DEFAULT_ACTIVITY_SESSIONS);
   }
 
   getActivitySessions(): ActivitySession[] {

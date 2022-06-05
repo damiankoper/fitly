@@ -7,9 +7,8 @@ import { BluetoothStatus } from '../../components/icons/bluetooth-status';
 import { DataCardSmall } from '../../components/cards/data-card-small';
 import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import {
-  ActivitySession,
+  ActivityTimeStats,
   ActivityTrackingMeta,
-  ActivityType,
   User,
 } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
@@ -20,7 +19,7 @@ import {
   getReadableDateStringFromInterval,
   getTimeDurationFromInterval,
 } from './history-screen';
-import { formatActivityString } from '../../common/utils';
+import { DEFAULT_HOME_PLOT_DATA } from '../../common/utils';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -59,106 +58,48 @@ export const TimeIcon = () => {
 };
 
 export const HomeScreen: React.FC<{}> = () => {
-  const [user, setUser] = useState<User>();
-  const isFocused = useIsFocused();
-  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
-  const [activities, setActivities] = useState<ActivitySession[] | null>(null);
-  const [userWeight, setUserWeight] = useState<number>(0);
-  const [allKcal, setAllKcal] = useState<number>(0);
-  const [sumTime, setSumTime] = useState<number>(0);
-  const [mostPopularActivity, setMostPopularActivity] = useState(
-    ActivityType.UNKNOWN
+  const initialStats = uiControl.getTimeStats();
+  const intialMostPopularActivity = Object.keys(initialStats.type).reduce(
+    (a, b) => (initialStats.type[a] > initialStats.type[b] ? a : b)
   );
-  const [topRepeats, setTopRepeats] = useState<number>(0);
-  const [percentile, setPercentile] = useState<number>(0);
+  const initialSummaryTime = Object.values(initialStats.type).reduce(
+    (a, b) => a + b
+  );
+  const initialTopActivityTimeSpent =
+    initialStats.type[intialMostPopularActivity];
+  const initialPercentile =
+    (100 * initialTopActivityTimeSpent) / initialSummaryTime;
 
-  const getStats = (sessions: ActivitySession[] | null) => {
-    let summaryTime = 0;
-    let summaryKcal = 0;
-    setAllKcal(summaryKcal);
-    setSumTime(summaryTime);
-
-    if (!sessions) {
-      return { summaryTime, summaryKcal };
-    }
-
-    for (let i = 0; i < sessions.length; i++) {
-      const sessionActivities = sessions[i].activities;
-      for (let j = 0; j < sessionActivities.length; j++) {
-        summaryKcal += getCaloriesFromActivityMetaAndUserWeight(
-          sessions[i].activities[j],
-          userWeight
-        );
-        const millis = sessions[i].activities[j].interval
-          .toDuration()
-          .toMillis();
-        summaryTime += millis;
-      }
-    }
-
-    // to hours
-    summaryTime = summaryTime / (1000 * 60 * 60);
-
-    setAllKcal(summaryKcal);
-    setSumTime(summaryTime);
-
-    const { topActivity, repeats, percentile } =
-      getMostPopularActivity(sessions);
-
-    setMostPopularActivity(topActivity);
-    setTopRepeats(repeats);
-    setPercentile(percentile);
-  };
-
-  const getMostPopularActivity = (sessions: ActivitySession[] | null) => {
-    let topActivity = ActivityType.UNKNOWN;
-    let repeats = 0;
-    let percentile = 0;
-    if (!sessions) {
-      return { topActivity, repeats, percentile };
-    }
-
-    const counter = [
-      { name: ActivityType.UNKNOWN, repeats: 0 },
-      { name: ActivityType.SITUPS, repeats: 0 },
-      { name: ActivityType.SQUATS, repeats: 0 },
-      { name: ActivityType.PUSHUPS, repeats: 0 },
-      { name: ActivityType.STAR_JUMPS, repeats: 0 },
-    ];
-
-    for (let i = 0; i < sessions.length; i++) {
-      const sessionActivities = sessions[i].activities;
-      for (let j = 0; j < sessionActivities.length; j++) {
-        for (let k = 0; k < counter.length; k++) {
-          if (sessionActivities[j].type === counter[k].name) {
-            counter[k].repeats += sessionActivities[j].repeats;
-          }
-        }
-      }
-    }
-
-    for (let i = 0; i < counter.length; i++) {
-      percentile += counter[i].repeats;
-      if (counter[i].repeats > repeats) {
-        repeats = counter[i].repeats;
-        topActivity = counter[i].name;
-      }
-    }
-
-    percentile = repeats / percentile * 100;
-    return { topActivity, repeats, percentile };
-  };
+  const isFocused = useIsFocused();
+  const [user, setUser] = useState<User>();
+  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
+  const [stats, setStats] = useState<ActivityTimeStats>(initialStats);
+  const [mostPopularActivity, setMostPopularActivity] = useState<string>(
+    intialMostPopularActivity
+  );
+  const [summaryTime, setSummaryTime] = useState<number>(initialSummaryTime);
+  const [topActivityTimeSpent, setTopActivityTimeSpent] = useState<number>(
+    initialTopActivityTimeSpent
+  );
+  const [percentile, setPercentile] = useState<number>(initialPercentile);
 
   const onHomeScrenFocused = async () => {
+    // default user always exist
     setUser(uiControl.getUser()!);
-    setActivities(await uiControl.getSessions());
-    setUserWeight(uiControl.getUser()?.weight || 0);
-    getStats(activities);
+    // update UI
+    setStats(uiControl.getTimeStats());
+    setMostPopularActivity(
+      Object.keys(stats.type).reduce((a, b) =>
+        stats.type[a] > stats.type[b] ? a : b
+      )
+    );
+    setTopActivityTimeSpent(stats.type[mostPopularActivity]);
+    setSummaryTime(Object.values(stats.type).reduce((a, b) => a + b));
+    setPercentile((100 * topActivityTimeSpent) / summaryTime);
 
     const lastSession = uiControl.getLastSession();
     if (lastSession) {
       setLastActivity(lastSession.activities[0]);
-      console.log(lastActivity)
     }
   };
 
@@ -175,7 +116,18 @@ export const HomeScreen: React.FC<{}> = () => {
           name={`${user?.name} ${user?.surname}`}
           title={`Master of ${mostPopularActivity}`}
         />
-        <ActivityLineChart />
+
+        {uiControl.getCaloriesDailyChart()?.data.length !== 0 ? (
+          <ActivityLineChart
+            data={
+              // @ts-ignore
+              uiControl.getCaloriesDailyChart().data
+            }
+          />
+        ) : (
+          <ActivityLineChart data={DEFAULT_HOME_PLOT_DATA} />
+        )}
+
         <View style={[styles.cardRow, styles.overflowVisible]}>
           <View
             style={[
@@ -186,14 +138,14 @@ export const HomeScreen: React.FC<{}> = () => {
           >
             <DataCardLarge
               Icon={StepsIcon}
-              name={formatActivityString(mostPopularActivity)}
-              quantity={topRepeats}
+              name={'Repeats'}
+              quantity={uiControl.getTotalRepeats()}
               theme="primary"
             />
             <DataCardLarge
               Icon={CaloriesIcon}
               name="Calories"
-              quantity={allKcal}
+              quantity={uiControl.getTotalCalories().toFixed(2)}
               theme="danger"
             />
           </View>
@@ -216,7 +168,7 @@ export const HomeScreen: React.FC<{}> = () => {
             <DataCardLarge
               Icon={TimeIcon}
               name="Hours spent"
-              quantity={sumTime.toFixed(2)}
+              quantity={topActivityTimeSpent.toFixed(2)}
               theme="basic"
             />
             <View style={styles.separator} />
@@ -230,7 +182,7 @@ export const HomeScreen: React.FC<{}> = () => {
               time={getTimeDurationFromInterval(lastActivity.interval)}
               kcal={getCaloriesFromActivityMetaAndUserWeight(
                 lastActivity,
-                user?.weight || 0
+                user!.weight || 0
               )}
               date={getReadableDateStringFromInterval(lastActivity.interval)}
               theme="primary"

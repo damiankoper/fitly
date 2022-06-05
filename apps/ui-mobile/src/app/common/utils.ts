@@ -2,6 +2,7 @@ import {
   ActivitySession,
   ActivityTrackingMeta,
   ActivityType,
+  ChartDataType,
   User,
 } from '@fitly/shared/meta';
 import { Sex } from 'libs/shared/meta/src/lib/enums/sex.enum';
@@ -68,4 +69,13 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
       ),
     ],
   },
+];
+
+export const DEFAULT_HOME_PLOT_DATA: ChartDataType[] = [
+  { value: 0, date: new Date(2000, 1, 1) },
+  { value: 0, date: new Date(2000, 1, 2) },
+  { value: 0, date: new Date(2000, 1, 3) },
+  { value: 0, date: new Date(2000, 1, 4) },
+  { value: 0, date: new Date(2000, 1, 5) },
+  { value: 0, date: new Date(2000, 1, 6) },
 ];

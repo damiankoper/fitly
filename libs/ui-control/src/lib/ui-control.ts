@@ -109,7 +109,8 @@ export class UiControl {
 
     sessions.forEach((session) => {
       session.activities.forEach((activity) => {
-        stats[activity.type] += activity.interval.length('minutes');
+        // TODO sum does not work (NaN)
+        stats[activity.type] = activity.interval.length('hours');
       });
     });
 
