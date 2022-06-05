@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Layout } from '@ui-kitten/components';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
-import { CounterSpinner } from '../../components/spinners/counter-spinner';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import { CounterSpinner } from '../components/spinners/counter-spinner';
 import { StyleSheet, View, Text } from 'react-native';
-import { ActivityCardSmall } from '../../components/cards/activity-card-small';
-import { MetaWearProps } from '../../App';
+import { ActivityCardSmall } from '../components/cards/activity-card-small';
+import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
 import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
-import { ActivityIcon } from '../../components/icons/activity-icon';
+import { ActivityIcon } from '../components/icons/activity-icon';
 
 type NavProps = BottomTabScreenProps<
   BottomTabParamList,

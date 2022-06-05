@@ -9,10 +9,10 @@ import {
   RadioGroup,
   Button,
 } from '@ui-kitten/components';
-import uiControl from 'apps/ui-mobile/data';
+import uiControl from 'apps/ui-mobile/src/app/data';
 import { User } from '@fitly/shared/meta';
 import { Sex } from 'libs/shared/meta/src/lib/enums/sex.enum';
-import { UserCard } from '../../components/cards/user-card';
+import { UserCard } from '../components/cards/user-card';
 import { useNavigation } from '@react-navigation/native';
 import { showNotification } from '@fitly/ui-utils';
 

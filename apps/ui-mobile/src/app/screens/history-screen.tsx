@@ -4,14 +4,14 @@ import {
   ActivityType,
 } from '@fitly/shared/meta';
 import { Divider, Layout, Text as TextUI } from '@ui-kitten/components';
-import uiControl from 'apps/ui-mobile/data';
+import uiControl from 'apps/ui-mobile/src/app/data';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import { ActivityCardLarge } from '../../components/cards/activity-card-large';
-import LoadingScreen from '../../components/loading-screen/LoadingScreen';
+import { ActivityCardLarge } from '../components/cards/activity-card-large';
+import LoadingScreen from '../components/loading-screen/LoadingScreen';
 import humanizeDuration from 'humanize-duration';
 import { Interval } from 'luxon';
-import { commonStyles } from '../../assets/common/styles';
+import { commonStyles } from '../assets/common/styles';
 const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
 
 export function getReadableDateStringFromInterval(interval: Interval): string {

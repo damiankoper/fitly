@@ -9,12 +9,12 @@ import {
   useTheme,
 } from '@ui-kitten/components';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { commonStyles } from '../../assets/common/styles';
+import { commonStyles } from '../assets/common/styles';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../state/root.reducer';
-import uiControl from 'apps/ui-mobile/data';
+import { RootState } from '../state/root.reducer';
+import uiControl from 'apps/ui-mobile/src/app/data';
 
 const useToggleState = (initialState = false) => {
   const [checked, setChecked] = React.useState(initialState);

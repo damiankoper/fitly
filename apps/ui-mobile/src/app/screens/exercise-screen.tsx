@@ -3,8 +3,8 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { Layout, Text as TextUi } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { ActivityButton } from '../../components/cards/activity-button';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { ActivityButton } from '../components/cards/activity-button';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Exercise'>;
 

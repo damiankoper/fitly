@@ -1,25 +1,25 @@
 import { Icon, Layout, useTheme } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { UserCard } from '../../components/cards/user-card';
+import { UserCard } from '../components/cards/user-card';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { DataCardLarge } from '../../components/cards/data-card-large';
-import { BluetoothStatus } from '../../components/icons/bluetooth-status';
-import { DataCardSmall } from '../../components/cards/data-card-small';
-import { ActivityCardLarge } from '../../components/cards/activity-card-large';
+import { DataCardLarge } from '../components/cards/data-card-large';
+import { BluetoothStatus } from '../components/icons/bluetooth-status';
+import { DataCardSmall } from '../components/cards/data-card-small';
+import { ActivityCardLarge } from '../components/cards/activity-card-large';
 import {
   ActivityTimeStats,
   ActivityTrackingMeta,
   User,
 } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
-import ActivityLineChart from '../../components/charts/ActivityLineChart';
-import uiControl from 'apps/ui-mobile/data';
+import ActivityLineChart from '../components/charts/ActivityLineChart';
+import uiControl from 'apps/ui-mobile/src/app/data';
 import {
   getCaloriesFromActivityMetaAndUserWeight,
   getReadableDateStringFromInterval,
   getTimeDurationFromInterval,
 } from './history-screen';
-import { DEFAULT_HOME_PLOT_DATA } from '../../common/utils';
+import { DEFAULT_HOME_PLOT_DATA } from '../common/utils';
 
 export const StepsIcon = () => {
   const theme = useTheme();

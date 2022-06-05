@@ -2,10 +2,7 @@ import { ActivitySession, User } from '@fitly/shared/meta';
 import { UiControl } from '@fitly/ui-control';
 import { IDataStore } from 'libs/ui-control/src/lib/interfaces/IDataStore';
 import MMKVStorage from './storage';
-import {
-  DEFAULT_ACTIVITY_SESSIONS,
-  DEFAULT_USER,
-} from '../src/app/common/utils';
+import { DEFAULT_ACTIVITY_SESSIONS, DEFAULT_USER } from '../common/utils';
 
 export class DataStore implements IDataStore {
   private storage: MMKVStorage;
