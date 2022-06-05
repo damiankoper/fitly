@@ -1,3 +1,12 @@
+from collections import defaultdict
+from numbers import Number
+
+import pandas as pd
+
+from apps.ml.src.utils.feature_extraction_functions import get_means, get_variances, get_standard_deviations, \
+    get_medians, get_maximums, get_minimums, get_ranges, get_root_mean_squares, get_integrals, \
+    get_correlation_coefficients, get_cross_correlation, get_max_differences, get_zero_crossings, \
+    get_signal_magnitude_area, get_signal_vector_magnitude
 from models.DataModels import DataPoint
 from enums.ActivityTypeEnum import ActivityType
 from models.DataModels import ActivityTracking, ActivityTrackingMeta
@@ -88,5 +97,113 @@ async def classify_data(activity: ActivityTracking):
     activity.meta.repeats = await repetition_counter.count_repetitions(
         exercise_info, signal_for_counting, activity.meta.uuid
     )
+
+    all_activity_files = load_single_json(activity)
+
+    ##################################################################################
+    # Create alll the features
+
+    all_features = defaultdict(list)
+
+    for i in range(0, len(all_activity_files), 3):
+        all_features["device"].append(all_activity_files[i]["device"])
+        all_features["interval"].append(all_activity_files[i]["interval"])
+        all_features["repeats"].append(all_activity_files[i]["repeats"])
+        all_features["type"].append(all_activity_files[i]["type"])
+
+        signals = [
+            [v for k, v in all_activity_files[i].items() if isinstance(k, Number)],
+            [v for k, v in all_activity_files[i + 1].items() if isinstance(k, Number)],
+            [v for k, v in all_activity_files[i + 2].items() if isinstance(k, Number)]]
+
+        means = get_means(signals)
+        all_features["x_mean"].append(means[0])
+        all_features["y_mean"].append(means[1])
+        all_features["z_mean"].append(means[2])
+
+        variances = get_variances(signals)
+        all_features["x_variance"].append(variances[0])
+        all_features["y_variance"].append(variances[1])
+        all_features["z_variance"].append(variances[2])
+
+        stds = get_standard_deviations(signals)
+        all_features["x_std"].append(stds[0])
+        all_features["y_std"].append(stds[1])
+        all_features["z_std"].append(stds[2])
+
+        medians = get_medians(signals)
+        all_features["x_median"].append(medians[0])
+        all_features["y_median"].append(medians[1])
+        all_features["z_median"].append(medians[2])
+
+        maximums = get_maximums(signals)
+        all_features["x_max"].append(maximums[0])
+        all_features["y_max"].append(maximums[1])
+        all_features["z_max"].append(maximums[2])
+
+        minimums = get_minimums(signals)
+        all_features["x_min"].append(minimums[0])
+        all_features["y_min"].append(minimums[1])
+        all_features["z_min"].append(minimums[2])
+
+        ranges = get_ranges(signals)
+        all_features["x_range"].append(ranges[0])
+        all_features["y_range"].append(ranges[1])
+        all_features["z_range"].append(ranges[2])
+
+        root_mean_squares = get_root_mean_squares(signals)
+        all_features["x_rms"].append(root_mean_squares[0])
+        all_features["y_rms"].append(root_mean_squares[1])
+        all_features["z_rms"].append(root_mean_squares[2])
+
+        integrals = get_integrals(signals)
+        all_features["x_integral"].append(integrals[0])
+        all_features["y_integral"].append(integrals[1])
+        all_features["z_integral"].append(integrals[2])
+
+        correlation_coefficients = get_correlation_coefficients(signals)
+        all_features["x_cor_coef"].append(correlation_coefficients[0])
+        all_features["y_cor_coef"].append(correlation_coefficients[1])
+        all_features["z_cor_coef"].append(correlation_coefficients[2])
+
+        cross_correlation = get_cross_correlation(signals)
+        all_features["cross_cor"].append(cross_correlation)
+
+        max_differences = get_max_differences(signals)
+        all_features["x_max_dif"].append(max_differences[0])
+        all_features["y_max_dif"].append(max_differences[1])
+        all_features["z_max_dif"].append(max_differences[2])
+
+        zero_crossings = get_zero_crossings(signals)
+        all_features["x_0_cross"].append(zero_crossings[0])
+        all_features["y_0_cross"].append(zero_crossings[1])
+        all_features["z_0_cross"].append(zero_crossings[2])
+
+        signal_magnitude_area = get_signal_magnitude_area(signals)
+        all_features["sig_magnitude_area"].append(signal_magnitude_area)
+
+        signal_vector_magnitude = get_signal_vector_magnitude(signals)
+        all_features["svm"].append(signal_vector_magnitude)
+
+        # DISABLED FOR NOW SINCE STANDARD SCALER DOES NOT HANDLE COMPLEX(IMAGINARY) VARIABLES
+        # Can we simply drop the imaginary part and use just the real one?
+
+        # dc_components = get_dc_components(signals)
+        # all_features["x_dc_component"].append(dc_components[0])
+        # all_features["y_dc_component"].append(dc_components[1])
+        # all_features["z_dc_component"].append(dc_components[2])
+
+        # spectral_energies = get_spectral_energies(signals)
+        # all_features["x_spec_energy"].append(spectral_energies[0])
+        # all_features["y_spec_energy"].append(spectral_energies[1])
+        # all_features["z_spec_energy"].append(spectral_energies[2])
+
+        # spectral_entropies = get_spectral_entropies(signals)
+        # all_features["x_spec_entropy"].append(spectral_entropies[0])
+        # all_features["y_spec_entropy"].append(spectral_entropies[1])
+        # all_features["z_spec_entropy"].append(spectral_entropies[2])
+
+    all_features_df = pd.DataFrame(all_features)
+    all_features_df
 
     return activity.meta
