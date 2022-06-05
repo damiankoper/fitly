@@ -141,9 +141,7 @@ export const HistoryScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    overflow: 'visible',
-  },
+  container: {},
   height100: {
     height: '100%',
   },

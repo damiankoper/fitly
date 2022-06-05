@@ -14,6 +14,7 @@ import { User } from '@fitly/shared/meta';
 import { Sex } from 'libs/shared/meta/src/lib/enums/sex.enum';
 import { UserCard } from '../../components/cards/user-card';
 import { useNavigation } from '@react-navigation/native';
+import { showNotification } from '@fitly/ui-utils';
 
 export const ProfileScreen = () => {
   const [firstName, setFirstName] = useState<string>();
@@ -62,8 +63,9 @@ export const ProfileScreen = () => {
       sex: selectedIndex === 0 ? Sex.MALE : Sex.FEMALE,
     };
     setUser(user);
-
     uiControl.setUser(user);
+
+    showNotification('Data saved');
   };
 
   return (

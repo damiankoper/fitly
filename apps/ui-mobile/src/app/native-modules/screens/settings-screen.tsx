@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Layout,
-  Toggle,
   Text,
   Divider,
   Button,
@@ -10,7 +9,6 @@ import {
   useTheme,
 } from '@ui-kitten/components';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { BluetoothButton } from '../../components/buttons/bluetooth-button';
 import { commonStyles } from '../../assets/common/styles';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
@@ -61,9 +59,9 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
           style={{ marginVertical: 12 }}
           onPress={() => navigation.navigate('Profile')}
         >
-          <Text style={styles.menuItemTitle}>Profile data</Text>
+          <Text style={styles.menuItemTitle}>User profile</Text>
           <Text style={styles.menuItemSubtitle}>
-            Edit data to get accurate activity statistics
+            Fill data to get accurate activity statistics
           </Text>
         </TouchableOpacity>
         <Divider />
