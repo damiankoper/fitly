@@ -3,9 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { ActivityIcon } from '../icons/activity-icon';
 import { ActivityType } from '@fitly/shared/meta';
 import { formatActivityString } from '../../common/utils';
-import DropShadowWrapper from '../gradients/drop-shadow';
 import { Themes } from '../gradients/themes';
-import { useTheme } from '@ui-kitten/components';
 
 interface Props {
   activity: ActivityType;

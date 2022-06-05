@@ -3,13 +3,12 @@ import { Layout } from '@ui-kitten/components';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import { CounterSpinner } from '../components/spinners/counter-spinner';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { ActivityCardSmall } from '../components/cards/activity-card-small';
 import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
 import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
-import { ActivityIcon } from '../components/icons/activity-icon';
 
 type NavProps = BottomTabScreenProps<
   BottomTabParamList,
@@ -108,16 +107,20 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
       })
     );
     navigationEvents.push(
-      navigation.addListener('blur', () => {
+      navigation.addListener('blur', (e) => {
         console.log('blur');
         if (isStarted) onStop();
         events.forEach((t) => t());
+      }),
+      navigation.addListener('beforeRemove', (e) => {
+        Alert.alert('xd');
       })
     );
 
     return () => {
       navigationEvents.forEach((t) => t());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

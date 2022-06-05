@@ -13,13 +13,13 @@ import {
 } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
 import ActivityLineChart from '../components/charts/ActivityLineChart';
-import uiControl from 'apps/ui-mobile/src/app/data';
 import {
   getCaloriesFromActivityMetaAndUserWeight,
   getReadableDateStringFromInterval,
   getTimeDurationFromInterval,
 } from './history-screen';
 import { DEFAULT_HOME_PLOT_DATA } from '../common/utils';
+import uiControl from '../data';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -57,7 +57,7 @@ export const TimeIcon = () => {
   );
 };
 
-export const HomeScreen: React.FC<{}> = () => {
+export const HomeScreen: React.FC = () => {
   const initialStats = uiControl.getTimeStats();
   const intialMostPopularActivity = Object.keys(initialStats.type).reduce(
     (a, b) => (initialStats.type[a] > initialStats.type[b] ? a : b)
@@ -85,7 +85,8 @@ export const HomeScreen: React.FC<{}> = () => {
 
   const onHomeScrenFocused = async () => {
     // default user always exist
-    setUser(uiControl.getUser()!);
+    const user = uiControl.getUser();
+    if (user) setUser(user);
     // update UI
     setStats(uiControl.getTimeStats());
     setMostPopularActivity(
@@ -107,6 +108,7 @@ export const HomeScreen: React.FC<{}> = () => {
     if (isFocused) {
       onHomeScrenFocused();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   return (
@@ -174,7 +176,7 @@ export const HomeScreen: React.FC<{}> = () => {
             <View style={styles.separator} />
           </View>
         </View>
-        {lastActivity ? (
+        {lastActivity && (
           <View style={styles.bottomCard}>
             <ActivityCardLarge
               activity={lastActivity.type}
@@ -182,14 +184,12 @@ export const HomeScreen: React.FC<{}> = () => {
               time={getTimeDurationFromInterval(lastActivity.interval)}
               kcal={getCaloriesFromActivityMetaAndUserWeight(
                 lastActivity,
-                user!.weight || 0
+                user?.weight || 0
               )}
               date={getReadableDateStringFromInterval(lastActivity.interval)}
               theme="primary"
             />
           </View>
-        ) : (
-          <></>
         )}
       </ScrollView>
     </Layout>

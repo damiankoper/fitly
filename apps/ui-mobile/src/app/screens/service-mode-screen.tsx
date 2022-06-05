@@ -121,6 +121,7 @@ export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
       navigationEvents.forEach((t) => t());
       events.forEach((t) => t());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activityTypeArray = Object.values(ActivityType);

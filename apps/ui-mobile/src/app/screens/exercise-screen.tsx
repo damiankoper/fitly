@@ -1,6 +1,6 @@
 import { ActivityType } from '@fitly/shared/meta';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { Layout, Text as TextUi } from '@ui-kitten/components';
+import { Layout } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ActivityButton } from '../components/cards/activity-button';

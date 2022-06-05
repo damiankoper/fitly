@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
-import {
-  Layout,
-  Text,
-  Input,
-  Radio,
-  RadioGroup,
-  Button,
-} from '@ui-kitten/components';
-import uiControl from 'apps/ui-mobile/src/app/data';
-import { User } from '@fitly/shared/meta';
-import { Sex } from 'libs/shared/meta/src/lib/enums/sex.enum';
+import { Input, Radio, RadioGroup, Button } from '@ui-kitten/components';
+import { Sex, User } from '@fitly/shared/meta';
 import { UserCard } from '../components/cards/user-card';
 import { useNavigation } from '@react-navigation/native';
 import { showNotification } from '@fitly/ui-utils';
+import uiControl from '../data';
 
 export const ProfileScreen = () => {
   const [firstName, setFirstName] = useState<string>();
@@ -51,15 +43,16 @@ export const ProfileScreen = () => {
     return () => {
       navigationEvents.forEach((t) => t());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = () => {
     const user: User = {
       name: firstName,
       surname: lastName,
-      age: parseInt(age!),
-      weight: parseInt(weight!),
-      height: parseInt(height!),
+      age: +(age || 0),
+      weight: +(weight || 0),
+      height: +(height || 0),
       sex: selectedIndex === 0 ? Sex.MALE : Sex.FEMALE,
     };
     setUser(user);

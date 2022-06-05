@@ -14,7 +14,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/root.reducer';
-import uiControl from 'apps/ui-mobile/src/app/data';
+import uiControl from '../data';
 
 const useToggleState = (initialState = false) => {
   const [checked, setChecked] = React.useState(initialState);
@@ -47,7 +47,6 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
   return (
     <Layout style={styles.container}>
       <Text style={commonStyles.title}>Settings</Text>
-
       <View
         style={[
           { backgroundColor: theme['color-basic-200'] },
@@ -130,10 +129,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginVertical: -8,
-  },
+  container: {},
   menuSection: {
     paddingHorizontal: 16,
     paddingVertical: 8,

@@ -5,7 +5,6 @@ import { commonStyles } from '../../assets/common/styles';
 import { ActivityType } from '@fitly/shared/meta';
 import { formatActivityString } from '../../common/utils';
 import DropShadowWrapper from '../gradients/drop-shadow';
-import { Themes } from '../gradients/themes';
 import { useTheme } from '@ui-kitten/components';
 
 interface Props {
@@ -30,7 +29,7 @@ export const ActivityButton: React.FC<Props> = ({
             { backgroundColor: uTheme['color-primary-300'] },
           ]}
         >
-          <ActivityIcon activity={activity} variant />
+          <ActivityIcon activity={activity} />
           <Text style={styles.text}>{formattedActivity}</Text>
           {subtitle && <Text style={styles.text}>{subtitle}</Text>}
         </View>

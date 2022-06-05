@@ -14,9 +14,9 @@ import { RootState } from '../state/root.reducer';
 
 const CONNECTION_CHECKING_INTERVAL_SECONDS = 2000;
 
-export interface AppInitScreenProps extends React.PropsWithChildren<{}> {
+export type AppInitScreenProps = React.PropsWithChildren<{
   metawear: MetaWear;
-}
+}>;
 
 const AppInitScreen: React.FC<AppInitScreenProps> = ({
   metawear,
@@ -75,6 +75,7 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
     return () => {
       metawear.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCloseLoadingScreen = () => {
@@ -93,7 +94,7 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
     );
   }
 
-  return <>{children}</>;
+  return <>children</>;
 };
 
 export default AppInitScreen;
