@@ -7,8 +7,9 @@ import {
   Button,
   Modal,
   Card,
+  useTheme,
 } from '@ui-kitten/components';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BluetoothButton } from '../../components/buttons/bluetooth-button';
 import { commonStyles } from '../../assets/common/styles';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -19,7 +20,6 @@ import uiControl from 'apps/ui-mobile/data';
 
 const useToggleState = (initialState = false) => {
   const [checked, setChecked] = React.useState(initialState);
-
   const onCheckedChange = (isChecked) => {
     setChecked(isChecked);
   };
@@ -29,6 +29,7 @@ const useToggleState = (initialState = false) => {
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Settings'>;
 export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
+  const theme = useTheme();
   const isConnectedToDevice = useSelector((state: RootState) =>
     Boolean(state.app.connectedDevice)
   );
@@ -46,52 +47,64 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
   return (
     <Layout style={styles.container}>
-      {/* TODO Too much custom styles */}
-      {/* <View style={[commonStyles.defaultBorder, styles.controlContainer]}>
-        <Text style={styles.modeText}>Dark mode</Text>
-        <Toggle status="primary" {...controlToggleState} />
+      <Text style={commonStyles.title}>Settings</Text>
+
+      <View
+        style={[
+          { backgroundColor: theme['color-basic-200'] },
+          styles.menuSection,
+          commonStyles.defaultBorder,
+        ]}
+      >
+        <TouchableOpacity
+          style={{ marginVertical: 12 }}
+          onPress={() => navigation.navigate('Profile')}
+        >
+          <Text style={styles.menuItemTitle}>Profile data</Text>
+          <Text style={styles.menuItemSubtitle}>
+            Edit data to get accurate activity statistics
+          </Text>
+        </TouchableOpacity>
+        <Divider />
+        <TouchableOpacity
+          style={{ marginVertical: 12 }}
+          onPress={handleClearDataClick}
+        >
+          <Text style={styles.menuItemTitle}>Reset data</Text>
+          <Text style={styles.menuItemSubtitle}>Restore default user data</Text>
+        </TouchableOpacity>
       </View>
-      <Divider /> */}
 
-      <View style={styles.buttonColumn}>
-        <View>
-          <Button
-            style={styles.button}
-            size="giant"
-            appearance="outline"
-            onPress={() => navigation.navigate('Profile')}
-          >
-            Change data
-          </Button>
-          <Button
-            style={styles.button}
-            size="giant"
-            status="warning"
-            appearance="outline"
-            onPress={handleClearDataClick}
-          >
-            Clear data
-          </Button>
-          <Button
-            style={styles.button}
-            size="giant"
-            status="basic"
-            appearance="outline"
-            onPress={() => navigation.navigate('Service')}
-          >
-            Service mode
-          </Button>
-        </View>
-
-        {isConnectedToDevice || <BluetoothButton navigation={navigation} />}
+      <View
+        style={[
+          { backgroundColor: theme['color-basic-200'] },
+          styles.menuSection,
+          commonStyles.defaultBorder,
+        ]}
+      >
+        <TouchableOpacity
+          style={{ marginVertical: 12 }}
+          onPress={() => navigation.navigate('BluetoothConnection')}
+        >
+          <Text style={styles.menuItemTitle}>Bluetooth connection</Text>
+          <Text style={styles.menuItemSubtitle}>Connect with the armband</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginVertical: 12 }}
+          onPress={() => navigation.navigate('Service')}
+        >
+          <Text style={styles.menuItemTitle}>Service mode</Text>
+          <Text style={styles.menuItemSubtitle}>Collect data for ML</Text>
+        </TouchableOpacity>
       </View>
 
       <Modal
         visible={modalVisible}
         backdropStyle={styles.backdrop}
+        style={{ maxWidth: '90%' }}
         onBackdropPress={() => setModalVisible(false)}
       >
-        <Card disabled={true}>
+        <Card disabled style={[commonStyles.defaultBorder]}>
           <Text>Are you sure that you want to delete all data?</Text>
           <View style={styles.buttonRow}>
             <Button
@@ -103,7 +116,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
               No
             </Button>
             <Button
-              appearance="outline"
+              appearance="filled"
               status="danger"
               style={styles.modalButton}
               onPress={handleDeleteClick}
@@ -120,7 +133,19 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginVertical: -8,
   },
+  menuSection: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginVertical: 8,
+  },
+  menuItemTitle: {
+    fontFamily: 'Roboto-Bold',
+    lineHeight: 20,
+    fontSize: 20,
+  },
+  menuItemSubtitle: {},
   controlContainer: {
     borderRadius: 4,
     padding: 16,
@@ -138,14 +163,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonRow: {
-    marginTop: 20,
+    marginTop: 16,
+    marginHorizontal: -8,
     flex: 1,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-	modalButton: {
-		width: 120
-	},
+  modalButton: {
+    flex: 1,
+    marginHorizontal: 8,
+    borderRadius: 999,
+  },
   button: {
     marginTop: 16,
   },

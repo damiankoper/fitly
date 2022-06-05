@@ -27,6 +27,7 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
   useEffect(() => {
     setActivity(route.params.activity);
     onStop(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   const [isPaused, setIsPaused] = useState(false);

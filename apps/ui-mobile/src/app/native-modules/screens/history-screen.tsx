@@ -11,6 +11,7 @@ import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import LoadingScreen from '../../components/loading-screen/LoadingScreen';
 import humanizeDuration from 'humanize-duration';
 import { Interval } from 'luxon';
+import { commonStyles } from '../../assets/common/styles';
 const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
 
 export function getReadableDateStringFromInterval(interval: Interval): string {
@@ -21,8 +22,11 @@ export function getReadableDateStringFromInterval(interval: Interval): string {
   const durationInDaysRounded = Math.floor(durationInDays);
 
   if (durationInDaysRounded === 1) return 'Yesterday';
-  if (durationInDaysRounded >= 2 && durationInDaysRounded < SHOW_DATE_AFTER_DAYS_DIFFERENCE){
-    return `${durationInDaysRounded} days ago`
+  if (
+    durationInDaysRounded >= 2 &&
+    durationInDaysRounded < SHOW_DATE_AFTER_DAYS_DIFFERENCE
+  ) {
+    return `${durationInDaysRounded} days ago`;
   }
   if (durationInDaysRounded >= SHOW_DATE_AFTER_DAYS_DIFFERENCE) {
     return startDate.setLocale('en-gb').toLocaleString({
@@ -86,6 +90,7 @@ export const HistoryScreen = () => {
 
   return (
     <Layout style={[styles.container, styles.height100]}>
+      <Text style={commonStyles.title}>History</Text>
       {activities.length === 0 ? (
         <View style={styles.loadingContainer}>
           <Text style={styles.headerText}>No exercises has been found!</Text>
@@ -98,42 +103,38 @@ export const HistoryScreen = () => {
           </Text>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.container}>
-          {activities.map(({ id, interval, activities }, index) => {
-            return (
-              <React.Fragment key={id}>
-                <View
-                  style={[
-                    styles.textAndDividerContainer,
-                    isFirstItem(index) ? undefined : styles.marginTop,
-                  ]}
-                >
-                  <Text style={styles.dateText}>
-                    {getReadableDateStringFromInterval(interval)}
-                  </Text>
-                  <Divider style={styles.divider} />
+        activities.map(({ id, interval, activities }, index) => {
+          return (
+            <React.Fragment key={id}>
+              <View
+                style={[
+                  styles.textAndDividerContainer,
+                  isFirstItem(index) ? undefined : styles.marginTop,
+                ]}
+              >
+                <Text style={styles.dateText}>
+                  {getReadableDateStringFromInterval(interval)}
+                </Text>
+                <Divider style={styles.divider} />
+              </View>
+              {activities.map((activity, index) => (
+                <View key={index} style={styles.cardWrapper}>
+                  <ActivityCardLarge
+                    activity={activity.type}
+                    count={activity.repeats}
+                    time={getTimeDurationFromInterval(interval)}
+                    kcal={getCaloriesFromActivityMetaAndUserWeight(
+                      activity,
+                      userWeight
+                    )}
+                    date={getReadableDateStringFromInterval(activity.interval)}
+                    theme="primary"
+                  />
                 </View>
-                {activities.map((activity, index) => (
-                  <View key={index} style={styles.cardWrapper}>
-                    <ActivityCardLarge
-                      activity={activity.type}
-                      count={activity.repeats}
-                      time={getTimeDurationFromInterval(interval)}
-                      kcal={getCaloriesFromActivityMetaAndUserWeight(
-                        activity,
-                        userWeight
-                      )}
-                      date={getReadableDateStringFromInterval(
-                        activity.interval
-                      )}
-                      theme="primary"
-                    />
-                  </View>
-                ))}
-              </React.Fragment>
-            );
-          })}
-        </ScrollView>
+              ))}
+            </React.Fragment>
+          );
+        })
       )}
     </Layout>
   );
@@ -141,9 +142,6 @@ export const HistoryScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
-    paddingRight: 12,
-    paddingLeft: 12,
     overflow: 'visible',
   },
   height100: {
@@ -161,6 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'nowrap',
     flexDirection: 'row',
+    marginBottom: 4,
   },
   headerText: {
     flex: 1,

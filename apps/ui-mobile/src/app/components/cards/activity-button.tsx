@@ -47,10 +47,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontFamily: 'RobotoSlab-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 24,
     color: 'white',
     textAlign: 'center',
-    letterSpacing: 1,
   },
 });

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   text: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'RobotoSlab-Bold',
     fontSize: 32,
     color: 'black',
   },

@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ServiceModeScreen } from '../../native-modules/screens/service-mode-screen';
 import { BottomNav } from './bottom-nav';
 import { Layout } from '@ui-kitten/components';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import BluetoothConnectionScreen from '../../native-modules/screens/bluetooth-connection-screen';
 import { NotConnectedScreen } from '../../native-modules/screens/home-not-connected-screen';
 import { NoPreviousActivityScreen } from '../../native-modules/screens/home-no-previous-activity-screen';
@@ -29,7 +29,9 @@ function wrapScroll(Component: any, outerProps: MetaWearProps) {
         style={styles.wrapper}
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <Component {...props} {...outerProps} />
+        <View style={{ padding: 16 }}>
+          <Component {...props} {...outerProps} />
+        </View>
       </ScrollView>
     );
   };
@@ -38,7 +40,7 @@ function wrapScroll(Component: any, outerProps: MetaWearProps) {
 function wrapScreen(Component: any, outerProps: MetaWearProps) {
   return (props: MetaWearProps) => {
     return (
-      <Layout style={styles.wrapper}>
+      <Layout style={[styles.wrapper, { padding: 16 }]}>
         <Component {...props} {...outerProps} />
       </Layout>
     );
@@ -63,7 +65,7 @@ const TabNavigator = (props: MetaWearProps) => (
         activity: ActivityType.UNKNOWN,
       }}
     />
-    <Screen name="History" component={HistoryScreen} />
+    <Screen name="History" component={wrapScroll(HistoryScreen)} />
     <Screen name="Settings" component={wrapScreen(SettingScreen, props)} />
     <Screen name="Profile" component={wrapScroll(ProfileScreen, props)} />
     <Screen name="Service" component={wrapScroll(ServiceModeScreen, props)} />
@@ -98,7 +100,7 @@ export const AppNav = (props: MetaWearProps) => (
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 16,
+    padding: 0,
     flex: 1,
     backgroundColor: 'white',
   },
