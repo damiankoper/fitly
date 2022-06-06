@@ -94,7 +94,8 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
     );
   }
 
-  return <>children</>;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{children}</>;
 };
 
 export default AppInitScreen;

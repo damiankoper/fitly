@@ -124,7 +124,6 @@ export const HistoryScreen = () => {
                       userWeight
                     )}
                     date={getReadableDateStringFromInterval(activity.interval)}
-                    theme="primary"
                   />
                 </View>
               ))}
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     flex: 1,
-    fontSize: 21,
+    fontSize: 20,
     fontFamily: 'RobotoSlab-Medium',
     textAlign: 'center',
     color: '#555',
@@ -169,8 +168,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#eee',
     marginBottom: 4,
-    marginLeft: 10,
-    marginRight: 15,
+    marginLeft: 8,
+    marginRight: 20,
   },
   subtitleText: {
     fontSize: 16,
@@ -181,14 +180,14 @@ const styles = StyleSheet.create({
   dateText: {
     color: '#a1a1a1',
     fontFamily: 'RobotoSlab-Medium',
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 8,
-    marginLeft: 14,
+    marginLeft: 16,
   },
   marginTop: {
-    marginTop: 15,
+    marginTop: 16,
   },
   cardWrapper: {
-    marginBottom: 8,
+    marginBottom: 16,
   },
 });

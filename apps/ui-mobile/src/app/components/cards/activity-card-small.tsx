@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     width: '100%',
     justifyContent: 'flex-start',
+    alignItems: 'flex-end',
     flexDirection: 'row',
   },
   textContainer: {

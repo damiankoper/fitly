@@ -142,13 +142,11 @@ export const HomeScreen: React.FC = () => {
               Icon={StepsIcon}
               name={'Repeats'}
               quantity={uiControl.getTotalRepeats()}
-              theme="primary"
             />
             <DataCardLarge
               Icon={CaloriesIcon}
               name="Calories"
               quantity={uiControl.getTotalCalories().toFixed(2)}
-              theme="danger"
             />
           </View>
           <View style={[styles.cardColumn, styles.rightColumn]}>
@@ -157,8 +155,7 @@ export const HomeScreen: React.FC = () => {
                 touchable
                 touchableStyles={styles.bluetoothWrapper}
                 renderOverlay
-                renderSubText
-                iconSize="large"
+                iconSize={'large'}
               />
               <View style={styles.separator} />
               <DataCardSmall
@@ -171,7 +168,6 @@ export const HomeScreen: React.FC = () => {
               Icon={TimeIcon}
               name="Hours spent"
               quantity={topActivityTimeSpent.toFixed(2)}
-              theme="basic"
             />
             <View style={styles.separator} />
           </View>
@@ -187,7 +183,6 @@ export const HomeScreen: React.FC = () => {
                 user?.weight || 0
               )}
               date={getReadableDateStringFromInterval(lastActivity.interval)}
-              theme="primary"
             />
           </View>
         )}
@@ -233,6 +228,7 @@ const styles = StyleSheet.create({
   icon: {
     height: 40,
     width: 40,
+    marginLeft: -4,
   },
   smallCardRow: {
     flexDirection: 'row',
@@ -242,7 +238,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   bottomCard: {
-    marginVertical: 21,
+    marginVertical: 12,
   },
   overflowVisible: {
     overflow: 'visible',

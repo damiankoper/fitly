@@ -43,7 +43,7 @@ export const ActivityIcon: React.FC<Props> = ({
   );
 };
 
-const size = 72;
+const size = 64;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
