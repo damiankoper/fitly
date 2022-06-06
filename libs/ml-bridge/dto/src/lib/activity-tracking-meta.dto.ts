@@ -4,6 +4,11 @@ import { Interval } from 'luxon';
 
 export class ActivityTrackingMetaDTO extends ActivityTrackingMeta {
   @ApiProperty({
+    description: 'Session UUID',
+  })
+  override uuid!: string;
+
+  @ApiProperty({
     enum: ActivityType,
     description: 'Activity type',
   })

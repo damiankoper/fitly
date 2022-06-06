@@ -7,10 +7,12 @@ import {
 import axios from 'axios';
 import { DateTime, Interval } from 'luxon';
 import { SimpleEventDispatcher } from 'strongly-typed-events';
+import { v4 as uuidv4 } from 'uuid';
 
 export class ActivityTracker {
   private intervalId: NodeJS.Timer | null = null;
   private meta: ActivityTrackingMeta = new ActivityTrackingMeta(
+    uuidv4(),
     Interval.fromDateTimes(DateTime.now(), DateTime.now())
   );
 
@@ -51,6 +53,7 @@ export class ActivityTracker {
   private start(url: string, emitAnalyse: boolean) {
     if (!this.intervalId) {
       this.reset();
+      this.meta.uuid = uuidv4();
       this.intervalId = setInterval(
         () => this.loop(url, emitAnalyse),
         this.duration
@@ -136,6 +139,7 @@ export class ActivityTracker {
     atm: Record<keyof ActivityTrackingMeta, any>
   ): ActivityTrackingMeta {
     return new ActivityTrackingMeta(
+      atm.uuid,
       Interval.fromISO(atm.interval),
       atm.type,
       atm.repeats

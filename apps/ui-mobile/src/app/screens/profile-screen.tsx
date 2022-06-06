@@ -24,7 +24,7 @@ export const ProfileScreen = () => {
       <View style={styles.formColumn}>
         <View>
           <Text category="h1" style={styles.name}>
-            Jan Nikodem
+            Jan Kowalski
           </Text>
           <Input
             placeholder="first name"

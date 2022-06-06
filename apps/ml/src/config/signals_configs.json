@@ -1,0 +1,34 @@
+{
+  "squats": {
+    "device": "accelerometer",
+    "axis": "z",
+    "upper_bound": 0.25,
+    "lower_bound": -0.6,
+    "window_len": 200,
+    "type": "squats"
+  },
+  "pushups": {
+    "device": "gyroscope",
+    "axis": "z",
+    "upper_bound": 0.4,
+    "lower_bound": -0.5,
+    "window_len": 200,
+    "type": "pushups"
+  },
+  "star_jumps": {
+    "device": "accelerometer",
+    "axis": "z",
+    "upper_bound": 0.6,
+    "lower_bound": -0.4,
+    "window_len": 40,
+    "type": "star_jumps"
+  },
+  "situps": {
+    "device": "gyroscope",
+    "axis": "z",
+    "upper_bound": 0.6,
+    "lower_bound": -0.6,
+    "window_len": 200,
+    "type": "situps"
+  }
+}

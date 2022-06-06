@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { FtpService } from 'nestjs-ftp';
 import { Readable } from 'stream';
+import { Interval } from 'luxon';
 
 @Injectable()
 export class DataService {

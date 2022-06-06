@@ -6,7 +6,7 @@ import { UserCardNoActivity } from '../components/cards/user-card-no-activity';
 export const NoPreviousActivityScreen = () => {
   return (
     <Layout style={styles.container}>
-      <UserCardNoActivity name="Jan Nikodem" />
+      <UserCardNoActivity name="Jan Kowalski" />
       <Text category="h4" style={styles.manual}>
         <Text category="h4" status="primary">
           Start
