@@ -57,6 +57,18 @@ export const TimeIcon = () => {
   );
 };
 
+export const ActivityIcon = () => {
+  const theme = useTheme();
+
+  return (
+    <Icon
+      name="activity-outline"
+      style={styles.icon}
+      fill={theme['color-warning-500']}
+    />
+  );
+};
+
 export const HomeScreen: React.FC<{}> = () => {
   const initialStats = uiControl.getTimeStats();
   const intialMostPopularActivity = Object.keys(initialStats.type).reduce(
@@ -125,7 +137,11 @@ export const HomeScreen: React.FC<{}> = () => {
             }
           />
         ) : (
-          <ActivityLineChart data={DEFAULT_HOME_PLOT_DATA} />
+          <ActivityLineChart
+            data={DEFAULT_HOME_PLOT_DATA}
+            subtitle="Calories burned last week"
+            selectedValueSubText="kcal"
+          />
         )}
 
         <View style={[styles.cardRow, styles.overflowVisible]}>
