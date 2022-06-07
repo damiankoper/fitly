@@ -4,6 +4,7 @@ import {
   ActivityType,
   SensorAsyncSample,
 } from '@fitly/shared/meta';
+import { parseMeta, serializeMeta } from '@fitly/ui-utils';
 import axios from 'axios';
 import { DateTime, Interval } from 'luxon';
 import { SimpleEventDispatcher } from 'strongly-typed-events';
@@ -116,10 +117,7 @@ export class ActivityTracker {
    */
   private instanceToPlain(at: ActivityTracking): Record<string, unknown> {
     return {
-      meta: {
-        ...at.meta,
-        interval: at.meta.interval.toISO(),
-      },
+      meta: serializeMeta(at.meta),
       accelerometer: at.accelerometer.map((s) => ({
         timestamp: s.timestamp.toISO(),
         data: s.data,
@@ -138,12 +136,7 @@ export class ActivityTracker {
   private plainToInstance(
     atm: Record<keyof ActivityTrackingMeta, any>
   ): ActivityTrackingMeta {
-    return new ActivityTrackingMeta(
-      atm.uuid,
-      Interval.fromISO(atm.interval),
-      atm.type,
-      atm.repeats
-    );
+    return parseMeta(atm);
   }
 
   private reset() {

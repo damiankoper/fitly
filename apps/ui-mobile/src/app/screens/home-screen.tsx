@@ -6,11 +6,7 @@ import { DataCardLarge } from '../components/cards/data-card-large';
 import { BluetoothStatus } from '../components/icons/bluetooth-status';
 import { DataCardSmall } from '../components/cards/data-card-small';
 import { ActivityCardLarge } from '../components/cards/activity-card-large';
-import {
-  ActivityTimeStats,
-  ActivityTrackingMeta,
-  User,
-} from '@fitly/shared/meta';
+import { ActivityTrackingMeta, User } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
 import ActivityLineChart from '../components/charts/ActivityLineChart';
 import {
@@ -18,8 +14,10 @@ import {
   getReadableDateStringFromInterval,
   getTimeDurationFromInterval,
 } from './history-screen';
-import { DEFAULT_HOME_PLOT_DATA } from '../common/utils';
+import { DEFAULT_HOME_PLOT_DATA, formatActivityString } from '../common/utils';
 import uiControl from '../data';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -69,63 +67,57 @@ export const ActivityIcon = () => {
   );
 };
 
-export const HomeScreen: React.FC = () => {
-  const initialStats = uiControl.getTimeStats();
-  const intialMostPopularActivity = Object.keys(initialStats).reduce((a, b) =>
-    initialStats[a] > initialStats[b] ? a : b
-  );
-  const initialSummaryTime = Object.values(initialStats).reduce(
-    (a, b) => a + b
-  );
-  const initialTopActivityTimeSpent = initialStats[intialMostPopularActivity];
-  const initialPercentile =
-    (100 * initialTopActivityTimeSpent) / initialSummaryTime;
+type NavProps = BottomTabScreenProps<BottomTabParamList, 'Home'>;
 
+export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
-  const [user, setUser] = useState<User>();
-  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta>();
-  const [stats, setStats] = useState<ActivityTimeStats>(initialStats);
-  const [mostPopularActivity, setMostPopularActivity] = useState<string>(
-    intialMostPopularActivity
+  const [user, setUser] = useState<User>(uiControl.getUser());
+  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta | null>(
+    null
   );
-  const [summaryTime, setSummaryTime] = useState<number>(initialSummaryTime);
-  const [topActivityTimeSpent, setTopActivityTimeSpent] = useState<number>(
-    initialTopActivityTimeSpent
+  const [mostPopularActivity, setMostPopularActivity] = useState(
+    getMostPopularActivity
   );
-  const [percentile, setPercentile] = useState<number>(initialPercentile);
+  const [percentile, setPercentile] = useState(getPercentile);
+  const [summaryTime, setSummaryTime] = useState(getSummaryTime);
 
-  const onHomeScrenFocused = async () => {
-    // default user always exist
-    const user = uiControl.getUser();
-    if (user) setUser(user);
-    // update UI
-    setStats(uiControl.getTimeStats());
-    setMostPopularActivity(
-      Object.keys(stats).reduce((a, b) => (stats[a] > stats[b] ? a : b))
-    );
-    setTopActivityTimeSpent(stats[mostPopularActivity]);
-    setSummaryTime(Object.values(stats).reduce((a, b) => a + b));
-    setPercentile((100 * topActivityTimeSpent) / summaryTime);
+  function getMostPopularActivity(): string {
+    const stats = uiControl.getTimeStats();
+    return Object.keys(stats).reduce((a, b) => (stats[a] > stats[b] ? a : b));
+  }
+  function getActivityTimeSpent(): number {
+    const stats = uiControl.getTimeStats();
+    return stats[mostPopularActivity];
+  }
+  function getSummaryTime(): number {
+    const stats = uiControl.getTimeStats();
+    return Object.values(stats).reduce((a, b) => a + b);
+  }
+  function getPercentile(): number {
+    return (100 * getActivityTimeSpent()) / getSummaryTime();
+  }
 
+  function onHomeScrenFocused() {
+    setUser(uiControl.getUser());
+    setMostPopularActivity(getMostPopularActivity());
+    setPercentile(getPercentile());
+    setSummaryTime(getSummaryTime());
     const lastSession = uiControl.getLastSession();
-    if (lastSession) {
-      setLastActivity(lastSession.activities[0]);
-    }
-  };
+    setLastActivity(lastSession?.activities[0] || null);
+  }
 
   useEffect(() => {
-    if (isFocused) {
-      onHomeScrenFocused();
-    }
+    if (isFocused) onHomeScrenFocused();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
+  const formattedActivity = formatActivityString(mostPopularActivity, false);
   return (
     <Layout>
       <ScrollView contentContainerStyle={styles.defaultPadding}>
         <UserCard
           name={`${user?.name} ${user?.surname}`}
-          title={`Master of ${mostPopularActivity}`}
+          title={`Master of ${formattedActivity}`}
         />
 
         {uiControl.getCaloriesDailyChart()?.data.length !== 0 ? (
@@ -153,13 +145,13 @@ export const HomeScreen: React.FC = () => {
           >
             <DataCardLarge
               Icon={StepsIcon}
-              name={'Repeats'}
+              name={'repeats'}
               quantity={uiControl.getTotalRepeats()}
             />
             <DataCardLarge
               Icon={CaloriesIcon}
-              name="Calories"
-              quantity={uiControl.getTotalCalories().toFixed(2)}
+              name="kcal burned"
+              quantity={uiControl.getTotalCalories().toFixed(0)}
             />
           </View>
           <View style={[styles.cardColumn, styles.rightColumn]}>
@@ -172,15 +164,15 @@ export const HomeScreen: React.FC = () => {
               />
               <View style={styles.separator} />
               <DataCardSmall
-                data={percentile}
+                data={percentile.toFixed(0)}
                 activity={mostPopularActivity}
                 style={styles.activitiesWrapper}
               />
             </View>
             <DataCardLarge
               Icon={TimeIcon}
-              name="Hours spent"
-              quantity={topActivityTimeSpent.toFixed(2)}
+              name="exercising"
+              quantity={summaryTime.toFixed(2) + 'h'}
             />
             <View style={styles.separator} />
           </View>
@@ -189,6 +181,7 @@ export const HomeScreen: React.FC = () => {
           <View style={styles.bottomCard}>
             <ActivityCardLarge
               activity={lastActivity.type}
+              subtitle="Last activity"
               count={lastActivity.repeats}
               time={getTimeDurationFromInterval(lastActivity.interval)}
               kcal={getCaloriesFromActivityMetaAndUserWeight(

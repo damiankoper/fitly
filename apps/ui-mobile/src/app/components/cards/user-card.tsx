@@ -5,12 +5,12 @@ import { commonStyles } from '../../assets/common/styles';
 import ManIcon from '../../assets/images/man.png';
 import DropShadowWrapper from '../gradients/drop-shadow';
 import { Themes } from '../gradients/themes';
+
 interface Props {
   name: string;
   title?: string;
   theme?: Themes;
 }
-
 export const UserCard: React.FC<Props> = ({ name, title, theme }) => {
   return (
     <DropShadowWrapper shadowColorTheme={theme}>

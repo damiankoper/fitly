@@ -2,15 +2,12 @@ import { IsDate, IsNumber } from 'class-validator';
 
 export class ChartDataType {
   @IsNumber()
-	value = 0;
+  value = 0;
 
   @IsDate()
-	date: Date;
+  date: Date;
 
-  constructor (
-    value,
-    date
-  ) {
+  constructor(value: number, date: Date) {
     this.value = value;
     this.date = date;
   }

@@ -12,26 +12,11 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { commonStyles } from '../assets/common/styles';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
-import { useSelector } from 'react-redux';
-import { RootState } from '../state/root.reducer';
 import uiControl from '../data';
-
-const useToggleState = (initialState = false) => {
-  const [checked, setChecked] = React.useState(initialState);
-  const onCheckedChange = (isChecked) => {
-    setChecked(isChecked);
-  };
-
-  return { checked, onChange: onCheckedChange };
-};
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Settings'>;
 export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
   const theme = useTheme();
-  const isConnectedToDevice = useSelector((state: RootState) =>
-    Boolean(state.app.connectedDevice)
-  );
-  const controlToggleState = useToggleState();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleClearDataClick = () => {
@@ -40,8 +25,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
   const handleDeleteClick = () => {
     setModalVisible(false);
-    // TODO make resetAll TS stuff work
-    uiControl.resetUser();
+    uiControl.reset();
   };
 
   return (

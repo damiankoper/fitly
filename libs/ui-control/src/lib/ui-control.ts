@@ -70,7 +70,7 @@ export class UiControl {
               weight,
               activity.interval.length('minutes')
             ),
-            activity.interval.start
+            activity.interval.start.toJSDate()
           )
         );
       });
@@ -91,7 +91,7 @@ export class UiControl {
         data.push(
           new ChartDataType(
             activity.interval.length('minutes'),
-            activity.interval.start
+            activity.interval.start.toJSDate()
           )
         );
       });
@@ -126,17 +126,12 @@ export class UiControl {
   }
 
   public getSessions(): ActivitySession[] {
-    const sessions = this.dataStore.getActivitySessions();
-    return sessions;
+    return this.dataStore.getActivitySessions();
   }
 
   public getLastSession(): ActivitySession | null {
     const sessions = this.dataStore.getActivitySessions();
-    if (sessions == undefined) {
-      return null;
-    } else {
-      return sessions[sessions.length - 1];
-    }
+    return sessions[sessions.length - 1] || null;
   }
 
   public saveSession(session: ActivitySession): void {
@@ -144,13 +139,8 @@ export class UiControl {
   }
 
   //  --- User Data ---
-  public getUser(): User | null {
-    const user = this.dataStore.getUser();
-    if (user == undefined) {
-      return null;
-    } else {
-      return user;
-    }
+  public getUser(): User {
+    return this.dataStore.getUser();
   }
 
   public setUser(user: User): void {
@@ -185,7 +175,9 @@ export class UiControl {
     const data: ChartDataType[] = [];
 
     session.activities.forEach((activity) => {
-      data.push(new ChartDataType(activity.repeats, activity.interval.start));
+      data.push(
+        new ChartDataType(activity.repeats, activity.interval.start.toJSDate())
+      );
     });
 
     return new ChartData(data);
@@ -221,12 +213,6 @@ export class UiControl {
   }
 
   private areDateTimesTheSameDay(date1: DateTime, date2: DateTime): boolean {
-    if (
-      date1.year === date2.year &&
-      date1.month === date2.month &&
-      date1.day === date2.day
-    )
-      return true;
-    else return false;
+    return date1.startOf('day').equals(date2.startOf('day'));
   }
 }

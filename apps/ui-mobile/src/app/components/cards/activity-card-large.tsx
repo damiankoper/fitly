@@ -3,10 +3,10 @@ import { Text, StyleSheet, View } from 'react-native';
 import { commonStyles } from '../../assets/common/styles';
 import { ActivityType } from '@fitly/shared/meta';
 import DropShadowWrapper from '../gradients/drop-shadow';
-import { Text as TextUi } from '@ui-kitten/components';
 import { ActivityCardSmall } from './activity-card-small';
 interface Props {
   activity: ActivityType;
+  subtitle?: string;
   count: number;
   time: string;
   kcal: number;
@@ -19,11 +19,18 @@ export const ActivityCardLarge: React.FC<Props> = ({
   count,
   time,
   kcal,
+  subtitle,
 }) => {
   return (
     <DropShadowWrapper>
-      <View style={[commonStyles.defaultBorder, styles.container]}>
-        <ActivityCardSmall activity={activity} />
+      <View
+        style={[
+          commonStyles.defaultBorder,
+          styles.container,
+          { paddingTop: subtitle ? 32 : 20 },
+        ]}
+      >
+        <ActivityCardSmall activity={activity} subtitle={subtitle} />
 
         <View style={styles.stats}>
           <View style={styles.infoRow}>

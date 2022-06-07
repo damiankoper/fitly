@@ -1,8 +1,12 @@
 import { ActivitySession, User } from '@fitly/shared/meta';
-import { UiControl } from '@fitly/ui-control';
-import { IDataStore } from 'libs/ui-control/src/lib/interfaces/IDataStore';
+import { UiControl, IDataStore } from '@fitly/ui-control';
 import MMKVStorage from './storage';
 import { DEFAULT_ACTIVITY_SESSIONS, DEFAULT_USER } from '../common/utils';
+import {
+  ActivitySessionRaw,
+  parseSession,
+  serializeSession,
+} from '@fitly/ui-utils';
 
 export class DataStore implements IDataStore {
   private storage: MMKVStorage;
@@ -58,10 +62,13 @@ export class DataStore implements IDataStore {
   }
 
   getActivitySessions(): ActivitySession[] {
-    const sessions = this.storage.getObject<ActivitySession[]>(
+    const sessions = this.storage.getObject<ActivitySessionRaw[]>(
       'user.activity-sessions'
     );
-    return sessions || DEFAULT_ACTIVITY_SESSIONS;
+    return (
+      sessions?.map((session) => parseSession(session)) ||
+      DEFAULT_ACTIVITY_SESSIONS
+    );
   }
 
   clearActivitySessions(): void {
@@ -69,17 +76,15 @@ export class DataStore implements IDataStore {
   }
 
   pushActivitySession(activitySession: ActivitySession): void {
-    const activities = this.storage.getObject<ActivitySession[]>(
+    const activities = this.storage.getObject<ActivitySessionRaw[]>(
       'user.activity-sessions'
     );
     if (activities) {
-      activities.push(activitySession);
+      activities.push(serializeSession(activitySession));
       this.storage.setObject('user.activity-sessions', activities);
     }
   }
 }
 
 const uiControl = new UiControl(new DataStore());
-// first time user init
-uiControl.resetUser();
 export default uiControl;

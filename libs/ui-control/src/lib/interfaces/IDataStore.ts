@@ -1,7 +1,6 @@
 import { ActivitySession, User } from '@fitly/shared/meta';
 
 export interface IDataStore {
-  // TODO: implement rest
   resetAll(): void;
 
   getUser(): User;

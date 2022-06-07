@@ -4,23 +4,23 @@ import { View } from 'react-native';
 import { Input, Radio, RadioGroup, Button } from '@ui-kitten/components';
 import { Sex, User } from '@fitly/shared/meta';
 import { UserCard } from '../components/cards/user-card';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { showNotification } from '@fitly/ui-utils';
 import uiControl from '../data';
 
 export const ProfileScreen = () => {
-  const [firstName, setFirstName] = useState<string>();
-  const [lastName, setLasttName] = useState<string>();
-  const [age, setAge] = useState<string>();
-  // RN does not deal with number input
-  const [weight, setWeight] = useState<string>();
-  const [height, setHeight] = useState<string>();
-  const [selectedIndex, setSelectedIndex] = useState<number>();
-  const [user, setUser] = useState<User>();
-  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [user, setUser] = useState<User>(uiControl.getUser());
+  const [firstName, setFirstName] = useState<string>(user.name);
+  const [lastName, setLasttName] = useState<string>(user.surname);
+  const [age, setAge] = useState<string>(user.age.toFixed(0));
+  const [weight, setWeight] = useState<string>(user.weight.toFixed(0));
+  const [height, setHeight] = useState<string>(user.height.toFixed(0));
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    Object.values(Sex).indexOf(user.sex)
+  );
 
   function setUserData() {
-    const user = uiControl.getUser();
     if (user) {
       setUser(user);
       setFirstName(user.name);
@@ -31,20 +31,11 @@ export const ProfileScreen = () => {
       setSelectedIndex(Object.values(Sex).indexOf(user.sex));
     }
   }
-  useEffect(() => {
-    setUserData();
-    const navigationEvents: (() => void)[] = [];
-    navigationEvents.push(
-      navigation.addListener('focus', () => {
-        setUserData();
-      })
-    );
 
-    return () => {
-      navigationEvents.forEach((t) => t());
-    };
+  useEffect(() => {
+    if (isFocused) setUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isFocused]);
 
   const onSubmit = () => {
     const user: User = {

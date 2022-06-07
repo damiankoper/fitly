@@ -3,8 +3,8 @@ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { commonStyles } from '../../assets/common/styles';
 import DropShadowWrapper from '../gradients/drop-shadow';
-import LinearGradientCard from '../gradients/linear-gradient-card';
 import { Themes } from '../gradients/themes';
+import { formatActivityString } from '../../common/utils';
 
 interface Props {
   data: string | number;
@@ -19,6 +19,8 @@ export const DataCardSmall: React.FC<Props> = ({
   theme,
   style,
 }) => {
+  const formattedActivity = formatActivityString(activity, false);
+
   return (
     <DropShadowWrapper shadowColorTheme={theme} style={style}>
       <View style={[commonStyles.defaultBorder, styles.container]}>
@@ -29,7 +31,7 @@ export const DataCardSmall: React.FC<Props> = ({
         <Text style={styles.smallText}>
           of{' '}
           <Text style={styles.primaryText} status="primary">
-            {activity}
+            {formattedActivity}
           </Text>
         </Text>
       </View>
