@@ -1,18 +1,13 @@
-import {
-  ActivitySession,
-  ActivityTrackingMeta,
-  ActivityType,
-} from '@fitly/shared/meta';
-import { Divider, Layout, Text as TextUI } from '@ui-kitten/components';
-import uiControl from 'apps/ui-mobile/data';
+import { ActivitySession, ActivityTrackingMeta } from '@fitly/shared/meta';
+import { Divider, Layout } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import { ActivityCardLarge } from '../../components/cards/activity-card-large';
-import LoadingScreen from '../../components/loading-screen/LoadingScreen';
+import { StyleSheet, View, Text } from 'react-native';
+import { ActivityCardLarge } from '../components/cards/activity-card-large';
+import LoadingScreen from '../components/loading-screen/LoadingScreen';
 import humanizeDuration from 'humanize-duration';
 import { Interval } from 'luxon';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { commonStyles } from '../assets/common/styles';
+import uiControl from '../data';
 const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
 
 export function getReadableDateStringFromInterval(interval: Interval): string {
@@ -97,6 +92,7 @@ export const HistoryScreen: React.FC<NavProps> = ({ navigation }) => {
 
   return (
     <Layout style={[styles.container, styles.height100]}>
+      <Text style={commonStyles.title}>History</Text>
       {activities.length === 0 ? (
         <View style={styles.loadingContainer}>
           <Text style={styles.headerText}>No exercises has been found!</Text>
@@ -109,55 +105,44 @@ export const HistoryScreen: React.FC<NavProps> = ({ navigation }) => {
           </Text>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.container}>
-          {activities.map(({ id, interval, activities }, index) => {
-            return (
-              <React.Fragment key={id}>
-                <View
-                  style={[
-                    styles.textAndDividerContainer,
-                    isFirstItem(index) ? undefined : styles.marginTop,
-                  ]}
-                >
-                  <Text style={styles.dateText}>
-                    {getReadableDateStringFromInterval(interval)}
-                  </Text>
-                  <Divider style={styles.divider} />
+        activities.map(({ id, interval, activities }, index) => {
+          return (
+            <React.Fragment key={id}>
+              <View
+                style={[
+                  styles.textAndDividerContainer,
+                  isFirstItem(index) ? undefined : styles.marginTop,
+                ]}
+              >
+                <Text style={styles.dateText}>
+                  {getReadableDateStringFromInterval(interval)}
+                </Text>
+                <Divider style={styles.divider} />
+              </View>
+              {activities.map((activity, index) => (
+                <View key={index} style={styles.cardWrapper}>
+                  <ActivityCardLarge
+                    activity={activity.type}
+                    count={activity.repeats}
+                    time={getTimeDurationFromInterval(interval)}
+                    kcal={getCaloriesFromActivityMetaAndUserWeight(
+                      activity,
+                      userWeight
+                    )}
+                    date={getReadableDateStringFromInterval(activity.interval)}
+                  />
                 </View>
-                {activities.map((activity, index) => (
-                  <View key={index} style={styles.cardWrapper}>
-                    <ActivityCardLarge
-                      onPress={handleActivityPress(activity)}
-                      activity={activity.type}
-                      count={activity.repeats}
-                      time={getTimeDurationFromInterval(interval)}
-                      kcal={getCaloriesFromActivityMetaAndUserWeight(
-                        activity,
-                        userWeight
-                      )}
-                      date={getReadableDateStringFromInterval(
-                        activity.interval
-                      )}
-                      theme="primary"
-                    />
-                  </View>
-                ))}
-              </React.Fragment>
-            );
-          })}
-        </ScrollView>
+              ))}
+            </React.Fragment>
+          );
+        })
       )}
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 8,
-    paddingRight: 12,
-    paddingLeft: 12,
-    overflow: 'visible',
-  },
+  container: {},
   height100: {
     height: '100%',
   },
@@ -173,10 +158,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'nowrap',
     flexDirection: 'row',
+    marginBottom: 4,
   },
   headerText: {
     flex: 1,
-    fontSize: 21,
+    fontSize: 20,
     fontFamily: 'RobotoSlab-Medium',
     textAlign: 'center',
     color: '#555',
@@ -188,8 +174,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#eee',
     marginBottom: 4,
-    marginLeft: 10,
-    marginRight: 15,
+    marginLeft: 8,
+    marginRight: 20,
   },
   subtitleText: {
     fontSize: 16,
@@ -200,14 +186,14 @@ const styles = StyleSheet.create({
   dateText: {
     color: '#a1a1a1',
     fontFamily: 'RobotoSlab-Medium',
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 8,
-    marginLeft: 14,
+    marginLeft: 16,
   },
   marginTop: {
-    marginTop: 15,
+    marginTop: 16,
   },
   cardWrapper: {
-    marginBottom: 8,
+    marginBottom: 16,
   },
 });

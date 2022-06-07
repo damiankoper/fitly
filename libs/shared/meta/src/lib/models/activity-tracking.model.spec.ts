@@ -5,6 +5,7 @@ import { ActivityTrackingMeta } from './activity-tracking-meta.model';
 import { AxesData } from './axes-data.model';
 import { SensorAsyncSample } from './sensor-async-sample.model';
 import { ActivityTracking } from './activity-tracking.model';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('ActivityTracking parse/serialize', () => {
   it('should parse plain object', () => {
@@ -50,7 +51,13 @@ describe('ActivityTracking parse/serialize', () => {
       timestamp: timestamp.toISO(),
       data: { x: 1, y: 1, z: 1 },
     };
-    const meta = new ActivityTrackingMeta(interval, ActivityType.UNKNOWN, 0);
+    const uuid = uuidv4();
+    const meta = new ActivityTrackingMeta(
+      uuid,
+      interval,
+      ActivityType.UNKNOWN,
+      0
+    );
     const axesData = new AxesData(1, 1, 1);
 
     const accSensorSample = new SensorAsyncSample(axesData, timestamp);
@@ -66,6 +73,7 @@ describe('ActivityTracking parse/serialize', () => {
       gyroscope: [plainSensorAsync],
       magnetometer: [plainSensorAsync],
       meta: {
+        uuid,
         repeats: 0,
         interval: interval.toISO(),
         type: ActivityType.UNKNOWN,

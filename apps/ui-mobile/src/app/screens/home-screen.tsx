@@ -1,25 +1,25 @@
 import { Icon, Layout, useTheme } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { UserCard } from '../../components/cards/user-card';
+import { UserCard } from '../components/cards/user-card';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { DataCardLarge } from '../../components/cards/data-card-large';
-import { BluetoothStatus } from '../../components/icons/bluetooth-status';
-import { DataCardSmall } from '../../components/cards/data-card-small';
-import { ActivityCardLarge } from '../../components/cards/activity-card-large';
+import { DataCardLarge } from '../components/cards/data-card-large';
+import { BluetoothStatus } from '../components/icons/bluetooth-status';
+import { DataCardSmall } from '../components/cards/data-card-small';
+import { ActivityCardLarge } from '../components/cards/activity-card-large';
 import {
   ActivityTimeStats,
   ActivityTrackingMeta,
   User,
 } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
-import ActivityLineChart from '../../components/charts/ActivityLineChart';
-import uiControl from 'apps/ui-mobile/data';
+import ActivityLineChart from '../components/charts/ActivityLineChart';
 import {
   getCaloriesFromActivityMetaAndUserWeight,
   getReadableDateStringFromInterval,
   getTimeDurationFromInterval,
 } from './history-screen';
-import { DEFAULT_HOME_PLOT_DATA } from '../../common/utils';
+import { DEFAULT_HOME_PLOT_DATA } from '../common/utils';
+import uiControl from '../data';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -69,16 +69,15 @@ export const ActivityIcon = () => {
   );
 };
 
-export const HomeScreen: React.FC<{}> = () => {
+export const HomeScreen: React.FC = () => {
   const initialStats = uiControl.getTimeStats();
-  const intialMostPopularActivity = Object.keys(initialStats.type).reduce(
-    (a, b) => (initialStats.type[a] > initialStats.type[b] ? a : b)
+  const intialMostPopularActivity = Object.keys(initialStats).reduce((a, b) =>
+    initialStats[a] > initialStats[b] ? a : b
   );
-  const initialSummaryTime = Object.values(initialStats.type).reduce(
+  const initialSummaryTime = Object.values(initialStats).reduce(
     (a, b) => a + b
   );
-  const initialTopActivityTimeSpent =
-    initialStats.type[intialMostPopularActivity];
+  const initialTopActivityTimeSpent = initialStats[intialMostPopularActivity];
   const initialPercentile =
     (100 * initialTopActivityTimeSpent) / initialSummaryTime;
 
@@ -97,16 +96,15 @@ export const HomeScreen: React.FC<{}> = () => {
 
   const onHomeScrenFocused = async () => {
     // default user always exist
-    setUser(uiControl.getUser()!);
+    const user = uiControl.getUser();
+    if (user) setUser(user);
     // update UI
     setStats(uiControl.getTimeStats());
     setMostPopularActivity(
-      Object.keys(stats.type).reduce((a, b) =>
-        stats.type[a] > stats.type[b] ? a : b
-      )
+      Object.keys(stats).reduce((a, b) => (stats[a] > stats[b] ? a : b))
     );
-    setTopActivityTimeSpent(stats.type[mostPopularActivity]);
-    setSummaryTime(Object.values(stats.type).reduce((a, b) => a + b));
+    setTopActivityTimeSpent(stats[mostPopularActivity]);
+    setSummaryTime(Object.values(stats).reduce((a, b) => a + b));
     setPercentile((100 * topActivityTimeSpent) / summaryTime);
 
     const lastSession = uiControl.getLastSession();
@@ -119,6 +117,7 @@ export const HomeScreen: React.FC<{}> = () => {
     if (isFocused) {
       onHomeScrenFocused();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   return (
@@ -156,13 +155,11 @@ export const HomeScreen: React.FC<{}> = () => {
               Icon={StepsIcon}
               name={'Repeats'}
               quantity={uiControl.getTotalRepeats()}
-              theme="primary"
             />
             <DataCardLarge
               Icon={CaloriesIcon}
               name="Calories"
               quantity={uiControl.getTotalCalories().toFixed(2)}
-              theme="danger"
             />
           </View>
           <View style={[styles.cardColumn, styles.rightColumn]}>
@@ -171,8 +168,7 @@ export const HomeScreen: React.FC<{}> = () => {
                 touchable
                 touchableStyles={styles.bluetoothWrapper}
                 renderOverlay
-                renderSubText
-                iconSize="large"
+                iconSize={'large'}
               />
               <View style={styles.separator} />
               <DataCardSmall
@@ -185,12 +181,11 @@ export const HomeScreen: React.FC<{}> = () => {
               Icon={TimeIcon}
               name="Hours spent"
               quantity={topActivityTimeSpent.toFixed(2)}
-              theme="basic"
             />
             <View style={styles.separator} />
           </View>
         </View>
-        {lastActivity ? (
+        {lastActivity && (
           <View style={styles.bottomCard}>
             <ActivityCardLarge
               activity={lastActivity.type}
@@ -198,14 +193,11 @@ export const HomeScreen: React.FC<{}> = () => {
               time={getTimeDurationFromInterval(lastActivity.interval)}
               kcal={getCaloriesFromActivityMetaAndUserWeight(
                 lastActivity,
-                user!.weight || 0
+                user?.weight || 0
               )}
               date={getReadableDateStringFromInterval(lastActivity.interval)}
-              theme="primary"
             />
           </View>
-        ) : (
-          <></>
         )}
       </ScrollView>
     </Layout>
@@ -249,6 +241,7 @@ const styles = StyleSheet.create({
   icon: {
     height: 40,
     width: 40,
+    marginLeft: -4,
   },
   smallCardRow: {
     flexDirection: 'row',
@@ -258,7 +251,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   bottomCard: {
-    marginVertical: 21,
+    marginVertical: 12,
   },
   overflowVisible: {
     overflow: 'visible',

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Layout } from '@ui-kitten/components';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
-import { CounterSpinner } from '../../components/spinners/counter-spinner';
-import { StyleSheet, View, Text } from 'react-native';
-import { ActivityCardSmall } from '../../components/cards/activity-card-small';
-import { MetaWearProps } from '../../App';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import { CounterSpinner } from '../components/spinners/counter-spinner';
+import { StyleSheet, View, Alert } from 'react-native';
+import { ActivityCardSmall } from '../components/cards/activity-card-small';
+import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
 import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
@@ -27,6 +27,7 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
   useEffect(() => {
     setActivity(route.params.activity);
     onStop(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   const [isPaused, setIsPaused] = useState(false);
@@ -117,23 +118,28 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
       })
     );
     navigationEvents.push(
-      navigation.addListener('blur', () => {
+      navigation.addListener('blur', (e) => {
         console.log('blur');
         if (isStarted) onStop();
         events.forEach((t) => t());
+      }),
+      navigation.addListener('beforeRemove', (e) => {
+        Alert.alert('xd');
       })
     );
 
     return () => {
       navigationEvents.forEach((t) => t());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Layout style={styles.container}>
       <View>
-        <Text style={styles.titleText}>Current Activity</Text>
-        <ActivityCardSmall activity={activity} />
+        <View>
+          <ActivityCardSmall activity={activity} subtitle="Current activity" />
+        </View>
         <View style={styles.spinnerWrapper}>
           <CounterSpinner
             repeats={lastRepeats}
@@ -159,6 +165,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    overflow: 'visible',
   },
   titleText: {
     fontSize: 32,
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
   },
   spinnerWrapper: {
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 8,
   },
 });

@@ -7,17 +7,17 @@ import {
 } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { BluetoothButton } from '../../components/buttons/bluetooth-button';
+import { BluetoothButton } from '../components/buttons/bluetooth-button';
 import _ from 'lodash';
 import { AxesData, SensorAsyncSample, ActivityType } from '@fitly/shared/meta';
 import { IndexPath } from '@ui-kitten/components';
-import { ActivityNames } from '../../assets/common/activity-names';
+import { ActivityNames } from '../assets/common/activity-names';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { MetaWearProps } from '../../App';
+import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../state/root.reducer';
+import { RootState } from '../state/root.reducer';
 
 type NavProps = BottomTabScreenProps<BottomTabParamList, 'Service'>;
 export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
@@ -121,6 +121,7 @@ export const ServiceModeScreen: React.FC<NavProps & MetaWearProps> = ({
       navigationEvents.forEach((t) => t());
       events.forEach((t) => t());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activityTypeArray = Object.values(ActivityType);

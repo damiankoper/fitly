@@ -1,3 +1,0 @@
-class Constants:
-    SAMPLING_FREQUENCY = 25
-    WINDOW_SECONDS = 10

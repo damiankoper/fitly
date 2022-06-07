@@ -2,21 +2,21 @@ import { MetaWear } from '@fitly/ui-metawear';
 import { showNotification } from '@fitly/ui-utils';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import LoadingScreen from '../../components/loading-screen/LoadingScreen';
-import BluetoothModule from '../BluetoothModule';
+import LoadingScreen from '../components/loading-screen/LoadingScreen';
+import BluetoothModule from '../native-modules/BluetoothModule';
 import {
   setConnectedDevice,
   restoreConnectionStop,
   restoreConnectionStart,
   clearConnectedDevice,
-} from '../../state/app/app.slice';
-import { RootState } from '../../state/root.reducer';
+} from '../state/app/app.slice';
+import { RootState } from '../state/root.reducer';
 
 const CONNECTION_CHECKING_INTERVAL_SECONDS = 2000;
 
-export interface AppInitScreenProps extends React.PropsWithChildren<{}> {
+export type AppInitScreenProps = React.PropsWithChildren<{
   metawear: MetaWear;
-}
+}>;
 
 const AppInitScreen: React.FC<AppInitScreenProps> = ({
   metawear,
@@ -75,6 +75,7 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
     return () => {
       metawear.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCloseLoadingScreen = () => {
@@ -93,6 +94,7 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
     );
   }
 
+  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{children}</>;
 };
 

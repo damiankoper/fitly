@@ -1,11 +1,10 @@
 from models.DataModels import DataPoint
-from fastapi import FastAPI
 from enums.ActivityTypeEnum import ActivityType
 from models.DataModels import ActivityTracking, ActivityTrackingMeta
-from utilities.RepetitionCounter import RepetitionCounter
-from utilities.Utilities import utilities
+from services.RepetitionCounter import RepetitionCounter
+from services.Utilities import utilities
 from pydantic import parse_obj_as
-
+from fastapi import FastAPI
 
 app = FastAPI()
 
@@ -28,8 +27,8 @@ async def classify_data(activity: ActivityTracking):
     )
 
     # Count repeats
-    activity.meta.repeats = repetition_counter.count_repetitions(
-        exercise_info, signal_for_counting
+    activity.meta.repeats = await repetition_counter.count_repetitions(
+        exercise_info, signal_for_counting, activity.meta.uuid
     )
 
     return activity.meta

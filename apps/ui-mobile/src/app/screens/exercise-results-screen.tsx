@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Layout, Text } from '@ui-kitten/components';
-import { ActivityCardResults } from '../../components/cards/activity-card-results';
+import { ActivityCardResults } from '../components/cards/activity-card-results';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import { StyleSheet, View } from 'react-native';
-import LoadingScreen from '../../components/loading-screen/LoadingScreen';
-import ActivityLineChart from '../../components/charts/ActivityLineChart';
-import uiControl from 'apps/ui-mobile/data';
+import LoadingScreen from '../components/loading-screen/LoadingScreen';
+import ActivityLineChart from '../components/charts/ActivityLineChart';
 import { ChartDataType } from '@fitly/shared/meta';
-import { DataCardLarge } from '../../components/cards/data-card-large';
+import { DataCardLarge } from '../components/cards/data-card-large';
 import { ActivityIcon, CaloriesIcon, StepsIcon, TimeIcon } from './home-screen';
+import uiControl from '../data';
+import { ActivityCardSmall } from '../components/cards/activity-card-small';
 
 type NavProps = BottomTabScreenProps<
   BottomTabParamList,
@@ -43,13 +44,11 @@ export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
             Icon={StepsIcon}
             name={'Repeats'}
             quantity={uiControl.getTotalRepeats()}
-            theme="primary"
           />
           <DataCardLarge
             Icon={CaloriesIcon}
             name="Calories"
             quantity={uiControl.getTotalCalories().toFixed(2)}
-            theme="danger"
           />
         </View>
         <View style={[styles.cardColumn, styles.rightColumn]}>
@@ -57,13 +56,11 @@ export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
             Icon={ActivityIcon}
             name={'Repeats'}
             quantity={uiControl.getTotalRepeats()}
-            theme="basic"
           />
           <DataCardLarge
             Icon={TimeIcon}
             name="Calories"
             quantity={uiControl.getTotalCalories().toFixed(2)}
-            theme="basic"
           />
         </View>
       </View>

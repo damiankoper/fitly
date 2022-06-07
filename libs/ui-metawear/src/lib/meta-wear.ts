@@ -31,8 +31,7 @@ export class MetaWear {
   }
 
   public async disconnect() {
-    // TODO
-    console.warn('Implement meta-wear disconnect method');
+    console.log('Implement meta-wear disconnect method');
     this.destroyEvents();
   }
 

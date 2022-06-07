@@ -9,6 +9,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DateTime, Interval } from 'luxon';
 import { of } from 'rxjs';
 import { AnalyzeService } from './analyze.service';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('AnalyzeService', () => {
   let service: AnalyzeService;
@@ -34,8 +35,10 @@ describe('AnalyzeService', () => {
   it('should send data to analyze and validate response', async () => {
     const activityTracking = new (jest.fn())() as ActivityTracking;
     const interval = Interval.after(DateTime.now(), 10000);
+    const uuid = uuidv4();
     const response = {
       data: {
+        uuid,
         interval: interval.toISO(),
         repeats: 10,
         type: ActivityType.PUSHUPS,
@@ -49,6 +52,7 @@ describe('AnalyzeService', () => {
     // then
     expect(result).toBeInstanceOf(ActivityTrackingMeta);
     expect(result).toEqual({
+      uuid,
       interval,
       repeats: 10,
       type: ActivityType.PUSHUPS,
@@ -58,7 +62,12 @@ describe('AnalyzeService', () => {
   it('should send data to analyze and throw on invalid interval', async () => {
     const activityTracking = new (jest.fn())() as ActivityTracking;
     const response = {
-      data: { interval: 'dupa', repeats: 'nonnumber', type: 123 },
+      data: {
+        uuid: uuidv4(),
+        interval: 'dupa',
+        repeats: 'nonnumber',
+        type: 123,
+      },
     } as AxiosResponse;
     MockHttpService.post.mockReturnValue(of(response));
 
@@ -73,7 +82,12 @@ describe('AnalyzeService', () => {
     const activityTracking = new (jest.fn())() as ActivityTracking;
     const interval = Interval.after(DateTime.now(), 10000);
     const response = {
-      data: { interval: interval.toISO(), repeats: 'nonnumber', type: 123 },
+      data: {
+        uuid: uuidv4(),
+        interval: interval.toISO(),
+        repeats: 'nonnumber',
+        type: 123,
+      },
     } as AxiosResponse;
     MockHttpService.post.mockReturnValue(of(response));
 

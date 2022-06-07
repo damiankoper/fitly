@@ -10,3 +10,12 @@ services:
       - .:/code/apps/ml
     command: uvicorn main:app --app-dir=apps/ml/src --host 0.0.0.0 --reload
     restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - SAMPLING_FREQUENCY=25
+      - WINDOW_SECONDS=10
+      - CONFIG_BASE_PATH=./apps/ml/src/config
+      - SESSION_EXPIRE_SECONDS=300 # 5 min
+
+  redis:
+    image: 'redis:7-alpine'

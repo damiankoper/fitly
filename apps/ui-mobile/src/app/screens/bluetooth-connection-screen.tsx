@@ -4,13 +4,13 @@ import { Button, Card, List, ListItem, Text } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { MetaWearProps } from '../../App';
+import { MetaWearProps } from '../App';
 
-import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
-import BluetoothModule from '../BluetoothModule';
-import { setConnectedDevice } from '../../state/app/app.slice';
-import { RootState } from '../../state/root.reducer';
-import { addEventListenerToBluetoothModule } from '../../events/bluetooth-module.listener';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import BluetoothModule from '../native-modules/BluetoothModule';
+import { setConnectedDevice } from '../state/app/app.slice';
+import { RootState } from '../state/root.reducer';
+import { addEventListenerToBluetoothModule } from '../events/bluetooth-module.listener';
 
 const SEARCHING_TIME = 10 * 1000;
 
@@ -53,7 +53,7 @@ const filterDuplicates = function (array: DeviceInfo[]) {
     obj[device.deviceAddress] = device.deviceName;
   }
 
-  let newArray: DeviceInfo[] = [];
+  const newArray: DeviceInfo[] = [];
   for (const deviceAddress of Object.keys(obj)) {
     newArray.push({ deviceName: obj[deviceAddress], deviceAddress });
   }

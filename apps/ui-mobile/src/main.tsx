@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import * as PopoverView from '@ui-kitten/components/ui/popover/popoverView.component';
 import * as Components from '@ui-kitten/components';
 import { AppRegistry } from 'react-native';

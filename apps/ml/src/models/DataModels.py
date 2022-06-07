@@ -14,6 +14,7 @@ class DataPoint(BaseModel):
 
 
 class ActivityTrackingMeta(BaseModel):
+    uuid: str
     type: ActivityType
     interval: str
     repeats: int

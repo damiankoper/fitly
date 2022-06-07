@@ -101,20 +101,16 @@ export class UiControl {
   }
 
   public getTimeStats(): ActivityTimeStats {
-    const stats: Record<ActivityType, number> = this.initiateRecord<number>(
-      ActivityType,
-      0
-    );
+    const stats = new ActivityTimeStats();
     const sessions = this.dataStore.getActivitySessions();
 
     sessions.forEach((session) => {
       session.activities.forEach((activity) => {
-        // TODO sum does not work (NaN)
-        stats[activity.type] = activity.interval.length('hours');
+        stats[activity.type] += activity.interval.length('hours') || 0;
       });
     });
 
-    return new ActivityTimeStats(stats);
+    return stats;
   }
 
   //   --- Activity Session Data ---
@@ -232,16 +228,5 @@ export class UiControl {
     )
       return true;
     else return false;
-  }
-
-  private initiateRecord<Y>(
-    enumX: { [index: string]: ActivityType },
-    defaultValue: Y
-  ): Record<ActivityType, Y> {
-    const toReturn: Record<string, Y> = {};
-    Object.keys(enumX).forEach((key) => {
-      toReturn[key] = defaultValue;
-    });
-    return toReturn;
   }
 }

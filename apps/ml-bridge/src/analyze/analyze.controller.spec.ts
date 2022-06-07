@@ -7,6 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DateTime, Interval } from 'luxon';
 import { AnalyzeController } from './analyze.controller';
 import { AnalyzeService } from './analyze.service';
+import { v4 as uuidv4 } from 'uuid';
 jest.mock('./analyze.service');
 
 describe('AnalyzeController', () => {
@@ -27,10 +28,11 @@ describe('AnalyzeController', () => {
     const date1 = DateTime.fromISO('2020-09-06T12:00:00');
     const date2 = DateTime.fromISO('2020-09-10T14:00:00');
     const interval = Interval.fromDateTimes(date1, date2);
-    const meta = new ActivityTrackingMeta(interval);
+    const meta = new ActivityTrackingMeta(uuidv4(), interval);
     const dto = new ActivityTracking(meta);
 
     const responseMeta = new ActivityTrackingMeta(
+      uuidv4(),
       interval,
       ActivityType.PUSHUPS,
       10
