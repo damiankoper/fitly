@@ -32,13 +32,42 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
     ),
     activities: [
       new ActivityTrackingMeta(
-        uuid1,
+        uuid2,
         Interval.fromDateTimes(
           DateTime.fromSQL('2022-05-22 08:15:00'),
           DateTime.fromSQL('2022-05-22 08:17:00')
         ),
         ActivityType.PUSHUPS,
         1
+      ),
+      new ActivityTrackingMeta(
+        uuid2,
+        Interval.fromDateTimes(
+          DateTime.fromSQL('2022-05-22 08:17:00'),
+          DateTime.fromSQL('2022-05-22 08:19:00')
+        ),
+        ActivityType.PUSHUPS,
+        2
+      ),
+
+      new ActivityTrackingMeta(
+        uuid2,
+        Interval.fromDateTimes(
+          DateTime.fromSQL('2022-05-22 08:19:00'),
+          DateTime.fromSQL('2022-05-22 08:21:00')
+        ),
+        ActivityType.PUSHUPS,
+        3
+      ),
+
+      new ActivityTrackingMeta(
+        uuid2,
+        Interval.fromDateTimes(
+          DateTime.fromSQL('2022-05-22 08:21:00'),
+          DateTime.fromSQL('2022-05-22 08:23:00')
+        ),
+        ActivityType.PUSHUPS,
+        2
       ),
     ],
   },

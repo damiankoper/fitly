@@ -1,10 +1,10 @@
-import { ActivityTrackingMeta, ActivityType } from '@fitly/shared/meta';
+import { ActivitySession, ActivityType } from '@fitly/shared/meta';
 
 type BottomTabParamList = {
   Home: undefined;
   Exercise: undefined;
   ExerciseCounterScreen: { activity: ActivityType };
-  ExerciseResultsScreen: { activity: ActivityTrackingMeta };
+  ExerciseResultsScreen: { activitySession: ActivitySession };
   Guess: { activity: ActivityType };
   History: undefined;
   Settings: undefined;

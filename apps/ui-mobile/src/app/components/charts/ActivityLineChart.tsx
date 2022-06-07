@@ -4,13 +4,14 @@ import { Text, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import * as shape from 'd3-shape';
 import { Circle } from 'react-native-svg';
-import { ChartDataType } from '@fitly/shared/meta';
+import { ChartData, ChartDataType } from '@fitly/shared/meta';
 
 interface ActivityLineChartProps {
   data: ChartDataType[];
   lineColor?: string;
   subtitle?: string;
   selectedValueSubText?: string;
+  granulity?: 'days' | 'minutes';
 }
 
 const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
@@ -18,9 +19,12 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
   lineColor,
   selectedValueSubText,
   subtitle,
+  granulity,
 }) => {
   const backgroundColor = 'rgba(255,255,255,0.5)';
-  const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number>(4);
+  const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number>(
+    Math.ceil((data.length - 1) / 2)
+  );
   const color = lineColor || 'rgb(89, 139, 255)';
 
   const ChartPoints = ({ data, x, y, ...props }: any) => {
@@ -58,11 +62,21 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
 
   const formatXLabelFromData = (_: number, index: number) => {
     const { date } = data[index];
-    const dateString = new Date(date).toLocaleString('en', {
+    const granulityIfMinutes: Intl.DateTimeFormatOptions = {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: false,
+    };
+    const granulityIfDays: Intl.DateTimeFormatOptions = {
       weekday: 'short',
-    });
+    };
+    const dateString = new Date(date).toLocaleString(
+      'en',
+      granulity === 'minutes' ? granulityIfMinutes : granulityIfDays
+    );
     return dateString;
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.selectedDayValue}>
@@ -120,6 +134,7 @@ export default ActivityLineChart;
 const styles = StyleSheet.create({
   container: {
     marginTop: 15,
+    overflow: 'visible',
   },
   chartTitle: {
     textAlign: 'center',

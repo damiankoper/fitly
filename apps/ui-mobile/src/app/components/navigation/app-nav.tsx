@@ -85,10 +85,7 @@ const TabNavigator = (props: MetaWearProps) => (
       name="ExerciseCounterScreen"
       component={wrapScreen(ExerciseCounterScreen, props)}
     />
-    <Screen
-      name="ExerciseResultsScreen"
-      component={wrapScroll(ExerciseResultsScreen, props)}
-    />
+    <Screen name="ExerciseResultsScreen" component={ExerciseResultsScreen} />
   </Navigator>
 );
 
