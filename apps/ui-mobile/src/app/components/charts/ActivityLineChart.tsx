@@ -4,11 +4,24 @@ import { Text, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import * as shape from 'd3-shape';
 import { Circle } from 'react-native-svg';
-import { ChartData, ChartDataType } from '@fitly/shared/meta';
+import { ChartDataType } from '@fitly/shared/meta';
 
-const ActivityLineChart: React.FC<ChartData> = ({ data }) => {
+interface ActivityLineChartProps {
+  data: ChartDataType[];
+  lineColor?: string;
+  subtitle?: string;
+  selectedValueSubText?: string;
+}
+
+const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
+  data,
+  lineColor,
+  selectedValueSubText,
+  subtitle,
+}) => {
   const backgroundColor = 'rgba(255,255,255,0.5)';
   const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number>(4);
+  const color = lineColor || 'rgb(89, 139, 255)';
 
   const ChartPoints = ({ data, x, y, ...props }: any) => {
     return data.map((item: ChartDataType, index: number) => {
@@ -28,7 +41,7 @@ const ActivityLineChart: React.FC<ChartData> = ({ data }) => {
             cx={x(index)}
             cy={y(item.value)}
             r={isSelected ? _r : _r / 2}
-            fill="rgb(89, 139, 255)"
+            fill={color}
           />
           {isSelected && (
             <Circle
@@ -55,7 +68,7 @@ const ActivityLineChart: React.FC<ChartData> = ({ data }) => {
       <Text style={styles.selectedDayValue}>
         {data[selectedMarkerIndex].value}
       </Text>
-      <Text style={styles.valueType}>kcal</Text>
+      <Text style={styles.valueType}>{selectedValueSubText}</Text>
       <LinearGradient
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}
@@ -73,7 +86,7 @@ const ActivityLineChart: React.FC<ChartData> = ({ data }) => {
         <LineChart
           data={data}
           svg={{
-            stroke: 'rgb(89, 139, 255)',
+            stroke: color,
             strokeWidth: '5px',
           }}
           curve={shape.curveBumpX}
@@ -97,7 +110,7 @@ const ActivityLineChart: React.FC<ChartData> = ({ data }) => {
         contentInset={{ left: 10, right: 10 }}
         svg={{ fontSize: 10, fill: 'black' }}
       />
-      <Text style={styles.chartTitle}>Calories burned last week</Text>
+      <Text style={styles.chartTitle}>{subtitle}</Text>
     </View>
   );
 };
