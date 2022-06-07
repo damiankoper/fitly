@@ -17,7 +17,7 @@ type NavProps = BottomTabScreenProps<
 >;
 
 export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
-  const { activity } = route.params;
+  const { interval, repeats, type } = route.params.activity;
 
   const dataRow: ChartDataType = { date: new Date(), value: 25 };
   const data: ChartDataType[] = [1, 2, 3, 4, 5, 6, 7].map((x) => dataRow);
@@ -25,7 +25,7 @@ export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
   return (
     <Layout>
       <View style={styles.resultsWrapper}>
-        <ActivityCardResults activity={activity} />
+        <ActivityCardResults activity={type} />
       </View>
       <View>
         <View>

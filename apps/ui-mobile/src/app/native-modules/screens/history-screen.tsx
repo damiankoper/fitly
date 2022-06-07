@@ -11,6 +11,8 @@ import { ActivityCardLarge } from '../../components/cards/activity-card-large';
 import LoadingScreen from '../../components/loading-screen/LoadingScreen';
 import humanizeDuration from 'humanize-duration';
 import { Interval } from 'luxon';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BottomTabParamList } from '../../interfaces/BottomTabParamList';
 const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
 
 export function getReadableDateStringFromInterval(interval: Interval): string {
@@ -21,8 +23,11 @@ export function getReadableDateStringFromInterval(interval: Interval): string {
   const durationInDaysRounded = Math.floor(durationInDays);
 
   if (durationInDaysRounded === 1) return 'Yesterday';
-  if (durationInDaysRounded >= 2 && durationInDaysRounded < SHOW_DATE_AFTER_DAYS_DIFFERENCE){
-    return `${durationInDaysRounded} days ago`
+  if (
+    durationInDaysRounded >= 2 &&
+    durationInDaysRounded < SHOW_DATE_AFTER_DAYS_DIFFERENCE
+  ) {
+    return `${durationInDaysRounded} days ago`;
   }
   if (durationInDaysRounded >= SHOW_DATE_AFTER_DAYS_DIFFERENCE) {
     return startDate.setLocale('en-gb').toLocaleString({
@@ -66,7 +71,9 @@ export function getCaloriesFromActivityMetaAndUserWeight(
   return Math.round(caloriesRaw);
 }
 
-export const HistoryScreen = () => {
+type NavProps = BottomTabScreenProps<BottomTabParamList, 'History'>;
+
+export const HistoryScreen: React.FC<NavProps> = ({ navigation }) => {
   const [activities, setActivities] = useState<ActivitySession[] | null>(null);
   const [userWeight, setUserWeight] = useState<number>(0);
 
@@ -78,6 +85,10 @@ export const HistoryScreen = () => {
   }, []);
 
   const isFirstItem = (position: number): boolean => position === 0;
+
+  const handleActivityPress = (activity: ActivityTrackingMeta) => () => {
+    navigation.navigate('ExerciseResultsScreen', { activity });
+  };
 
   if (activities == null)
     return (
@@ -116,6 +127,7 @@ export const HistoryScreen = () => {
                 {activities.map((activity, index) => (
                   <View key={index} style={styles.cardWrapper}>
                     <ActivityCardLarge
+                      onPress={handleActivityPress(activity)}
                       activity={activity.type}
                       count={activity.repeats}
                       time={getTimeDurationFromInterval(interval)}
