@@ -40,8 +40,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
 
   const handleDeleteClick = () => {
     setModalVisible(false);
-    // TODO make resetAll TS stuff work
-    uiControl.resetUser();
+    uiControl.reset();
   };
 
   return (
@@ -69,7 +68,7 @@ export const SettingScreen: React.FC<NavProps> = ({ navigation }) => {
           onPress={handleClearDataClick}
         >
           <Text style={styles.menuItemTitle}>Reset data</Text>
-          <Text style={styles.menuItemSubtitle}>Restore default user data</Text>
+          <Text style={styles.menuItemSubtitle}>Restore default user and delete exercise history</Text>
         </TouchableOpacity>
       </View>
 
