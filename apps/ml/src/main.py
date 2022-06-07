@@ -1,9 +1,8 @@
 from collections import defaultdict
 from numbers import Number
 
-import pandas as pd
 
-from apps.ml.src.utils.feature_extraction_functions import get_means, get_variances, get_standard_deviations, \
+from utils.feature_extraction_functions import get_means, get_variances, get_standard_deviations, \
     get_medians, get_maximums, get_minimums, get_ranges, get_root_mean_squares, get_integrals, \
     get_correlation_coefficients, get_cross_correlation, get_max_differences, get_zero_crossings, \
     get_signal_magnitude_area, get_signal_vector_magnitude
@@ -188,22 +187,7 @@ async def classify_data(activity: ActivityTracking):
         # DISABLED FOR NOW SINCE STANDARD SCALER DOES NOT HANDLE COMPLEX(IMAGINARY) VARIABLES
         # Can we simply drop the imaginary part and use just the real one?
 
-        # dc_components = get_dc_components(signals)
-        # all_features["x_dc_component"].append(dc_components[0])
-        # all_features["y_dc_component"].append(dc_components[1])
-        # all_features["z_dc_component"].append(dc_components[2])
-
-        # spectral_energies = get_spectral_energies(signals)
-        # all_features["x_spec_energy"].append(spectral_energies[0])
-        # all_features["y_spec_energy"].append(spectral_energies[1])
-        # all_features["z_spec_energy"].append(spectral_energies[2])
-
-        # spectral_entropies = get_spectral_entropies(signals)
-        # all_features["x_spec_entropy"].append(spectral_entropies[0])
-        # all_features["y_spec_entropy"].append(spectral_entropies[1])
-        # all_features["z_spec_entropy"].append(spectral_entropies[2])
-
-    all_features_df = pd.DataFrame(all_features)
-    all_features_df
+    # all_features_df = pd.DataFrame(all_features)
+    # all_features_df
 
     return activity.meta
