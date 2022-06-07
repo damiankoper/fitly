@@ -1,6 +1,7 @@
 from collections import defaultdict
 from numbers import Number
 
+import numpy as np
 
 from utils.feature_extraction_functions import get_means, get_variances, get_standard_deviations, \
     get_medians, get_maximums, get_minimums, get_ranges, get_root_mean_squares, get_integrals, \
@@ -15,6 +16,7 @@ from pydantic import parse_obj_as
 from fastapi import FastAPI
 from dateutil import parser
 from datetime import datetime
+from sklearn.preprocessing import  StandardScaler
 
 app = FastAPI()
 
