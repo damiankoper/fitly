@@ -18,5 +18,4 @@ services:
       - SESSION_EXPIRE_SECONDS=300 # 5 min
 
   redis:
-    image: "redis:7-alpine"
-
+    image: 'redis:7-alpine'

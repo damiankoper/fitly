@@ -3,9 +3,9 @@ import {
   ActivityTrackingMeta,
   ActivityType,
   ChartDataType,
+  Sex,
   User,
 } from '@fitly/shared/meta';
-import { Sex } from 'libs/shared/meta/src/lib/enums/sex.enum';
 import { DateTime, Interval } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
 export function formatActivityString(activity: string) {

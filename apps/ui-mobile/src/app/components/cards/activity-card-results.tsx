@@ -11,6 +11,7 @@ import { DataCardLarge } from './data-card-large';
 import { CaloriesIcon } from '../../native-modules/screens/home-screen';
 import { ActivityCardSmall } from './activity-card-small';
 import LinearGradient from 'react-native-linear-gradient';
+import DropShadow from 'react-native-drop-shadow';
 
 interface Props {
   activity: ActivityType;
@@ -25,19 +26,21 @@ function capitalize(str: string) {
 
 export const ActivityCardResults: React.FC<Props> = ({ activity, theme }) => {
   return (
-    <LinearGradient
-      locations={[0, 1]}
-      colors={['#9EB6FF', '#6B90FF']}
-      style={[commonStyles.defaultBorder]}
-    >
-      <View style={[commonStyles.defaultBorder, styles.container]}>
-        <View style={styles.resultContainer}>
-          <Text style={styles.resultsText}>{capitalize(activity)}</Text>
-          <Text style={styles.subtitle}>Type of activity</Text>
+    <DropShadowWrapper>
+      <LinearGradient // pls consider removing dis 💘 💘 💘
+        locations={[0, 1]}
+        colors={['#6B90FF', '#6B90FF']}
+        style={[commonStyles.defaultBorder]}
+      >
+        <View style={[commonStyles.defaultBorder, styles.container]}>
+          <ActivityCardSmall
+            activity={activity}
+            subtitle="Type of activity"
+            color="white"
+          />
         </View>
-        <ActivityIcon activity={activity} large={false} />
-      </View>
-    </LinearGradient>
+      </LinearGradient>
+    </DropShadowWrapper>
   );
 };
 

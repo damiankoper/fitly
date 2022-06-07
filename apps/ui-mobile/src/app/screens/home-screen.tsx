@@ -69,16 +69,15 @@ export const ActivityIcon = () => {
   );
 };
 
-export const HomeScreen: React.FC<{}> = () => {
+export const HomeScreen: React.FC = () => {
   const initialStats = uiControl.getTimeStats();
-  const intialMostPopularActivity = Object.keys(initialStats.type).reduce(
-    (a, b) => (initialStats.type[a] > initialStats.type[b] ? a : b)
+  const intialMostPopularActivity = Object.keys(initialStats).reduce((a, b) =>
+    initialStats[a] > initialStats[b] ? a : b
   );
-  const initialSummaryTime = Object.values(initialStats.type).reduce(
+  const initialSummaryTime = Object.values(initialStats).reduce(
     (a, b) => a + b
   );
-  const initialTopActivityTimeSpent =
-    initialStats.type[intialMostPopularActivity];
+  const initialTopActivityTimeSpent = initialStats[intialMostPopularActivity];
   const initialPercentile =
     (100 * initialTopActivityTimeSpent) / initialSummaryTime;
 
@@ -102,12 +101,10 @@ export const HomeScreen: React.FC<{}> = () => {
     // update UI
     setStats(uiControl.getTimeStats());
     setMostPopularActivity(
-      Object.keys(stats.type).reduce((a, b) =>
-        stats.type[a] > stats.type[b] ? a : b
-      )
+      Object.keys(stats).reduce((a, b) => (stats[a] > stats[b] ? a : b))
     );
-    setTopActivityTimeSpent(stats.type[mostPopularActivity]);
-    setSummaryTime(Object.values(stats.type).reduce((a, b) => a + b));
+    setTopActivityTimeSpent(stats[mostPopularActivity]);
+    setSummaryTime(Object.values(stats).reduce((a, b) => a + b));
     setPercentile((100 * topActivityTimeSpent) / summaryTime);
 
     const lastSession = uiControl.getLastSession();
