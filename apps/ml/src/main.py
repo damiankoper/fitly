@@ -90,7 +90,6 @@ async def classify_data(activity: ActivityTracking):
     )
 
     loaded_data = load_single_json(activity)
-    print('API loaded data', loaded_data)
 
     # Count repeats
     activity.meta.repeats = await repetition_counter.count_repetitions(
@@ -183,11 +182,5 @@ async def classify_data(activity: ActivityTracking):
 
         signal_vector_magnitude = get_signal_vector_magnitude(signals)
         all_features["svm"].append(signal_vector_magnitude)
-
-        # DISABLED FOR NOW SINCE STANDARD SCALER DOES NOT HANDLE COMPLEX(IMAGINARY) VARIABLES
-        # Can we simply drop the imaginary part and use just the real one?
-
-    # all_features_df = pd.DataFrame(all_features)
-    # all_features_df
 
     return activity.meta
