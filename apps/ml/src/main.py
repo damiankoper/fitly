@@ -83,24 +83,6 @@ def load_single_json(activity_data):
 @app.post("/api/v1/classify_data", response_model=ActivityTrackingMeta)
 async def classify_data(activity: ActivityTracking):
     # Classification
-    # TODO: if type != UNKNOWN do not overwrite it!!!
-    if activity.meta.type == ActivityType.UNKNOWN:
-        activity.meta.type = ActivityType.SQUATS
-
-    # Counting repetitions
-
-    # Extract signal & config data
-    exercise_info = utilities.get_signal_config(activity.meta.type)
-    signal_for_counting: list[DataPoint] = parse_obj_as(
-        list[DataPoint], activity.dict()[exercise_info.device.value]
-    )
-
-    loaded_data = load_single_json(activity)
-
-    # Count repeats
-    activity.meta.repeats = await repetition_counter.count_repetitions(
-        exercise_info, signal_for_counting, activity.meta.uuid
-    )
 
     all_activity_files = load_single_json(activity)
 
@@ -204,20 +186,34 @@ async def classify_data(activity: ActivityTracking):
         all_features["y_spec_entropy"].append(spectral_entropies[1])
         all_features["z_spec_entropy"].append(spectral_entropies[2])
 
-        list_to_standardization = list(all_features.values())[4:]
+        list_to_standardization = [x[0] for x in list(all_features.values())[4:]]
 
         # load our trained scaler model
         loaded_scaler_model = pickle.load(open('/code/apps/ml/src/standard_scaler_exported_model.sav', 'rb'))
 
-        standarized_all_features = loaded_scaler_model.transform(list_to_standardization)
-        print('scaler std', std(standarized_all_features))
-        print('scaler mean', mean(standarized_all_features))
-        print('list for training', standarized_all_features)
+        standarized_all_features = loaded_scaler_model.fit_transform(np.array(list_to_standardization).reshape(-1,1))
+        print('standarized_all_features', standarized_all_features)
 
-        #load model
+        # #load model
         with open('/code/apps/ml/src/model_pkl', 'rb') as f:
             loaded_model = pickle.load(f)
 
         loaded_model.predict(standarized_all_features)
+
+    # TODO: if type != UNKNOWN do not overwrite it!!!
+    if activity.meta.type == ActivityType.UNKNOWN:
+        activity.meta.type = ActivityType.SQUATS
+
+    # Counting repetitions
+
+    # Extract signal & config data
+    exercise_info = utilities.get_signal_config(activity.meta.type)
+    signal_for_counting: list[DataPoint] = parse_obj_as(
+        list[DataPoint], activity.dict()[exercise_info.device.value]
+    )
+
+    loaded_data = load_single_json(activity)
+
+    new_data = loaded_data[4:]
 
     return activity.meta
