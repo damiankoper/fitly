@@ -1,3 +1,4 @@
+import os
 from collections import defaultdict
 from numbers import Number
 
@@ -19,6 +20,7 @@ from fastapi import FastAPI
 from dateutil import parser
 from datetime import datetime
 from sklearn.preprocessing import  StandardScaler
+import pickle
 
 app = FastAPI()
 
@@ -209,5 +211,11 @@ async def classify_data(activity: ActivityTracking):
         print('scaler std', std(standarized_all_features))
         print('scaler mean', mean(standarized_all_features))
         print('list for training', standarized_all_features)
+
+        #load model
+        with open('/code/apps/ml/src/model_pkl', 'rb') as f:
+            loaded_model = pickle.load(f)
+
+        loaded_model.predict(standarized_all_features)
 
     return activity.meta
