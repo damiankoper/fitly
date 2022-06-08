@@ -2,11 +2,13 @@ from collections import defaultdict
 from numbers import Number
 
 import numpy as np
+from numpy import median, mean, std
 
 from utils.feature_extraction_functions import get_means, get_variances, get_standard_deviations, \
     get_medians, get_maximums, get_minimums, get_ranges, get_root_mean_squares, get_integrals, \
-    get_correlation_coefficients, get_cross_correlation, get_max_differences, get_zero_crossings, \
-    get_signal_magnitude_area, get_signal_vector_magnitude
+    get_correlation_coefficients, get_cross_correlation, get_max_differences, \
+    get_signal_magnitude_area, get_signal_vector_magnitude, get_zero_crossings, get_dc_components, \
+    get_spectral_energies, get_spectral_entropies
 from models.DataModels import DataPoint
 from enums.ActivityTypeEnum import ActivityType
 from models.DataModels import ActivityTracking, ActivityTrackingMeta
@@ -184,5 +186,28 @@ async def classify_data(activity: ActivityTracking):
 
         signal_vector_magnitude = get_signal_vector_magnitude(signals)
         all_features["svm"].append(signal_vector_magnitude)
+
+        dc_components = get_dc_components(signals)
+        all_features["x_dc_component"].append(dc_components[0])
+        all_features["y_dc_component"].append(dc_components[1])
+        all_features["z_dc_component"].append(dc_components[2])
+
+        spectral_energies = get_spectral_energies(signals)
+        all_features["x_spec_energy"].append(spectral_energies[0])
+        all_features["y_spec_energy"].append(spectral_energies[1])
+        all_features["z_spec_energy"].append(spectral_energies[2])
+
+        spectral_entropies = get_spectral_entropies(signals)
+        all_features["x_spec_entropy"].append(spectral_entropies[0])
+        all_features["y_spec_entropy"].append(spectral_entropies[1])
+        all_features["z_spec_entropy"].append(spectral_entropies[2])
+
+        list_to_standardization = list(all_features.values())[4:]
+
+        scaler = StandardScaler()
+        standarized_all_features = scaler.fit_transform(list_to_standardization)
+        print('scaler std', std(standarized_all_features))
+        print('scaler mean', mean(standarized_all_features))
+        print('list for training', standarized_all_features)
 
     return activity.meta

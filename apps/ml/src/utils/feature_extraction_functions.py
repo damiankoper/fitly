@@ -13,8 +13,8 @@ def get_means(signal):
     Returns means for all x, y, z axes
     """
     x, y, z = _separate_signal(signal)
-    # return np.mean(x), np.mean(y), np.mean(z)
-    return x
+    return np.mean(x), np.mean(y), np.mean(z)
+
 
 def get_variances(signal):
     """
@@ -148,19 +148,19 @@ def _zero_crossings(values, mean):
     return zero_crossings
 
 
-# def get_zero_crossings(signal):
-#     """
-#     Returns numbers of zero-crossings for each x, y, z signals
-#     Zero-crossing is when the signal crosses the mean of it's range
-#     """
-#     x_mean, y_mean, z_mean = get_means(signal)
-#     x, y, z = _separate_signal(signal)
-#
-#     x_zero_crossings = _zero_crossings(x, x_mean)
-#     y_zero_crossings = _zero_crossings(y, y_mean)
-#     z_zero_crossings = _zero_crossings(z, z_mean)
-#
-#     return x_zero_crossings, y_zero_crossings, z_zero_crossings
+def get_zero_crossings(signal):
+    """
+    Returns numbers of zero-crossings for each x, y, z signals
+    Zero-crossing is when the signal crosses the mean of it's range
+    """
+    x_mean, y_mean, z_mean = get_means(signal)
+    x, y, z = _separate_signal(signal)
+
+    x_zero_crossings = _zero_crossings(x, x_mean)
+    y_zero_crossings = _zero_crossings(y, y_mean)
+    z_zero_crossings = _zero_crossings(z, z_mean)
+
+    return x_zero_crossings, y_zero_crossings, z_zero_crossings
 
 
 def get_signal_magnitude_area(signal):
@@ -208,7 +208,7 @@ def get_dc_components(signal):
     Returns means of spectral coefficients
     """
     ffts = _ffts(signal)
-    return np.mean(ffts[0]), np.mean(ffts[1]), np.mean(ffts[2])
+    return abs(np.mean(ffts[0])), abs(np.mean(ffts[1])), abs(np.mean(ffts[2]))
 
 
 def get_spectral_energies(signal):
@@ -219,7 +219,7 @@ def get_spectral_energies(signal):
     spec_energy_x = np.power(sum(fft_x), 2) / len(fft_x)
     spec_energy_y = np.power(sum(fft_y), 2) / len(fft_y)
     spec_energy_z = np.power(sum(fft_z), 2) / len(fft_z)
-    return spec_energy_x, spec_energy_y, spec_energy_z
+    return abs(spec_energy_x), abs(spec_energy_y), abs(spec_energy_z)
 
 
 def get_spectral_entropies(signal):
@@ -227,4 +227,4 @@ def get_spectral_entropies(signal):
     sen_x = sum([vx * np.log(1 / vx) for vx in fft_x])
     sen_y = sum([vy * np.log(1 / vy) for vy in fft_y])
     sen_z = sum([vz * np.log(1 / vz) for vz in fft_z])
-    return sen_x, sen_y, sen_z
+    return abs(sen_x), abs(sen_y), abs(sen_z)
