@@ -206,8 +206,10 @@ async def classify_data(activity: ActivityTracking):
 
         list_to_standardization = list(all_features.values())[4:]
 
-        scaler = StandardScaler()
-        standarized_all_features = scaler.fit_transform(list_to_standardization)
+        # load our trained scaler model
+        loaded_scaler_model = pickle.load(open('/code/apps/ml/src/standard_scaler_exported_model.sav', 'rb'))
+
+        standarized_all_features = loaded_scaler_model.transform(list_to_standardization)
         print('scaler std', std(standarized_all_features))
         print('scaler mean', mean(standarized_all_features))
         print('list for training', standarized_all_features)
