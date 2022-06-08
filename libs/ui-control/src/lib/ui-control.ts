@@ -126,12 +126,16 @@ export class UiControl {
   }
 
   public getSessions(): ActivitySession[] {
-    return this.dataStore.getActivitySessions();
+    return this.sortSessions(this.dataStore.getActivitySessions());
   }
 
   public getLastSession(): ActivitySession | null {
     const sessions = this.dataStore.getActivitySessions();
-    return sessions[sessions.length - 1] || null;
+    return this.sortSessions(sessions)[0] || null;
+  }
+
+  private sortSessions(sessions: ActivitySession[]): ActivitySession[] {
+    return sessions.sort((a, b) => +b.interval.start - +a.interval.start);
   }
 
   public saveSession(session: ActivitySession): void {
@@ -153,10 +157,12 @@ export class UiControl {
 
   //   --- Activity Session Stats ---
   public getSessionSummary(session: ActivitySession): ActivitySummary | null {
-    // jeśli user nie został ustawiony
-    if (this.dataStore.getUser() == null) return null;
-
-    const summary = new ActivitySummary(0, new Date(), 0, 0);
+    const summary = new ActivitySummary(
+      0,
+      session.interval.start.toJSDate(),
+      0,
+      0
+    );
     const weight = this.dataStore.getUser().weight;
 
     session.activities.forEach((activity) => {
@@ -179,6 +185,11 @@ export class UiControl {
         new ChartDataType(activity.repeats, activity.interval.start.toJSDate())
       );
     });
+
+    if (data.length) {
+      const last = data[data.length - 1];
+      data.push(new ChartDataType(last.value, session.interval.end.toJSDate()));
+    }
 
     return new ChartData(data);
   }

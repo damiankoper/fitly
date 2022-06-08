@@ -1,43 +1,18 @@
 import { ActivitySession, ActivityTrackingMeta } from '@fitly/shared/meta';
-import { Divider, Layout } from '@ui-kitten/components';
+import { Divider } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { ActivityCardLarge } from '../components/cards/activity-card-large';
 import LoadingScreen from '../components/loading-screen/LoadingScreen';
-import humanizeDuration from 'humanize-duration';
 import { Interval } from 'luxon';
 import { commonStyles } from '../assets/common/styles';
 import uiControl from '../data';
-const SHOW_DATE_AFTER_DAYS_DIFFERENCE = 34;
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import ActivitySessionSummaryCard from '../components/cards/activity-session-summary-card';
 
 export function getReadableDateStringFromInterval(interval: Interval): string {
   const startDate = interval.start;
-  const duration = startDate.diffNow();
-  const durationInSeconds = Math.abs(duration.shiftTo('seconds').seconds);
-  const durationInDays = Math.abs(duration.shiftTo('days').days);
-  const durationInDaysRounded = Math.floor(durationInDays);
-
-  if (durationInDaysRounded === 1) return 'Yesterday';
-  if (
-    durationInDaysRounded >= 2 &&
-    durationInDaysRounded < SHOW_DATE_AFTER_DAYS_DIFFERENCE
-  ) {
-    return `${durationInDaysRounded} days ago`;
-  }
-  if (durationInDaysRounded >= SHOW_DATE_AFTER_DAYS_DIFFERENCE) {
-    return startDate.setLocale('en-gb').toLocaleString({
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  }
-  return (
-    humanizeDuration(durationInSeconds, {
-      largest: 1,
-      units: ['mo', 'w', 'd', 'h', 'm', 's'],
-      round: true,
-    }) + ' ago'
-  );
+  return startDate.toRelative() || '';
 }
 
 export function getTimeDurationFromInterval(interval: Interval): string {
@@ -66,28 +41,37 @@ export function getCaloriesFromActivityMetaAndUserWeight(
   return Math.round(caloriesRaw);
 }
 
-export const HistoryScreen = () => {
-  const [activities, setActivities] = useState<ActivitySession[] | null>(null);
-  const [userWeight, setUserWeight] = useState<number>(0);
+type HistoryScreenProps = BottomTabScreenProps<BottomTabParamList, 'History'>;
+
+export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
+  const [activitySessions, setActivitySessions] = useState<
+    ActivitySession[] | null
+  >(null);
 
   useEffect(() => {
     const newActivities = uiControl.getSessions();
-    const newUserWeight = uiControl.getUser()?.weight;
-    setActivities(newActivities);
-    setUserWeight(newUserWeight || 0);
+    setActivitySessions(newActivities);
   }, []);
 
   const isFirstItem = (position: number): boolean => position === 0;
 
-  if (activities == null)
+  if (activitySessions == null)
     return (
       <LoadingScreen subText="Loading previous activites. This might take a while. Please wait..." />
     );
 
+  const dateMap = new Map<string, ActivitySession[]>();
+  activitySessions.forEach((session) => {
+    const key = session.interval.start.toRelative() || '';
+    const sessions = dateMap.get(key) || [];
+    sessions.push(session);
+    dateMap.set(key, sessions);
+  });
+
   return (
-    <Layout style={[styles.container, styles.height100]}>
+    <View style={[styles.container, styles.height100]}>
       <Text style={commonStyles.title}>History</Text>
-      {activities.length === 0 ? (
+      {activitySessions.length === 0 ? (
         <View style={styles.loadingContainer}>
           <Text style={styles.headerText}>No exercises has been found!</Text>
           <Text style={styles.subtitleText}>
@@ -99,39 +83,57 @@ export const HistoryScreen = () => {
           </Text>
         </View>
       ) : (
-        activities.map(({ id, interval, activities }, index) => {
-          return (
-            <React.Fragment key={id}>
-              <View
-                style={[
-                  styles.textAndDividerContainer,
-                  isFirstItem(index) ? undefined : styles.marginTop,
-                ]}
-              >
-                <Text style={styles.dateText}>
-                  {getReadableDateStringFromInterval(interval)}
-                </Text>
-                <Divider style={styles.divider} />
+        [...dateMap.entries()].map(([key, sessions]) => (
+          <React.Fragment key={key}>
+            <View style={[styles.textAndDividerContainer, styles.marginTop]}>
+              <Text style={styles.dateText}>{key}</Text>
+              <Divider style={styles.divider} />
+            </View>
+            {sessions.map((session) => (
+              <View key={session.id} style={styles.cardWrapper}>
+                <ActivitySessionSummaryCard
+                  activitySession={session}
+                  onPress={() =>
+                    navigation.navigate('ExerciseResultsScreen', {
+                      activitySession: session,
+                    })
+                  }
+                />
               </View>
-              {activities.map((activity, index) => (
+            ))}
+          </React.Fragment>
+        ))
+        /*  activitySessions
+          .sort((a, b) => +b.interval.start - +a.interval.start)
+          .map((session, index) => {
+            return (
+              <React.Fragment key={session.id}>
+                <View
+                  style={[
+                    styles.textAndDividerContainer,
+                    isFirstItem(index) ? undefined : styles.marginTop,
+                  ]}
+                >
+                  <Text style={styles.dateText}>
+                    {getReadableDateStringFromInterval(session.interval)}
+                  </Text>
+                  <Divider style={styles.divider} />
+                </View>
                 <View key={index} style={styles.cardWrapper}>
-                  <ActivityCardLarge
-                    activity={activity.type}
-                    count={activity.repeats}
-                    time={getTimeDurationFromInterval(interval)}
-                    kcal={getCaloriesFromActivityMetaAndUserWeight(
-                      activity,
-                      userWeight
-                    )}
-                    date={getReadableDateStringFromInterval(activity.interval)}
+                  <ActivitySessionSummaryCard
+                    activitySession={session}
+                    onPress={() =>
+                      navigation.navigate('ExerciseResultsScreen', {
+                        activitySession: session,
+                      })
+                    }
                   />
                 </View>
-              ))}
-            </React.Fragment>
-          );
-        })
+              </React.Fragment>
+            );
+          }) */
       )}
-    </Layout>
+    </View>
   );
 };
 

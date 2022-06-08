@@ -28,52 +28,68 @@ export const DEFAULT_USER: User = {
 };
 
 const uuid1 = uuidv4();
-const uuid2 = uuidv4();
+let start = DateTime.now().minus({ days: 2 });
 export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
   {
     id: 2,
-    interval: Interval.fromDateTimes(
-      DateTime.fromSQL('2022-05-22 08:15:00'),
-      DateTime.fromSQL('2022-05-22 08:17:00')
-    ),
-    activities: [
-      new ActivityTrackingMeta(
-        uuid1,
-        Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-22 08:15:00'),
-          DateTime.fromSQL('2022-05-22 08:17:00')
-        ),
-        ActivityType.STAR_JUMPS,
-        1
+    interval: Interval.fromDateTimes(start, start.plus({ seconds: 24 * 10 })),
+    activities: new Array(24)
+      .fill(0)
+      .map(
+        (_, i) =>
+          new ActivityTrackingMeta(
+            uuid1,
+            Interval.fromDateTimes(
+              start,
+              (start = start.plus({ seconds: 10 }))
+            ),
+            ActivityType.PUSHUPS,
+            Math.floor((Math.random() * 10) / 3) + 3
+          )
       ),
-    ],
   },
   {
     id: 1,
     interval: Interval.fromDateTimes(
-      DateTime.fromSQL('2022-05-26 08:15:00'),
-      DateTime.fromSQL('2022-05-26 09:25:05')
+      (start = start.plus({ hours: 1 })),
+      start.plus({ seconds: 50 * 10 })
     ),
-    activities: [
-      new ActivityTrackingMeta(
-        uuid2,
-        Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-26 08:15:00'),
-          DateTime.fromSQL('2022-05-26 09:25:15')
-        ),
-        ActivityType.STAR_JUMPS,
-        4
+    activities: new Array(50)
+      .fill(0)
+      .map(
+        (_, i) =>
+          new ActivityTrackingMeta(
+            uuid1,
+            Interval.fromDateTimes(
+              start,
+              (start = start.plus({ seconds: 10 }))
+            ),
+            ActivityType.STAR_JUMPS,
+            Math.floor((Math.random() * 10) / 3) + 6
+          )
       ),
-      new ActivityTrackingMeta(
-        uuid2,
-        Interval.fromDateTimes(
-          DateTime.fromSQL('2022-05-26 08:15:00'),
-          DateTime.fromSQL('2022-05-26 09:25:15')
-        ),
-        ActivityType.SQUATS,
-        3
+  },
+
+  {
+    id: 3,
+    interval: Interval.fromDateTimes(
+      (start = start.plus({ days: 1 })),
+      start.plus({ seconds: 2 * 10 })
+    ),
+    activities: new Array(2)
+      .fill(0)
+      .map(
+        (_, i) =>
+          new ActivityTrackingMeta(
+            uuid1,
+            Interval.fromDateTimes(
+              start,
+              (start = start.plus({ seconds: 10 }))
+            ),
+            ActivityType.SITUPS,
+            Math.floor((Math.random() * 10) / 3) + 6
+          )
       ),
-    ],
   },
 ];
 

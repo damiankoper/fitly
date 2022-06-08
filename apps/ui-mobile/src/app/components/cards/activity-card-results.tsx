@@ -1,45 +1,39 @@
 import React from 'react';
 import { ActivityType } from '@fitly/shared/meta';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIcon } from '../icons/activity-icon';
 import { commonStyles } from '../../assets/common/styles';
 import DropShadowWrapper from '../gradients/drop-shadow';
-import LinearGradientCard from '../gradients/linear-gradient-card';
 import { Themes } from '../gradients/themes';
-import { Text } from 'react-native';
-import { DataCardLarge } from './data-card-large';
-import { CaloriesIcon } from '../../native-modules/screens/home-screen';
 import { ActivityCardSmall } from './activity-card-small';
 import LinearGradient from 'react-native-linear-gradient';
-import DropShadow from 'react-native-drop-shadow';
+import { useTheme } from '@ui-kitten/components';
 
 interface Props {
   activity: ActivityType;
   theme?: Themes;
+  subtitle?: string;
 }
 
-function capitalize(str: string) {
-  return `${str.substring(0, 1).toUpperCase()}${str
-    .substring(1)
-    .toLowerCase()}`;
-}
-
-export const ActivityCardResults: React.FC<Props> = ({ activity, theme }) => {
+export const ActivityCardResults: React.FC<Props> = ({
+  activity,
+  subtitle,
+}) => {
+  const theme = useTheme();
   return (
     <DropShadowWrapper>
-      <LinearGradient // pls consider removing dis 💘 💘 💘
-        locations={[0, 1]}
-        colors={['#6B90FF', '#6B90FF']}
-        style={[commonStyles.defaultBorder]}
+      <View
+        style={[
+          commonStyles.defaultBorder,
+          styles.container,
+          { backgroundColor: theme['color-primary-400'] },
+        ]}
       >
-        <View style={[commonStyles.defaultBorder, styles.container]}>
-          <ActivityCardSmall
-            activity={activity}
-            subtitle="Type of activity"
-            color="white"
-          />
-        </View>
-      </LinearGradient>
+        <ActivityCardSmall
+          activity={activity}
+          subtitle={subtitle}
+          color="white"
+        />
+      </View>
     </DropShadowWrapper>
   );
 };

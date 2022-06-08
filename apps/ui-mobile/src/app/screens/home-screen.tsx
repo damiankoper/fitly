@@ -6,7 +6,12 @@ import { DataCardLarge } from '../components/cards/data-card-large';
 import { BluetoothStatus } from '../components/icons/bluetooth-status';
 import { DataCardSmall } from '../components/cards/data-card-small';
 import { ActivityCardLarge } from '../components/cards/activity-card-large';
-import { ActivityTrackingMeta, User } from '@fitly/shared/meta';
+import {
+  ActivitySession,
+  ActivitySummary,
+  ActivityTrackingMeta,
+  User,
+} from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
 import ActivityLineChart from '../components/charts/ActivityLineChart';
 import {
@@ -18,6 +23,7 @@ import { DEFAULT_HOME_PLOT_DATA, formatActivityString } from '../common/utils';
 import uiControl from '../data';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
+import ActivitySessionSummaryCard from '../components/cards/activity-session-summary-card';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -72,9 +78,7 @@ type NavProps = BottomTabScreenProps<BottomTabParamList, 'Home'>;
 export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState<User>(uiControl.getUser());
-  const [lastActivity, setLastActivity] = useState<ActivityTrackingMeta | null>(
-    null
-  );
+  const [lastSession, setLastSession] = useState<ActivitySession | null>(null);
   const [mostPopularActivity, setMostPopularActivity] = useState(
     getMostPopularActivity
   );
@@ -103,7 +107,7 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
     setPercentile(getPercentile());
     setSummaryTime(getSummaryTime());
     const lastSession = uiControl.getLastSession();
-    setLastActivity(lastSession?.activities[0] || null);
+    setLastSession(lastSession);
   }
 
   useEffect(() => {
@@ -120,7 +124,7 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
           title={`Master of ${formattedActivity}`}
         />
 
-        {uiControl.getCaloriesDailyChart()?.data.length !== 0 ? (
+        {/*   {uiControl.getCaloriesDailyChart()?.data.length !== 0 ? (
           <ActivityLineChart
             data={
               // @ts-ignore
@@ -133,7 +137,7 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
             subtitle="Calories burned last week"
             selectedValueSubText="kcal"
           />
-        )}
+        )} */}
 
         <View style={[styles.cardRow, styles.overflowVisible]}>
           <View
@@ -177,18 +181,16 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
             <View style={styles.separator} />
           </View>
         </View>
-        {lastActivity && (
+        {lastSession && (
           <View style={styles.bottomCard}>
-            <ActivityCardLarge
-              activity={lastActivity.type}
+            <ActivitySessionSummaryCard
+              activitySession={lastSession}
               subtitle="Last activity"
-              count={lastActivity.repeats}
-              time={getTimeDurationFromInterval(lastActivity.interval)}
-              kcal={getCaloriesFromActivityMetaAndUserWeight(
-                lastActivity,
-                user?.weight || 0
-              )}
-              date={getReadableDateStringFromInterval(lastActivity.interval)}
+              onPress={() =>
+                navigation.navigate('ExerciseResultsScreen', {
+                  activitySession: lastSession,
+                })
+              }
             />
           </View>
         )}

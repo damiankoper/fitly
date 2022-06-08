@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { commonStyles } from '../../assets/common/styles';
 import { ActivityType } from '@fitly/shared/meta';
 import DropShadowWrapper from '../gradients/drop-shadow';
 import { ActivityCardSmall } from './activity-card-small';
+
 interface Props {
   activity: ActivityType;
   subtitle?: string;
@@ -11,6 +12,7 @@ interface Props {
   time: string;
   kcal: number;
   date: string;
+  onPress?: () => void;
 }
 
 export const ActivityCardLarge: React.FC<Props> = ({
@@ -20,48 +22,51 @@ export const ActivityCardLarge: React.FC<Props> = ({
   time,
   kcal,
   subtitle,
+  onPress,
 }) => {
   return (
-    <DropShadowWrapper>
-      <View
-        style={[
-          commonStyles.defaultBorder,
-          styles.container,
-          { paddingTop: subtitle ? 32 : 20 },
-        ]}
-      >
-        <ActivityCardSmall activity={activity} subtitle={subtitle} />
-
-        <View style={styles.stats}>
-          <View style={styles.infoRow}>
-            <View style={styles.exerciseData}>
-              <Text style={[styles.valueText, styles.repeatsText]}>
-                {count}
-              </Text>
-              <Text style={[styles.labelText, styles.repeatsText]}>
-                repeats
-              </Text>
-            </View>
-            <View style={styles.exerciseData}>
-              <Text style={[styles.valueText, styles.timeText]}>{time}</Text>
-              <Text style={[styles.labelText, styles.timeText]}>time</Text>
-            </View>
-            <View style={styles.exerciseData}>
-              <Text style={[styles.valueText]}>{kcal}</Text>
-              <Text style={[styles.labelText]}>kcal</Text>
-            </View>
-          </View>
-        </View>
-        <Text
+    <TouchableOpacity onPress={onPress}>
+      <DropShadowWrapper>
+        <View
           style={[
-            { backgroundColor: '#3366FF', color: 'white' },
-            styles.dateText,
+            commonStyles.defaultBorder,
+            styles.container,
+            { paddingTop: subtitle ? 32 : 20 },
           ]}
         >
-          {date}
-        </Text>
-      </View>
-    </DropShadowWrapper>
+          <ActivityCardSmall activity={activity} subtitle={subtitle} />
+
+          <View style={styles.stats}>
+            <View style={styles.infoRow}>
+              <View style={styles.exerciseData}>
+                <Text style={[styles.valueText, styles.repeatsText]}>
+                  {count}
+                </Text>
+                <Text style={[styles.labelText, styles.repeatsText]}>
+                  repeats
+                </Text>
+              </View>
+              <View style={styles.exerciseData}>
+                <Text style={[styles.valueText, styles.timeText]}>{time}</Text>
+                <Text style={[styles.labelText, styles.timeText]}>time</Text>
+              </View>
+              <View style={styles.exerciseData}>
+                <Text style={[styles.valueText]}>{kcal.toFixed(0)}</Text>
+                <Text style={[styles.labelText]}>kcal</Text>
+              </View>
+            </View>
+          </View>
+          <Text
+            style={[
+              { backgroundColor: '#3366FF', color: 'white' },
+              styles.dateText,
+            ]}
+          >
+            {date}
+          </Text>
+        </View>
+      </DropShadowWrapper>
+    </TouchableOpacity>
   );
 };
 

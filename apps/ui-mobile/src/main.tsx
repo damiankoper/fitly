@@ -3,6 +3,11 @@ import * as PopoverView from '@ui-kitten/components/ui/popover/popoverView.compo
 import * as Components from '@ui-kitten/components';
 import { AppRegistry } from 'react-native';
 import App from './app/App';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 AppRegistry.registerComponent('main', () => App);
 

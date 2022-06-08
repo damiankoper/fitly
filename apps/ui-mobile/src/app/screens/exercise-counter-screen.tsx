@@ -9,6 +9,7 @@ import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
 import { SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
+import { Interval, DateTime } from 'luxon';
 
 type NavProps = BottomTabScreenProps<
   BottomTabParamList,
@@ -57,7 +58,17 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
     setLastDuration(0);
     setLastRepeats(0);
     stopwatch.reset(undefined, false);
-    if (redirect) navigation.navigate('ExerciseResultsScreen', { activity });
+    if (redirect)
+      navigation.navigate('ExerciseResultsScreen', {
+        activity: {
+          interval: Interval.fromDateTimes(
+            DateTime.fromSQL('2022-05-26 08:15:00'),
+            DateTime.fromSQL('2022-05-26 09:25:05')
+          ),
+          repeats: 15,
+          type: activity,
+        },
+      });
   }
 
   function onStart() {

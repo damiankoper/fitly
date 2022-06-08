@@ -33,6 +33,7 @@ const AppInitScreen: React.FC<AppInitScreenProps> = ({
       await BluetoothModule.getSavedConnectedBluetoothDevice();
     if (lastConnectedMac == null) {
       showNotification('No metawear device saved');
+      handleCloseLoadingScreen();
     } else {
       try {
         await metawear.connect(lastConnectedMac);
