@@ -16,19 +16,7 @@ const ActivitySessionSummaryCard: React.FC<ActivitySessionSummaryCardProps> = ({
   onPress,
   subtitle,
 }) => {
-  const map = activitySession.activities.reduce(
-    (acc, e) => acc.set(e.type, (acc.get(e.type) || 0) + 1),
-    new Map<ActivityType, number>()
-  );
-  let bestType = ActivityType.UNKNOWN;
-  let bestTypeCount = 0;
-  [...map.entries()].forEach(([type, count]) => {
-    if (bestTypeCount < count) {
-      bestTypeCount = count;
-      bestType = type;
-    }
-  });
-
+  const bestType = uiControl.getSessionActivityType(activitySession);
   const sessionSummary = uiControl.getSessionSummary(activitySession);
 
   return (

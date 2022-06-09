@@ -5,14 +5,14 @@ import { Interval } from 'luxon';
 import { IsNumber } from 'class-validator';
 
 export class ActivitySession {
-	@IsNumber()
-  id = 0;
-  
+  @IsNumber()
+  id: number | string = 0;
+
   @Transform(({ value }) => Interval.fromISO(value), { toClassOnly: true })
-	@Transform(({ value }) => value.toISO(), { toPlainOnly: true })
-	@Type(() => Interval)
+  @Transform(({ value }) => value.toISO(), { toPlainOnly: true })
+  @Type(() => Interval)
   interval!: Interval;
-  
+
   @ValidateNested({ each: true })
   @Type(() => ActivityTrackingMeta)
   activities: ActivityTrackingMeta[];
@@ -20,10 +20,10 @@ export class ActivitySession {
   constructor(
     interval: Interval,
     activities: ActivityTrackingMeta[] = [],
-    id?: number
+    id?: number | string
   ) {
     this.interval = interval;
     this.activities = activities;
-		if (id) this.id = id;
+    if (id) this.id = id;
   }
 }

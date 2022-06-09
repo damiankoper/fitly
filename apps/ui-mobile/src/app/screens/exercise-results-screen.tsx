@@ -25,8 +25,8 @@ type NavProps = BottomTabScreenProps<
 
 export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
   const { activitySession } = route.params;
-  const { activities, interval } = activitySession;
-  const firstActivity = activities[0];
+  const { interval } = activitySession;
+  const bestType = uiControl.getSessionActivityType(activitySession);
   const sessionSummary = uiControl.getSessionSummary(activitySession);
   const { data } = uiControl.getSessionPaceChart(activitySession);
   const theme = useTheme();
@@ -34,7 +34,7 @@ export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
     <Layout style={styles.layout}>
       <View style={styles.resultsWrapper}>
         <ActivityCardResults
-          activity={firstActivity.type}
+          activity={bestType}
           subtitle={interval.start.toLocaleString(DateTime.DATETIME_SHORT, {
             locale: 'pl',
           })}

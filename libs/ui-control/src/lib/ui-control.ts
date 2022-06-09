@@ -73,8 +73,6 @@ export class UiControl {
       });
       items.push(data);
     }
-    console.log(items);
-
     return new ChartData(items);
   }
 
@@ -224,6 +222,22 @@ export class UiControl {
 
     const calories = (duration * (met * 3.5 * weight)) / 200;
     return calories;
+  }
+
+  public getSessionActivityType(activitySession: ActivitySession) {
+    const map = activitySession.activities.reduce(
+      (acc, e) => acc.set(e.type, (acc.get(e.type) || 0) + 1),
+      new Map<ActivityType, number>()
+    );
+    let bestType = ActivityType.UNKNOWN;
+    let bestTypeCount = 0;
+    [...map.entries()].forEach(([type, count]) => {
+      if (bestTypeCount < count) {
+        bestTypeCount = count;
+        bestType = type;
+      }
+    });
+    return bestType;
   }
 
   private isDateSame(date1: DateTime, date2: DateTime): boolean {

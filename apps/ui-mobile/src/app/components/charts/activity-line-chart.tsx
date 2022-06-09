@@ -116,8 +116,6 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
     fontSize: 8,
   };
 
-  console.log(data.map((d) => d.value));
-
   return (
     <View style={{ marginVertical: 16 }}>
       {title && (

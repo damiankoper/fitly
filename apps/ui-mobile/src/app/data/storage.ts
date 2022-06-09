@@ -27,11 +27,9 @@ class MMKVStorage {
   getItem(key: keyof Storage): string | undefined {
     const response = this.storage.getString(key);
     if (!response) {
-      console.log('reading boolean');
       this.storage.getBoolean(key);
     }
     if (!response) {
-      console.log('reading number');
       this.storage.getNumber(key);
     }
     return response;

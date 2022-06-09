@@ -1,4 +1,4 @@
-import { ActivitySession, User } from '@fitly/shared/meta';
+import { ActivitySession, ActivityType, User } from '@fitly/shared/meta';
 import { UiControl, IDataStore } from '@fitly/ui-control';
 import MMKVStorage from './storage';
 import { DEFAULT_ACTIVITY_SESSIONS, DEFAULT_USER } from '../common/utils';

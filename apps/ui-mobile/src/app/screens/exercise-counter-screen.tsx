@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Layout } from '@ui-kitten/components';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
@@ -7,10 +7,13 @@ import { StyleSheet, View, Alert } from 'react-native';
 import { ActivityCardSmall } from '../components/cards/activity-card-small';
 import { MetaWearProps } from '../App';
 import { showNotification } from '@fitly/ui-utils';
-import { SensorAsyncSample } from '@fitly/shared/meta';
+import { ActivitySession, SensorAsyncSample } from '@fitly/shared/meta';
 import { useStopwatch } from 'react-timer-hook';
 import { Interval, DateTime } from 'luxon';
-
+import uiControl from '../data';
+import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state/root.reducer';
 type NavProps = BottomTabScreenProps<
   BottomTabParamList,
   'ExerciseCounterScreen'
@@ -35,18 +38,22 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
   const [lastRepeats, setLastRepeats] = useState(0);
   const [lastDuration, setLastDuration] = useState(1);
 
+  const activitySession = useRef<ActivitySession | null>(null);
+
   const stopwatch = useStopwatch({
     autoStart: false,
   });
 
+  const isConnectedWithDevice = useSelector((state: RootState) =>
+    Boolean(state.app.connectedDevice)
+  );
+
   function startCapture() {
-    console.log('StartCapture');
     metawear.start();
     tracker.startAnalyze();
   }
 
   function stopCapture() {
-    console.log('StopCapture');
     tracker.stop();
     metawear.stop();
   }
@@ -58,24 +65,34 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
     setLastDuration(0);
     setLastRepeats(0);
     stopwatch.reset(undefined, false);
-    if (redirect)
-      navigation.navigate('ExerciseResultsScreen', {
-        activity: {
-          interval: Interval.fromDateTimes(
-            DateTime.fromSQL('2022-05-26 08:15:00'),
-            DateTime.fromSQL('2022-05-26 09:25:05')
-          ),
-          repeats: 15,
-          type: activity,
-        },
-      });
+    if (redirect && activitySession.current) {
+      if (activitySession.current.activities.length > 0) {
+        uiControl.saveSession(activitySession.current);
+        navigation.navigate('ExerciseResultsScreen', {
+          activitySession: activitySession.current,
+        });
+      } else {
+        showNotification(
+          'Excercise for at least 10 seconds to enable activity tracking'
+        );
+      }
+    }
   }
 
   function onStart() {
-    setIsStarted(true);
-    setIsPaused(false);
-    stopwatch.reset(undefined, true);
-    startCapture();
+    if (!isConnectedWithDevice) {
+      showNotification('Connect your armband to enable activity tracking');
+    } else {
+      setIsStarted(true);
+      setIsPaused(false);
+      stopwatch.reset(undefined, true);
+      startCapture();
+      activitySession.current = new ActivitySession(
+        Interval.fromDateTimes(DateTime.now(), DateTime.now()),
+        [],
+        uuidv4()
+      );
+    }
   }
 
   function onPause() {
@@ -113,18 +130,21 @@ export const ExerciseCounterScreen: React.FC<NavProps & MetaWearProps> = ({
             setLastDuration(
               lastDuration + data.interval.toDuration().as('seconds')
             );
+            if (activitySession.current) {
+              activitySession.current.activities.push(data);
+              activitySession.current.interval =
+                activitySession.current.interval.set({
+                  end: data.interval.end,
+                });
+            }
           })
         );
       })
     );
     navigationEvents.push(
       navigation.addListener('blur', (e) => {
-        console.log('blur');
         if (isStarted) onStop();
         events.forEach((t) => t());
-      }),
-      navigation.addListener('beforeRemove', (e) => {
-        Alert.alert('xd');
       })
     );
 

@@ -64,14 +64,14 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
 
   const dateMap = new Map<string, ActivitySession[]>();
   activitySessions.forEach((session) => {
-    const key = session.interval.start.startOf('day').toRelative() || '';
+    const key = session.interval.start.toRelativeCalendar() || '';
     const sessions = dateMap.get(key) || [];
     sessions.push(session);
     dateMap.set(key, sessions);
   });
 
   return (
-    <View style={[styles.container, styles.height100]}>
+    <View style={[styles.container]}>
       <Text style={commonStyles.title}>History</Text>
       {activitySessions.length === 0 ? (
         <View style={styles.loadingContainer}>
@@ -105,35 +105,6 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
             ))}
           </React.Fragment>
         ))
-        /*  activitySessions
-          .sort((a, b) => +b.interval.start - +a.interval.start)
-          .map((session, index) => {
-            return (
-              <React.Fragment key={session.id}>
-                <View
-                  style={[
-                    styles.textAndDividerContainer,
-                    isFirstItem(index) ? undefined : styles.marginTop,
-                  ]}
-                >
-                  <Text style={styles.dateText}>
-                    {getReadableDateStringFromInterval(session.interval)}
-                  </Text>
-                  <Divider style={styles.divider} />
-                </View>
-                <View key={index} style={styles.cardWrapper}>
-                  <ActivitySessionSummaryCard
-                    activitySession={session}
-                    onPress={() =>
-                      navigation.navigate('ExerciseResultsScreen', {
-                        activitySession: session,
-                      })
-                    }
-                  />
-                </View>
-              </React.Fragment>
-            );
-          }) */
       )}
     </View>
   );
@@ -141,9 +112,6 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {},
-  height100: {
-    height: '100%',
-  },
   loadingContainer: {
     height: '100%',
     width: '100%',
@@ -152,7 +120,7 @@ const styles = StyleSheet.create({
   },
   textAndDividerContainer: {
     flex: 1,
-    alignContent: 'stretch',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     flexWrap: 'nowrap',
     flexDirection: 'row',
