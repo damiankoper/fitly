@@ -4,17 +4,19 @@ services:
     build:
       dockerfile: ./apps/ml-bridge/Dockerfile
       context: ../../
-    ports:
-      - '3333:3333'
+    expose:
+      - "3333"
     volumes:
       - .:/code/apps/ml-bridge
     environment:
-      ML_BASE_URL: http://ml_ml_api:8000/api/v1/classify_data
+      ML_BASE_URL: http://ml_api:8000/api/v1/classify_data
+    deploy:
+      replicas: 4
 
   nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+    build:
+      dockerfile: ./config/Dockerfile
+      context: ./
     depends_on:
       - ml_bridge
     ports:
