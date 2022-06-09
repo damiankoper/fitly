@@ -1,0 +1,6 @@
+version: '3.3'    
+services:
+  ml-bridge:
+    build:
+      context: ./
+      dockerfile: ./apps/ml-bridge/Dockerfile
