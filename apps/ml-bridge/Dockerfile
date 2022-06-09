@@ -1,24 +1,30 @@
 FROM node:16-alpine as builder
+WORKDIR /home/node
 ENV NODE_ENV build
 
-USER root
-WORKDIR /home/node
-
-COPY ./* ./
 
 RUN apk add git
-RUN apk add openssh
-RUN npm install --legacy-peer-deps
-RUN npx nx build ml-brige
+
+USER node
+COPY ./package*.json ./
+RUN npm install --legacy-peer-deps --ignore-scripts
+
+COPY ./ ./
+RUN npx nx build ml-bridge
 
 # ---
 
 FROM node:16-alpine
+WORKDIR /home/node
 ENV NODE_ENV production
 
+RUN apk add git
+
 USER node
-WORKDIR /home/node
+COPY ./package*.json ./
+RUN npm install --legacy-peer-deps --ignore-scripts
 
-COPY --from=builder /home/node/dist/apps/ml-bridge/* ./
 
-CMD ["node", "index.js"]
+COPY --from=builder /home/node/dist ./dist
+
+CMD ["node", "dist/apps/ml-bridge/main.js"]
