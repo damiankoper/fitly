@@ -50,15 +50,20 @@ async def classify_data(activity: ActivityTracking):
 
     # Counting repetitions
 
-    # Extract signal & config data
-    exercise_info = utilities.get_signal_config(activity.meta.type)
-    signal_for_counting: list[DataPoint] = parse_obj_as(
-        list[DataPoint], activity.dict()[exercise_info.device.value]
-    )
+    # Only if type != unknown
+    if activity.meta.type != ActivityType.UNKNOWN:
 
-    # Count repeats
-    activity.meta.repeats = await repetition_counter.count_repetitions(
-        exercise_info, signal_for_counting, activity.meta.uuid
-    )
+        # Extract signal & config data
+
+        exercise_info = utilities.get_signal_config(activity.meta.type)
+
+        signal_for_counting: list[DataPoint] = parse_obj_as(
+            list[DataPoint], activity.dict()[exercise_info.device.value]
+        )
+
+        # Count repeats
+        activity.meta.repeats = await repetition_counter.count_repetitions(
+            exercise_info, signal_for_counting, activity.meta.uuid
+        )
 
     return activity.meta
