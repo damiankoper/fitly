@@ -40,9 +40,13 @@ async def classify_data(activity: ActivityTracking):
         gyr_sig_features = feature_extractor.calculate_features_for_signals(gyr_signals)
         mag_sig_features = feature_extractor.calculate_features_for_signals(mag_signals)
 
-        # standarize, classify data
-        standarized_data = model.standarize_data(acc_sig_features)
-        activity.meta.type = ActivityType(model.predict_type(standarized_data))
+        # standarization + classification
+        classification_restult = model.predict_highest_probable_class(
+            acc_sig_features, gyr_sig_features, mag_sig_features
+        )
+
+        # activity type based on classification
+        activity.meta.type = ActivityType(classification_restult)
 
     # Counting repetitions
 
