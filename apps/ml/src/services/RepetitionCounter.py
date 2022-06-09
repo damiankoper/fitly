@@ -14,16 +14,9 @@ class RepetitionCounter:
         source_signal: list[DataPoint],
         session_uuid: str,
     ):
-        # Resampling
-        resampled_signal = utilities.resample(
-            source_signal,
-            int(os.getenv("SAMPLING_FREQUENCY", 25)),
-            int(os.getenv("WINDOW_SECONDS", 10)),
-        )
-
-        # Extract only axis used for counting
+        # Extract only axis used for counting (we assume the signal is already resampled)
         signal: list[float] = list(
-            map(lambda x: x.dict()[exercise_info.axis], resampled_signal)
+            map(lambda x: x.dict()["data"][exercise_info.axis], source_signal)
         )
 
         # Normalize signal

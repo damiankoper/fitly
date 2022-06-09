@@ -11,6 +11,7 @@ python-dateutil = "*"
 aioredis = "*"
 scikit-learn = "~=1.0.2" # Need to be aligned with scikit from Google Coolab (because we pickle models from there)
 numpy = "*"
+gdown = "*"
 
 [dev-packages]
 

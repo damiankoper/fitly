@@ -2,21 +2,47 @@ from models.DataModels import DataPoint
 from enums.ActivityTypeEnum import ActivityType
 from models.DataModels import ActivityTracking, ActivityTrackingMeta
 from services.RepetitionCounter import RepetitionCounter
+from services.FeaturesExtractor import FeaturesExtractor
 from services.Utilities import utilities
+from services.Model import Model
+from config.Config import Config
+
 from pydantic import parse_obj_as
 from fastapi import FastAPI
 
 app = FastAPI()
 
 repetition_counter = RepetitionCounter()
+feature_extractor = FeaturesExtractor()
+model = Model(
+    f"{Config.MODELS_PATH}/standard_scaler.pickle",
+    f"{Config.MODELS_PATH}/random_forest.pickle",
+)
 
 
 @app.post("/api/v1/classify_data", response_model=ActivityTrackingMeta)
 async def classify_data(activity: ActivityTracking):
+
+    # Resampling (used both in classification and counting)
+    activity = utilities.resample_all_signals(activity)
+
     # Classification
-    # TODO: if type != UNKNOWN do not overwrite it!!!
     if activity.meta.type == ActivityType.UNKNOWN:
-        activity.meta.type = ActivityType.SQUATS
+
+        (
+            acc_signals,
+            gyr_signals,
+            mag_signals,
+        ) = feature_extractor.parse_all_device_signals_data(activity)
+
+        # calculate features for each of the above devices
+        acc_sig_features = feature_extractor.calculate_features_for_signals(acc_signals)
+        gyr_sig_features = feature_extractor.calculate_features_for_signals(gyr_signals)
+        mag_sig_features = feature_extractor.calculate_features_for_signals(mag_signals)
+
+        # standarize, classify data
+        standarized_data = model.standarize_data(acc_sig_features)
+        activity.meta.type = ActivityType(model.predict_type(standarized_data))
 
     # Counting repetitions
 
