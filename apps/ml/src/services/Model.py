@@ -22,9 +22,9 @@ class Model:
         standarized_mag_features = self.standard_scaler.transform(transformed_mag)
 
         # Get probabilities from classification on each data
-        acc_class_prob = self.random_forest.predict_proba(standarized_acc_features)
-        gyr_class_prob = self.random_forest.predict_proba(standarized_gyr_features)
-        mag_class_prob = self.random_forest.predict_proba(standarized_mag_features)
+        acc_class_prob = self.random_forest.predict_proba(standarized_acc_features)[0]
+        gyr_class_prob = self.random_forest.predict_proba(standarized_gyr_features)[0]
+        mag_class_prob = self.random_forest.predict_proba(standarized_mag_features)[0]
 
         # First let's see what are the highest probable classes from each classifier
         class_names = self.random_forest.classes_
@@ -40,7 +40,7 @@ class Model:
 
         # Else we choose the class, from the most sure classifier
         # Get biggest probabilities from each of the models
-        all_probabilities = acc_class_prob + gyr_class_prob + mag_class_prob
+        all_probabilities = [*acc_class_prob, *gyr_class_prob, *mag_class_prob]
         max_prob = max(all_probabilities)
         max_prob_index = list(all_probabilities).index(max_prob) % 5
         return class_names[max_prob_index]
