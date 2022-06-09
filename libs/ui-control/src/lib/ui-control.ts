@@ -217,7 +217,7 @@ export class UiControl {
         met = 5;
         break;
       default:
-        throw new Error('Invalid activityType');
+        met = 0;
     }
 
     const calories = (duration * (met * 3.5 * weight)) / 200;

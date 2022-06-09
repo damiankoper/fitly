@@ -53,6 +53,8 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
   useEffect(() => {
     if (isFocused) {
       const newActivities = uiControl.getSessions();
+      console.log(newActivities.length);
+
       setActivitySessions(newActivities);
     } else setActivitySessions(null);
   }, [isFocused]);

@@ -76,13 +76,11 @@ export class DataStore implements IDataStore {
   }
 
   pushActivitySession(activitySession: ActivitySession): void {
-    const activities = this.storage.getObject<ActivitySessionRaw[]>(
-      'user.activity-sessions'
-    );
-    if (activities) {
-      activities.push(serializeSession(activitySession));
-      this.storage.setObject('user.activity-sessions', activities);
-    }
+    const activities =
+      this.storage.getObject<ActivitySessionRaw[]>('user.activity-sessions') ||
+      [];
+    activities.push(serializeSession(activitySession));
+    this.storage.setObject('user.activity-sessions', activities);
   }
 }
 
