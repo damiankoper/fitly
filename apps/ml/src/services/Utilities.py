@@ -24,7 +24,10 @@ class Utilities:
         max_val = max(samples)
         shift = -min_val
 
-        factor = 1 / (max_val + shift)
+        if max_val + shift == 0:
+            factor = 0
+        else:
+            factor = 1 / (max_val + shift)
 
         normalized = list(map(lambda x: (x + shift) * factor * 2 - 1, samples))
         return normalized

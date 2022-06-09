@@ -50,33 +50,32 @@ export class UiControl {
     return repeats;
   }
 
-  public getCaloriesDailyChart(): ChartData | null {
-    // jeśli user nie został ustawiony
-    if (this.dataStore.getUser() == null) return null;
-
-    const now = DateTime.now();
-    const data: ChartDataType[] = [];
+  public getCaloriesDailyChart(): ChartData {
     const weight = this.dataStore.getUser().weight;
-    const sessions = this.dataStore
-      .getActivitySessions()
-      .filter((s) => this.areDateTimesTheSameDay(s.interval.start, now));
+    const now = DateTime.now().startOf('day');
+    const from = now.minus({ days: 7 });
+    const items: ChartDataType[] = [];
+    const sessions = this.dataStore.getActivitySessions();
 
-    sessions.forEach((session) => {
-      session.activities.forEach((activity) => {
-        data.push(
-          new ChartDataType(
-            this.calculateCalories(
-              activity.type,
-              weight,
-              activity.interval.length('minutes')
-            ),
-            activity.interval.start.toJSDate()
-          )
-        );
+    for (let d = from; d < now; d = d.plus({ days: 1 })) {
+      const sessionsThatDay = sessions.filter((s) =>
+        this.isDateSame(s.interval.start, d)
+      );
+      const data = new ChartDataType(0, d.toJSDate());
+      sessionsThatDay.forEach((session) => {
+        session.activities.forEach((activity) => {
+          data.value += this.calculateCalories(
+            activity.type,
+            weight,
+            activity.interval.length('minutes')
+          );
+        });
       });
-    });
+      items.push(data);
+    }
+    console.log(items);
 
-    return new ChartData(data);
+    return new ChartData(items);
   }
 
   public getTimeDailyChart(): ChartData {
@@ -84,7 +83,7 @@ export class UiControl {
     const data: ChartDataType[] = [];
     const sessions = this.dataStore
       .getActivitySessions()
-      .filter((s) => this.areDateTimesTheSameDay(s.interval.start, now));
+      .filter((s) => this.isDateSame(s.interval.start, now));
 
     sessions.forEach((session) => {
       session.activities.forEach((activity) => {
@@ -179,10 +178,14 @@ export class UiControl {
 
   public getSessionPaceChart(session: ActivitySession): ChartData {
     const data: ChartDataType[] = [];
+    const windowCoefficient = 60 / 10;
 
     session.activities.forEach((activity) => {
       data.push(
-        new ChartDataType(activity.repeats, activity.interval.start.toJSDate())
+        new ChartDataType(
+          activity.repeats * windowCoefficient,
+          activity.interval.start.toJSDate()
+        )
       );
     });
 
@@ -223,7 +226,7 @@ export class UiControl {
     return calories;
   }
 
-  private areDateTimesTheSameDay(date1: DateTime, date2: DateTime): boolean {
+  private isDateSame(date1: DateTime, date2: DateTime): boolean {
     return date1.startOf('day').equals(date2.startOf('day'));
   }
 }

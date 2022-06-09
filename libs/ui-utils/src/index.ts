@@ -50,6 +50,8 @@ export function serializeSession(session: ActivitySession): ActivitySessionRaw {
 }
 
 export function parseSession(session: ActivitySessionRaw): ActivitySession {
+  console.log(session.interval);
+
   return new ActivitySession(
     Interval.fromISO(session.interval),
     session.activities.map((meta) => parseMeta(meta)),

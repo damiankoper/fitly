@@ -1,10 +1,12 @@
 import React from 'react';
-import { Layout } from '@ui-kitten/components';
+import { Layout, useTheme } from '@ui-kitten/components';
 import { ActivityCardResults } from '../components/cards/activity-card-results';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import { StyleSheet, View } from 'react-native';
-import ActivityLineChart from '../components/charts/ActivityLineChart';
+import ActivityLineChart, {
+  XAxisLabelType,
+} from '../components/charts/activity-line-chart';
 import { DataCardLarge } from '../components/cards/data-card-large';
 import { ActivityIcon, CaloriesIcon, StepsIcon, TimeIcon } from './home-screen';
 import uiControl from '../data';
@@ -27,7 +29,7 @@ export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
   const firstActivity = activities[0];
   const sessionSummary = uiControl.getSessionSummary(activitySession);
   const { data } = uiControl.getSessionPaceChart(activitySession);
-
+  const theme = useTheme();
   return (
     <Layout style={styles.layout}>
       <View style={styles.resultsWrapper}>
@@ -38,16 +40,15 @@ export const ExerciseResultsScreen: React.FC<NavProps> = ({ route }) => {
           })}
         />
       </View>
-      <View>
-        <ActivityLineChart
-          data={data}
-          granulity="minutes"
-          subtitle="Calories burnt during workout overtime"
-          selectedValueSubText="kcal"
-          lineColor="#9CDE30"
-          interval={activitySession.interval}
-        />
-      </View>
+      <ActivityLineChart
+        data={data}
+        title="exercise rate [r/min]"
+        tooltipSuffix=" r/min"
+        lineColor={theme['color-success-default']}
+        interval={activitySession.interval}
+        labelType={XAxisLabelType.DURATION}
+        showYAxis
+      />
       <View style={styles.cardRow}>
         <View style={[styles.cardColumn, styles.leftColumn]}>
           <DataCardLarge

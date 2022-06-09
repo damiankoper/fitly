@@ -39,7 +39,11 @@ export const BluetoothStatus: React.FC<Props> = ({
     <Icon
       name="bluetooth-outline"
       style={iconStyles[iconSize || 'medium']}
-      fill={isConnectedWithDevice ? 'green' : 'red'}
+      fill={
+        isConnectedWithDevice
+          ? uiTheme['color-success-default']
+          : uiTheme['color-danger-default']
+      }
     />
   );
 

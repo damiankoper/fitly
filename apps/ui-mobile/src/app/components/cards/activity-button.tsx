@@ -26,7 +26,7 @@ export const ActivityButton: React.FC<Props> = ({
         <View
           style={[
             styles.container,
-            { backgroundColor: uTheme['color-primary-300'] },
+            { backgroundColor: uTheme['color-primary-400'] },
           ]}
         >
           <ActivityIcon activity={activity} />

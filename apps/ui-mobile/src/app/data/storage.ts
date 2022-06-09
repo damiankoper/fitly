@@ -20,6 +20,10 @@ class MMKVStorage {
     this.storage.set(key, value);
   }
 
+  deleteItem<K extends keyof Storage>(key: K) {
+    this.storage.delete(key);
+  }
+
   getItem(key: keyof Storage): string | undefined {
     const response = this.storage.getString(key);
     if (!response) {

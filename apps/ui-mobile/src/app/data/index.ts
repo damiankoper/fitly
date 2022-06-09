@@ -56,9 +56,13 @@ export class DataStore implements IDataStore {
     this.storage.setObject('user.data', DEFAULT_USER);
   }
 
+  resetActivitySessions(): void {
+    this.storage.setObject('user.activity-sessions', []);
+  }
+
   resetAll(): void {
-    this.storage.setObject('user.data', DEFAULT_USER);
-    this.storage.setObject('user.activity-sessions', DEFAULT_ACTIVITY_SESSIONS);
+    this.resetUser();
+    this.resetActivitySessions();
   }
 
   getActivitySessions(): ActivitySession[] {
@@ -69,10 +73,6 @@ export class DataStore implements IDataStore {
       sessions?.map((session) => parseSession(session)) ||
       DEFAULT_ACTIVITY_SESSIONS
     );
-  }
-
-  clearActivitySessions(): void {
-    this.storage.setObject('user.activity-sessions', DEFAULT_ACTIVITY_SESSIONS);
   }
 
   pushActivitySession(activitySession: ActivitySession): void {

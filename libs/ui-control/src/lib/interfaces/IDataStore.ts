@@ -11,7 +11,7 @@ export interface IDataStore {
 
   getActivitySessions(): ActivitySession[];
 
-  clearActivitySessions(): void;
+  resetActivitySessions(): void;
 
   pushActivitySession(activitySession: ActivitySession): void;
 }

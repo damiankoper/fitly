@@ -9,6 +9,7 @@ import uiControl from '../data';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import ActivitySessionSummaryCard from '../components/cards/activity-session-summary-card';
+import { useIsFocused } from '@react-navigation/native';
 
 export function getReadableDateStringFromInterval(interval: Interval): string {
   const startDate = interval.start;
@@ -44,16 +45,17 @@ export function getCaloriesFromActivityMetaAndUserWeight(
 type HistoryScreenProps = BottomTabScreenProps<BottomTabParamList, 'History'>;
 
 export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const [activitySessions, setActivitySessions] = useState<
     ActivitySession[] | null
   >(null);
 
   useEffect(() => {
-    const newActivities = uiControl.getSessions();
-    setActivitySessions(newActivities);
-  }, []);
-
-  const isFirstItem = (position: number): boolean => position === 0;
+    if (isFocused) {
+      const newActivities = uiControl.getSessions();
+      setActivitySessions(newActivities);
+    } else setActivitySessions(null);
+  }, [isFocused]);
 
   if (activitySessions == null)
     return (
@@ -62,7 +64,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
 
   const dateMap = new Map<string, ActivitySession[]>();
   activitySessions.forEach((session) => {
-    const key = session.interval.start.toRelative() || '';
+    const key = session.interval.start.startOf('day').toRelative() || '';
     const sessions = dateMap.get(key) || [];
     sessions.push(session);
     dateMap.set(key, sessions);
@@ -73,7 +75,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigation }) => {
       <Text style={commonStyles.title}>History</Text>
       {activitySessions.length === 0 ? (
         <View style={styles.loadingContainer}>
-          <Text style={styles.headerText}>No exercises has been found!</Text>
+          <Text style={styles.headerText}>No exercises have been found!</Text>
           <Text style={styles.subtitleText}>
             We didn't find any previous activities.{'\n'} Wear a MetaWear band,
             select 'Exercise' tab,{'\n'} click desired activity and start

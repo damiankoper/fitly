@@ -13,7 +13,9 @@ import {
   User,
 } from '@fitly/shared/meta';
 import { useIsFocused } from '@react-navigation/native';
-import ActivityLineChart from '../components/charts/ActivityLineChart';
+import ActivityLineChart, {
+  XAxisLabelType,
+} from '../components/charts/activity-line-chart';
 import {
   getCaloriesFromActivityMetaAndUserWeight,
   getReadableDateStringFromInterval,
@@ -24,6 +26,7 @@ import uiControl from '../data';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from '../interfaces/BottomTabParamList';
 import ActivitySessionSummaryCard from '../components/cards/activity-session-summary-card';
+import { DateTime, Interval } from 'luxon';
 
 export const StepsIcon = () => {
   const theme = useTheme();
@@ -87,7 +90,9 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
 
   function getMostPopularActivity(): string {
     const stats = uiControl.getTimeStats();
-    return Object.keys(stats).reduce((a, b) => (stats[a] > stats[b] ? a : b));
+    return Object.keys(stats).reduceRight((a, b) =>
+      stats[a] > stats[b] ? a : b
+    );
   }
   function getActivityTimeSpent(): number {
     const stats = uiControl.getTimeStats();
@@ -116,28 +121,28 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
   }, [isFocused]);
 
   const formattedActivity = formatActivityString(mostPopularActivity, false);
+  const theme = useTheme();
   return (
     <Layout>
       <ScrollView contentContainerStyle={styles.defaultPadding}>
-        <UserCard
-          name={`${user?.name} ${user?.surname}`}
-          title={`Master of ${formattedActivity}`}
+        <View style={{ marginBottom: 20 }}>
+          <UserCard
+            name={`${user?.name} ${user?.surname}`}
+            title={`Master of ${formattedActivity}`}
+          />
+        </View>
+        <ActivityLineChart
+          data={uiControl.getCaloriesDailyChart().data}
+          interval={Interval.fromDateTimes(
+            DateTime.now().minus({ days: 7 }),
+            DateTime.now()
+          )}
+          title="kcal burned last week"
+          tooltipSuffix=" kcal"
+          labelType={XAxisLabelType.WEEKDAY}
+          lineColor={theme['color-primary-default']}
+          showYAxis={false}
         />
-
-        {/*   {uiControl.getCaloriesDailyChart()?.data.length !== 0 ? (
-          <ActivityLineChart
-            data={
-              // @ts-ignore
-              uiControl.getCaloriesDailyChart().data
-            }
-          />
-        ) : (
-          <ActivityLineChart
-            data={DEFAULT_HOME_PLOT_DATA}
-            subtitle="Calories burned last week"
-            selectedValueSubText="kcal"
-          />
-        )} */}
 
         <View style={[styles.cardRow, styles.overflowVisible]}>
           <View
@@ -171,6 +176,7 @@ export const HomeScreen: React.FC<NavProps> = ({ navigation }) => {
                 data={percentile.toFixed(0)}
                 activity={mostPopularActivity}
                 style={styles.activitiesWrapper}
+                empty={!lastSession}
               />
             </View>
             <DataCardLarge
@@ -203,6 +209,7 @@ const styles = StyleSheet.create({
   defaultPadding: {
     padding: 16,
     overflow: 'visible',
+    minHeight: '100%',
   },
   placeholder: {
     marginVertical: 16,

@@ -73,10 +73,10 @@ export const DEFAULT_ACTIVITY_SESSIONS: ActivitySession[] = [
   {
     id: 3,
     interval: Interval.fromDateTimes(
-      (start = start.plus({ days: 1 })),
-      start.plus({ seconds: 2 * 10 })
+      (start = start.minus({ days: 2 })),
+      start.plus({ seconds: 13 * 10 })
     ),
-    activities: new Array(2)
+    activities: new Array(13)
       .fill(0)
       .map(
         (_, i) =>

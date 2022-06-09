@@ -11,12 +11,25 @@ interface ActivityLineChartProps {
   data: ChartDataType[];
   lineColor?: string;
   interval: Interval;
+  title?: string;
+  tooltipSuffix?: string;
+  labelType?: XAxisLabelType;
+  showYAxis?: boolean;
+}
+
+export enum XAxisLabelType {
+  DURATION,
+  WEEKDAY,
 }
 
 const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
   data,
   lineColor,
   interval,
+  title,
+  labelType,
+  showYAxis,
+  tooltipSuffix,
 }) => {
   const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number | null>(
     null
@@ -73,7 +86,7 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
                 textAnchor="middle"
                 y={rectHeight - 7}
               >
-                {item.value * windowCoefficient + ' r/min'}
+                {Math.round(item.value) + (tooltipSuffix || '')}
               </Text>
             </G>
           </>
@@ -84,60 +97,69 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
 
   function formatXLabel(value: Date, index: number) {
     const date = DateTime.fromJSDate(value);
-    return date.diff(interval?.start).toFormat('mm:ss');
+    if (labelType === XAxisLabelType.DURATION) {
+      return date.diff(interval?.start).toFormat('mm:ss');
+    } else {
+      return date.setLocale('en').weekdayShort;
+    }
   }
 
   const xTicks = 6;
-  const verticalInset = { top: 30, bottom: 10, left: 1, right: 1 };
-  const windowCoefficient = 60 / 10;
-  const yMax = Math.max(...data.map((v) => v.value)) + 1;
+  const verticalInset = { top: 30, bottom: 10, left: 2.5, right: 2.5 };
+  const yMax = Math.round(Math.max(...data.map((v) => v.value))) + 6;
   const numTicks = Math.min(yMax + 1, xTicks);
   const yAxisData = Array(yMax + 1)
     .fill(0)
-    .map((_, i) => i * windowCoefficient);
+    .map((_, i) => i);
   const axesSvg = {
     fill: 'black',
     fontSize: 8,
   };
 
+  console.log(data.map((d) => d.value));
+
   return (
     <View style={{ marginVertical: 16 }}>
-      <ReactText
-        style={{
-          marginTop: -16,
-          marginBottom: -16 - 8,
-          fontSize: 16,
-          textAlign: 'center',
-        }}
-      >
-        exercise rate [r/min]
-      </ReactText>
+      {title && (
+        <ReactText
+          style={{
+            marginTop: -16,
+            marginBottom: -16 - 8,
+            fontSize: 16,
+            textAlign: 'center',
+          }}
+        >
+          {title}
+        </ReactText>
+      )}
       <View style={{ flexDirection: 'row', height: 220, paddingHorizontal: 4 }}>
-        <YAxis
-          data={yAxisData}
-          svg={axesSvg}
-          contentInset={verticalInset}
-          style={{ marginBottom: 20 }}
-          numberOfTicks={numTicks}
-        />
+        {showYAxis && (
+          <YAxis
+            data={yAxisData}
+            svg={axesSvg}
+            contentInset={verticalInset}
+            style={{ marginBottom: 20 }}
+            numberOfTicks={numTicks}
+          />
+        )}
         <View
-          style={{ height: 220, flex: 1, marginLeft: 8 }}
+          style={{ height: 220, flex: 1, marginLeft: showYAxis ? 8 : 0 }}
           onLayout={(event) => setChartWidth(event.nativeEvent.layout.width)}
         >
           <LineChart
             style={{ flex: 1 }}
             data={data}
-            yAccessor={({ item }) => item.value * 6}
+            yAccessor={({ item }) => item.value}
             xAccessor={({ item }) => item.date as any as number}
             xScale={scale.scaleTime}
             contentInset={verticalInset}
-            svg={{ stroke: color, strokeWidth: '5px' }}
+            svg={{ stroke: color, strokeWidth: 5, strokeLinecap: 'round' }}
             numberOfTicks={numTicks}
-            yMax={yMax * windowCoefficient}
+            yMax={yMax}
             yMin={0}
             curve={shape.curveMonotoneX}
           >
-            <Grid />
+            {showYAxis && <Grid />}
             <Tooltip />
           </LineChart>
           <XAxis
@@ -145,7 +167,7 @@ const ActivityLineChart: React.FC<ActivityLineChartProps> = ({
             svg={axesSvg}
             xAccessor={({ item }) => item.date}
             scale={scale.scaleTime}
-            numberOfTicks={6}
+            numberOfTicks={numTicks}
             style={{ marginHorizontal: -16, height: 20 }}
             contentInset={{ left: 16, right: 16 }}
             formatLabel={formatXLabel}
