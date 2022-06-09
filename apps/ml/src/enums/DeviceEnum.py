@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Device(Enum):
+class DeviceEnum(Enum):
     accelerometer = "accelerometer"
     gyroscope = "gyroscope"
     magnetometer = "magnetometer"

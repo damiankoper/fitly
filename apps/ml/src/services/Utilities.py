@@ -1,8 +1,10 @@
 from dateutil import parser
 from datetime import datetime
 import json
+import os
 
 from models.DataModels import DataPoint
+from models.DataModels import ActivityTracking
 from models.ConfigModels import SignalConfig, SignalsConfigs
 from enums.ActivityTypeEnum import ActivityType
 from config.Config import Config
@@ -25,14 +27,16 @@ class Utilities:
         shift = -min_val
 
         if max_val + shift == 0:
-            factor = 0
+            factor = float(0)
         else:
             factor = 1 / (max_val + shift)
 
         normalized = list(map(lambda x: (x + shift) * factor * 2 - 1, samples))
         return normalized
 
-    def resample(self, signal_data: list[DataPoint], target_freq: int, target_len: int):
+    def _resample_signal(
+        self, signal_data: list[DataPoint], target_freq: int, target_len: int
+    ) -> list[DataPoint]:
         target_ms = target_len * 1000
         step_ms = 1000 // target_freq
         resampled = []
@@ -54,9 +58,30 @@ class Utilities:
                 and current_time_ms >= timestamps_ms[current_src_sample + 1]
             ):
                 current_src_sample += 1
-            resampled.append(signal_data[current_src_sample].data)
+            resampled.append(signal_data[current_src_sample])
             current_time_ms += step_ms
         return resampled
+
+    def resample_all_signals(self, activity: ActivityTracking):
+
+        activity.accelerometer = self._resample_signal(
+            activity.accelerometer,
+            int(os.getenv("SAMPLING_FREQUENCY", 25)),
+            int(os.getenv("WINDOW_SECONDS", 10)),
+        )
+
+        activity.gyroscope = self._resample_signal(
+            activity.gyroscope,
+            int(os.getenv("SAMPLING_FREQUENCY", 25)),
+            int(os.getenv("WINDOW_SECONDS", 10)),
+        )
+
+        activity.magnetometer = self._resample_signal(
+            activity.magnetometer,
+            int(os.getenv("SAMPLING_FREQUENCY", 25)),
+            int(os.getenv("WINDOW_SECONDS", 10)),
+        )
+        return activity
 
     def limit_signal(self, samples: list[float], exercise_info: SignalConfig):
         bounds = self.signals_limits[exercise_info.type.value][

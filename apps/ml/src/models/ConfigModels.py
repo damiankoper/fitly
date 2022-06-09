@@ -1,10 +1,10 @@
 from pydantic import BaseModel
-from enums.DeviceEnum import Device
+from enums.DeviceEnum import DeviceEnum
 from enums.ActivityTypeEnum import ActivityType
 
 
 class SignalConfig(BaseModel):
-    device: Device
+    device: DeviceEnum
     axis: str
     upper_bound: float
     lower_bound: float
