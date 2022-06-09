@@ -42,5 +42,5 @@ class Model:
         # Get biggest probabilities from each of the models
         all_probabilities = acc_class_prob + gyr_class_prob + mag_class_prob
         max_prob = max(all_probabilities)
-        max_prob_index = max_prob.index(max_prob) % 5
+        max_prob_index = list(max_prob).index(max_prob) % 5
         return class_names[max_prob_index]
