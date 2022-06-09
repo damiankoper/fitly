@@ -15,8 +15,8 @@ services:
 
   nginx:
     build:
-      dockerfile: ./Dockerfile
-      context: ./config
+      dockerfile: ./apps/ml-bridge/config/Dockerfile
+      context: ../../
     depends_on:
       - ml_bridge
     ports:
