@@ -35,7 +35,7 @@ class Model:
         pred_class_count[class_names[np.argmax(mag_class_prob)]] += 1
 
         # If one class is already dominating, we classify the signal as it
-        if any(v > 2 for v in iter(pred_class_count.values())):
+        if any(v >= 2 for v in iter(pred_class_count.values())):
             return max(pred_class_count, key=lambda x: pred_class_count[x])
 
         # Else we choose the class, from the most sure classifier
